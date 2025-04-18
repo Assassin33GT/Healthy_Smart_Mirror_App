@@ -10,7 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(kIsWeb){
+  // Initialize Firebase
+  if(kIsWeb == true){
   await Firebase.initializeApp(
     options: FirebaseOptions(
     apiKey: "AIzaSyDfnYz0phMnHFHBEiNYKuzY0BjVj1ofAxw",
