@@ -1,3 +1,4 @@
+import 'package:demo/MostlyReviewButtons/diet_button.dart';
 import 'package:flutter/material.dart';
 
 class MostlyReview extends StatelessWidget {
@@ -17,13 +18,28 @@ class MostlyReview extends StatelessWidget {
                 color: const Color.fromARGB(188, 124, 77, 255),
                 borderRadius: BorderRadius.circular(13),
               ),
-              child: Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(188, 124, 77, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                ),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DietButton(),
+                    ),
+                  );
+                },
+                child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      "22",
+                      "Diet",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
@@ -31,13 +47,15 @@ class MostlyReview extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Done",
+                      "Plans",
                       style: TextStyle(color: Colors.white70, fontSize: 15),
                     ),
                   ],
                 ),
               ),
             ),
+                ), 
+              
             Padding(
               padding: const EdgeInsets.only(top: 13.0),
               child: Container(
@@ -117,7 +135,7 @@ class MostlyReview extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "12",
+                          "Skin",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
@@ -125,7 +143,7 @@ class MostlyReview extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Skipped",
+                          "Analysis",
                           style: TextStyle(color: Colors.white70, fontSize: 15),
                         ),
                       ],
