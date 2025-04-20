@@ -1,148 +1,129 @@
+import 'package:demo/buttons/form_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// SpoonacularDietPlanner class here (same as in your Dart-only script)
+
+TextEditingController calories = TextEditingController();
+String selectedDiet = "vegetarian";
+List<String> dietOptions = [
+  "vegetarian",
+  "vegan",
+  "paleo",
+  "keto",
+  "gluten free",
+  "whole30",
+];
+int flag = 0;
+
 class SpoonacularDietPlanner {
-  final String apiKey;
+  final String apiKey = "29bbc8b420bf4005a12354619047140f";
   final String baseUrl = "https://api.spoonacular.com";
 
-  SpoonacularDietPlanner(this.apiKey);
+  SpoonacularDietPlanner();
 
-  Future<List<Map<String, dynamic>>> getDietPlan({
+  Future<Map<String, dynamic>?> getDietPlan({
     required int calories,
     String? diet,
     List<String>? intolerances,
   }) async {
-    List<Map<String, dynamic>> allPlans = [];
-    int daysToFetch = 7;
+    Map<String, String> params = {
+      'apiKey': apiKey,
+      'targetCalories': calories.toString(),
+      'timeFrame': 'day',
+    };
 
-  if(allPlans.isEmpty) {
-    for (int week = 0; week < 1; week++) {
-      for (int day = 0; day < daysToFetch; day++) {
-        Map<String, String> params = {
-          'apiKey': apiKey,
-          'targetCalories': calories.toString(),
-          'timeFrame': 'day',
-        };
-        if (diet != null) params['diet'] = diet;
-        if (intolerances != null && intolerances.isNotEmpty) {
-          params['intolerances'] = intolerances.join(',');
-        }
-
-        var uri = Uri.parse("$baseUrl/mealplanner/generate")
-            .replace(queryParameters: params);
-
-        try {
-          final response = await http.get(uri);
-          if (response.statusCode >= 400) return allPlans;
-          final data = jsonDecode(response.body) as Map<String, dynamic>;
-          allPlans.add(data);
-        } catch (_) {
-          return allPlans;
-        }
-      }
+    if (diet != null) params['diet'] = diet;
+    if (intolerances != null && intolerances.isNotEmpty) {
+      params['intolerances'] = intolerances.join(',');
     }
-  }
-    return allPlans;
-  }
 
-  Future<Map<String, dynamic>?> getRecipeDetails(int recipeId) async {
-    Map<String, String> params = {'apiKey': apiKey};
-    var uri = Uri.parse("$baseUrl/recipes/$recipeId/information")
+    var uri = Uri.parse("$baseUrl/mealplanner/generate")
         .replace(queryParameters: params);
 
     try {
       final response = await http.get(uri);
-      if (response.statusCode >= 400) return null;
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } catch (_) {
+      if (response.statusCode >= 400) {
+        print("Error: ${response.statusCode}");
+        return null;
+      }
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return data;
+    } catch (e) {
+      print("Exception: $e");
       return null;
     }
   }
 }
 
-// Helper function to format HTML instructions
-String formatInstructions(String? rawInstructions) {
-  if (rawInstructions == null || rawInstructions.isEmpty) {
-    return "No instructions available.";
-  }
-
-  String cleaned = rawInstructions
-      .replaceAll(RegExp(r"<[^>]+>"), "")
-      .replaceAll(RegExp(r'\s+'), ' ')
-      .trim();
-
-  return cleaned;
-}
-
 class DietButton extends StatefulWidget {
   const DietButton({super.key});
+
   @override
   State<DietButton> createState() => _DietButtonState();
 }
 
 class _DietButtonState extends State<DietButton> {
-  final String apiKey = "29bbc8b420bf4005a12354619047140f";
   late final SpoonacularDietPlanner planner;
 
-  List<Map<String, dynamic>> dietPlans = [];
+  Map<String, dynamic>? dietPlan;
   bool isLoading = false;
   String error = '';
 
   @override
   void initState() {
     super.initState();
-    planner = SpoonacularDietPlanner(apiKey);
+    planner = SpoonacularDietPlanner();
   }
 
-  Future<void> saveDietPlansToFirestore(List<Map<String, dynamic>> plans) async {
+  Future<void> saveDietPlanToFirestore(Map<String, dynamic> plan) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference dietCollection = firestore.collection('diet_plans');
 
-    for (int i = 0; i < plans.length; i++) {
-      final plan = plans[i];
-      await dietCollection.add({
-        'day': i + 1,
-        'timestamp': Timestamp.now(),
-        'meals': plan['meals'] ?? [],
-        'nutrients': plan['nutrients'] ?? {},
-      });
-    }
+    await dietCollection.doc("today").set({
+      'timestamp': Timestamp.now(),
+      'meals': plan['meals'] ?? [],
+      'nutrients': plan['nutrients'] ?? {},
+    });
   }
 
-  Future<List<Map<String, dynamic>>> loadPlansFromFirestore() async {
+  Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final QuerySnapshot snapshot = await firestore.collection('diet_plans').orderBy('day').get();
+    final DocumentSnapshot snapshot =
+        await firestore.collection('diet_plans').doc("today").get();
 
-    return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    if (snapshot.exists) {
+      return snapshot.data() as Map<String, dynamic>;
+    }
+    return null;
   }
 
   Future<void> fetchPlan() async {
     setState(() {
       isLoading = true;
       error = '';
-      dietPlans.clear();
+      dietPlan = null;
     });
 
     try {
-      final existingPlans = await loadPlansFromFirestore();
+      final existingPlan = await loadPlanFromFirestore();
 
-      if (existingPlans.isNotEmpty) {
-        dietPlans = existingPlans;
+      if (existingPlan != null && flag == 0) {
+        dietPlan = existingPlan;
       } else {
         final result = await planner.getDietPlan(
-          calories: 2000,
-          diet: "vegetarian",
+          calories: calories.text.isNotEmpty ? int.parse(calories.text) : 2000,
+          diet: selectedDiet,
           intolerances: ["gluten", "dairy"],
         );
-
-        if (result.isEmpty) {
+        flag = 0;
+        if (result == null) {
           error = "Failed to fetch data. Check your API key or quota.";
         } else {
-          dietPlans = result;
-          await saveDietPlansToFirestore(dietPlans);
+          dietPlan = result;
+          await saveDietPlanToFirestore(dietPlan!);
         }
       }
     } catch (e) {
@@ -155,45 +136,39 @@ class _DietButtonState extends State<DietButton> {
   }
 
   Widget buildPlan() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: dietPlans.length,
-        itemBuilder: (context, index) {
-          final dayPlan = dietPlans[index];
-          final meals = dayPlan["meals"] ?? [];
-          final nutrients = dayPlan["nutrients"] ?? {};
+    final meals = dietPlan?["meals"] ?? [];
+    final nutrients = dietPlan?["nutrients"] ?? {};
 
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("📅 Day ${index + 1}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  ...meals.map<Widget>((meal) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("🍲 ${meal['title']}"),
-                        Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
-                        Text("🔗 ${meal['sourceUrl']}"),
-                        const SizedBox(height: 6),
-                      ],
-                    );
-                  }).toList(),
-                  const Divider(),
-                  const Text("📊 Nutrition:"),
-                  Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
-                  Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
-                  Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
-                  Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
-                ],
-              ),
-            ),
-          );
-        },
+    return Expanded(
+      child: Card(
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("📅 Today's Meal Plan", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              ...meals.map<Widget>((meal) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("🍲 ${meal['title']}"),
+                    Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
+                    Text("🔗 ${meal['sourceUrl']}"),
+                    const SizedBox(height: 6),
+                  ],
+                );
+              }).toList(),
+              const Divider(),
+              const Text("📊 Nutrition:"),
+              Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
+              Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
+              Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
+              Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -218,8 +193,71 @@ class _DietButtonState extends State<DietButton> {
         child: Column(
           children: [
             const SizedBox(height: 50),
+            // Calories input field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: FormContainerWidget(
+                controller: calories,
+                hintText: "Enter your calories",
+                isPasswordField: false,
+                ),
+            ),
+            const SizedBox(height: 20),
+            // Dropdown for diet selection
+            Text("Select Diet Type", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white70,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  //labelText: "Select Diet",
+                ),
+                value: selectedDiet,
+                items: dietOptions.map((String diet) {
+                  return DropdownMenuItem<String>(
+                    value: diet,
+                    child: Text(diet),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedDiet = newValue!;
+                  });
+                }
+                ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: isLoading ? null : fetchPlan,
+              onPressed: (){
+                if(calories.text.isNotEmpty){
+                  fetchPlan();
+                  flag = 1;
+                }
+                else{
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: const Text("Error"),
+                        content: const Text("Please enter your calories."),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      );
+                    },
+                    );
+                }
+                },
               child: const Text("Get Diet Plan"),
             ),
             if (isLoading)
@@ -232,7 +270,7 @@ class _DietButtonState extends State<DietButton> {
                 padding: const EdgeInsets.all(12.0),
                 child: Text(error, style: const TextStyle(color: Colors.red)),
               ),
-            if (dietPlans.isNotEmpty) buildPlan(),
+            if (dietPlan != null) buildPlan(),
           ],
         ),
       ),
