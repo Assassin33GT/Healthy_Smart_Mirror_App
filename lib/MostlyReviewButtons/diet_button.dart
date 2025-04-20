@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // SpoonacularDietPlanner class here (same as in your Dart-only script)
 class SpoonacularDietPlanner {
@@ -90,27 +90,33 @@ class _DietButtonState extends State<DietButton> {
   List<Map<String, dynamic>> dietPlans = [];
   bool isLoading = false;
   String error = '';
-  
+
   @override
   void initState() {
     super.initState();
     planner = SpoonacularDietPlanner(apiKey);
-    saveDietsPlans();
   }
 
-  Future<void> saveDietsPlans() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('diet_plans', dietPlans.map((plan) => jsonEncode(plan)).toList());
+  Future<void> saveDietPlansToFirestore(List<Map<String, dynamic>> plans) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final CollectionReference dietCollection = firestore.collection('diet_plans');
+
+    for (int i = 0; i < plans.length; i++) {
+      final plan = plans[i];
+      await dietCollection.add({
+        'day': i + 1,
+        'timestamp': Timestamp.now(),
+        'meals': plan['meals'] ?? [],
+        'nutrients': plan['nutrients'] ?? {},
+      });
+    }
   }
 
-  Future<void> loadDietPlans() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List? savedPath = prefs.getStringList('diet_plans');
-  
-    setState(() {
-      //dietPlans = savedPath;
-      print(dietPlans);
-    });
+  Future<List<Map<String, dynamic>>> loadPlansFromFirestore() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final QuerySnapshot snapshot = await firestore.collection('diet_plans').orderBy('day').get();
+
+    return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
 
   Future<void> fetchPlan() async {
@@ -120,18 +126,24 @@ class _DietButtonState extends State<DietButton> {
       dietPlans.clear();
     });
 
-    // user inputs
     try {
-      final result = await planner.getDietPlan(
-        calories: 2000,
-        diet: "vegetarian",
-        intolerances: ["gluten", "dairy"],
-      );
+      final existingPlans = await loadPlansFromFirestore();
 
-      if (result.isEmpty) {
-        error = "Failed to fetch data. Check your API key or quota.";
+      if (existingPlans.isNotEmpty) {
+        dietPlans = existingPlans;
       } else {
-        dietPlans = result;
+        final result = await planner.getDietPlan(
+          calories: 2000,
+          diet: "vegetarian",
+          intolerances: ["gluten", "dairy"],
+        );
+
+        if (result.isEmpty) {
+          error = "Failed to fetch data. Check your API key or quota.";
+        } else {
+          dietPlans = result;
+          await saveDietPlansToFirestore(dietPlans);
+        }
       }
     } catch (e) {
       error = "An error occurred: $e";
@@ -152,14 +164,14 @@ class _DietButtonState extends State<DietButton> {
           final nutrients = dayPlan["nutrients"] ?? {};
 
           return Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("📅 Day ${index + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
+                  Text("📅 Day ${index + 1}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
                   ...meals.map<Widget>((meal) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,12 +179,12 @@ class _DietButtonState extends State<DietButton> {
                         Text("🍲 ${meal['title']}"),
                         Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
                         Text("🔗 ${meal['sourceUrl']}"),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                       ],
                     );
                   }).toList(),
-                  Divider(),
-                  Text("📊 Nutrition:"),
+                  const Divider(),
+                  const Text("📊 Nutrition:"),
                   Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
                   Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
                   Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
@@ -189,7 +201,7 @@ class _DietButtonState extends State<DietButton> {
   @override
   Widget build(context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Meal Plan")),
+      appBar: AppBar(title: const Text("Meal Plan")),
       body: Container(
         width: double.infinity,
         height: double.infinity,
