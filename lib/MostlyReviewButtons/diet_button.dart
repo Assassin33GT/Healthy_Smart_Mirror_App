@@ -6,14 +6,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 TextEditingController calories = TextEditingController();
-String selectedDiet = "vegetarian";
+String selectedDiet = "Vegetarian";
 List<String> dietOptions = [
-  "vegetarian",
-  "vegan",
+  "Gluten Free",
+  "Ketogenic",
+  "Vegetarian",
+  "Ketogenic",
+  "Lacto-Vegetarian",
+  "Ovo-Vegetarian",
+  "Vegan",
+  "Pescetarian",
+  "Paleo",
+  "Primal",
+  "Low FODMAP",
+  "Whole30",
+];
+String selectedIntolerance = "None";
+List<String> selectedIntolerances = [selectedIntolerance];
+List<String> intoleranceOptions = [
+  "Dairy",
+  "Egg",
   "paleo",
-  "keto",
-  "gluten free",
-  "whole30",
+  "Gluten",
+  "Grain",
+  "Peanut",
+  "Seafood",
+  "Sesame",
+  "Shellfish",
+  "Soy",
+  "Sulfite",
+  "Tree Nut",
+  "Wheat",
+  "None",
 ];
 int flag = 0;
 
@@ -100,6 +124,23 @@ class _DietButtonState extends State<DietButton> {
     return null;
   }
 
+  Future<int> fetchSavedPlan() async {
+    final existingPlan = await loadPlanFromFirestore();
+    try { 
+      if (existingPlan != null) {
+        setState(() {
+          dietPlan = existingPlan;
+        });
+        return 1;
+      } else {
+        return 0;
+      }
+    }catch (e) {
+      print("Error loading plan from Firestore: $e");
+      return 0;
+    }
+  }
+
   Future<void> fetchPlan() async {
     setState(() {
       isLoading = true;
@@ -108,15 +149,15 @@ class _DietButtonState extends State<DietButton> {
     });
 
     try {
-      final existingPlan = await loadPlanFromFirestore();
+      //final existingPlan = await loadPlanFromFirestore();
 
-      if (existingPlan != null && flag == 0) {
-        dietPlan = existingPlan;
-      } else {
+      // if (existingPlan != null && flag == 0) {
+      //   dietPlan = existingPlan;
+      // } else {
         final result = await planner.getDietPlan(
           calories: calories.text.isNotEmpty ? int.parse(calories.text) : 2000,
           diet: selectedDiet,
-          intolerances: ["gluten", "dairy"],
+          intolerances: selectedIntolerances,
         );
         flag = 0;
         if (result == null) {
@@ -125,7 +166,7 @@ class _DietButtonState extends State<DietButton> {
           dietPlan = result;
           await saveDietPlanToFirestore(dietPlan!);
         }
-      }
+      // }
     } catch (e) {
       error = "An error occurred: $e";
     }
@@ -138,36 +179,34 @@ class _DietButtonState extends State<DietButton> {
   Widget buildPlan() {
     final meals = dietPlan?["meals"] ?? [];
     final nutrients = dietPlan?["nutrients"] ?? {};
-
-    return Expanded(
-      child: Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("📅 Today's Meal Plan", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              ...meals.map<Widget>((meal) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("🍲 ${meal['title']}"),
-                    Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
-                    Text("🔗 ${meal['sourceUrl']}"),
-                    const SizedBox(height: 6),
-                  ],
-                );
-              }).toList(),
-              const Divider(),
-              const Text("📊 Nutrition:"),
-              Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
-              Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
-              Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
-              Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
-            ],
-          ),
+    
+    return Card(
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("📅 Today's Meal Plan", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            ...meals.map<Widget>((meal) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("🍲 ${meal['title']}"),
+                  Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
+                  Text("🔗 ${meal['sourceUrl']}"),
+                  const SizedBox(height: 6),
+                ],
+              );
+            }).toList(),
+            const Divider(),
+            const Text("📊 Nutrition:"),
+            Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
+            Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
+            Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
+            Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
+          ],
         ),
       ),
     );
@@ -190,88 +229,152 @@ class _DietButtonState extends State<DietButton> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            // Calories input field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: FormContainerWidget(
-                controller: calories,
-                hintText: "Enter your calories",
-                isPasswordField: false,
-                ),
-            ),
-            const SizedBox(height: 20),
-            // Dropdown for diet selection
-            Text("Select Diet Type", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white70,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  //labelText: "Select Diet",
-                ),
-                value: selectedDiet,
-                items: dietOptions.map((String diet) {
-                  return DropdownMenuItem<String>(
-                    value: diet,
-                    child: Text(diet),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedDiet = newValue!;
-                  });
-                }
-                ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: (){
-                if(calories.text.isNotEmpty){
-                  fetchPlan();
-                  flag = 1;
-                }
-                else{
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: const Text("Error"),
-                        content: const Text("Please enter your calories."),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      );
-                    },
-                    );
-                }
-                },
-              child: const Text("Get Diet Plan"),
-            ),
-            if (isLoading)
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(),
-              ),
-            if (error.isNotEmpty)
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 50),
+              // Calories input field
               Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(error, style: const TextStyle(color: Colors.red)),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: FormContainerWidget(
+                  controller: calories,
+                  hintText: "Enter the amount of calories",
+                  isPasswordField: false,
+                  ),
               ),
-            if (dietPlan != null) buildPlan(),
-          ],
+              const SizedBox(height: 20),
+              // Dropdown for diet selection
+              Text("Select Diet Type", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white70,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                    //labelText: "Select Diet",
+                  ),
+                  value: selectedDiet,
+                  items: dietOptions.map((String diet) {
+                    return DropdownMenuItem<String>(
+                      value: diet,
+                      child: Text(diet),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDiet = newValue!;
+                    });
+                  }
+                  ),
+              ),
+              const SizedBox(height: 20),
+              // Dropdown for Intolerance
+              Text("Select Intolerance Type", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white70,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                    //labelText: "Select Diet",
+                  ),
+                  value: selectedIntolerance,
+                  items: intoleranceOptions.map((String intolerance) {
+                    return DropdownMenuItem<String>(
+                      value: intolerance,
+                      child: Text(intolerance),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedIntolerance = newValue!;
+                    });
+                  }
+                  ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async{
+                      int result = await fetchSavedPlan();
+                      if(result == 1){
+                        fetchSavedPlan();
+                      }
+                      else if(result == 0){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: const Text("Error"),
+                              content: const Text("No diet plan found."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                          );
+                      }
+                      },
+                    child: const Text("Show Your Diet Plan"),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){
+                      if(calories.text.isNotEmpty){
+                        flag = 1;
+                        fetchPlan();
+                      }
+                      else{
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: const Text("Error"),
+                              content: const Text("Please enter your calories."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                          );
+                      }
+                      },
+                    child: const Text("Get New Diet Plan"),
+                  ),
+                ],
+              ),
+              if (isLoading)
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: CircularProgressIndicator(),
+                ),
+              if (error.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(error, style: const TextStyle(color: Colors.red)),
+                ),
+              if (dietPlan != null) buildPlan(),
+            ],
+          ),
         ),
       ),
     );
