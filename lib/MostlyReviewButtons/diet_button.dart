@@ -22,7 +22,7 @@ List<String> dietOptions = [
   "Whole30",
 ];
 String selectedIntolerance = "None";
-List<String> selectedIntolerances = [selectedIntolerance];
+List<String> selectedIntolerances = [];
 List<String> intoleranceOptions = [
   "Dairy",
   "Egg",
@@ -154,12 +154,13 @@ class _DietButtonState extends State<DietButton> {
       // if (existingPlan != null && flag == 0) {
       //   dietPlan = existingPlan;
       // } else {
+        // variables
         final result = await planner.getDietPlan(
           calories: calories.text.isNotEmpty ? int.parse(calories.text) : 2000,
           diet: selectedDiet,
-          intolerances: selectedIntolerances,
+          intolerances: selectedIntolerances.isEmpty ? null : selectedIntolerances,
         );
-        flag = 0;
+        
         if (result == null) {
           error = "Failed to fetch data. Check your API key or quota.";
         } else {
@@ -300,14 +301,57 @@ class _DietButtonState extends State<DietButton> {
                   }
                   ),
               ),
+              // print intolerances
+              if(flag == 0)
+              ...selectedIntolerances.map((String intolerance) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(vertical: 1),
+                    child: ListTile(
+                      title: Text(intolerance),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            selectedIntolerances.remove(intolerance);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              const SizedBox(height: 10),   
+              // Button to add Intolerance
+              ElevatedButton(
+                      onPressed: (){
+                        setState(() {
+                          int i;
+                          flag = 0;
+                          for(i = 0;i < selectedIntolerances.length;i++){
+                            print(selectedIntolerances.length);
+                            if(selectedIntolerances[i] == selectedIntolerance)
+                            {break;}
+                          }
+                          if(i == selectedIntolerances.length &&  selectedIntolerance != "None")
+                          {selectedIntolerances.add(selectedIntolerance);}
+                            
+                          print(selectedIntolerances);
+                        });
+                      },
+                      child: Text("Add Intolerance"),
+                      ),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // Get saved diet plan
                   ElevatedButton(
                     onPressed: () async{
                       int result = await fetchSavedPlan();
                       if(result == 1){
+                        flag = 1;
                         fetchSavedPlan();
                       }
                       else if(result == 0){
@@ -330,8 +374,9 @@ class _DietButtonState extends State<DietButton> {
                           );
                       }
                       },
-                    child: const Text("Show Your Diet Plan"),
+                    child: const Text("Show Saved Diet Plan"),
                   ),
+                  // Get new diet plan
                   ElevatedButton(
                     onPressed: (){
                       if(calories.text.isNotEmpty){
