@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                  ),
                  // Name
                  Text(
-                   "Smart Mirror...",
+                   "Smart Mirror",
                    style: TextStyle(
                      color: Colors.white,
                      fontSize: 10,

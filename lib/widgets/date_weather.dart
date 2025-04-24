@@ -15,7 +15,8 @@ class _DateWeatherState extends State<DateWeather> {
   String? _currentDate;
   String? _currentWeather;
   String? _temperature;
-
+  String _cityName = "Loading...";
+  
   final String apiKey = 'e3cb3437d76d3bf7bbb3457583a0c8b9'; // Replace with your actual API key
   final String cityName = 'Cairo'; // Change to any city of your choice
 
@@ -24,6 +25,7 @@ class _DateWeatherState extends State<DateWeather> {
     super.initState();
     _getCurrentDate();
     _fetchWeatherData();
+    _fetchCity();
   }
 
    // Get the current date and format it
@@ -34,6 +36,32 @@ class _DateWeatherState extends State<DateWeather> {
     });
   }
 
+  Future<String> getUserCityByIP() async {
+  final response = await http.get(Uri.parse('http://ip-api.com/json/'));
+  
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data['city'] ?? 'Unknown';
+  } else {
+    throw Exception('Failed to load location data');
+  }
+}
+
+  Future<void> _fetchCity() async {
+  try {
+    String city = await getUserCityByIP();
+    setState(() {
+      _cityName = city;
+    });
+    //await _fetchWeatherData(city);
+  } catch (e) {
+    print("Error fetching city: $e");
+    setState(() {
+      _cityName = "Cairo";
+    });
+    //await _fetchWeatherData("Cairo");
+  }
+}
   Future<void> _fetchWeatherData() async {
   try {
     final response = await http.get(Uri.parse(
@@ -65,10 +93,14 @@ class _DateWeatherState extends State<DateWeather> {
               Text("Date", style: TextStyle(color: Colors.white, fontSize: 15)),
               Padding(
                 padding: const EdgeInsets.only(left: 150.0, right: 8.0),
+                // child: Text (
+                //   "${getCity()}",
+                //   style: TextStyle(color: Colors.white, fontSize: 15),
+                // ),
                 child: Text(
-                  "Cairo",
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                ),
+              _currentDate != null ? '$_cityName' : 'Loading date...',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
               ),
             ],
           ),
