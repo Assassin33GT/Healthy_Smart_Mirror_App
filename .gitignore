@@ -32,7 +32,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/*
-!/build/web  # Allow only Flutter Web build to be tracked
+!/build/web/
 
 # Symbolication related
 app.*.symbols
