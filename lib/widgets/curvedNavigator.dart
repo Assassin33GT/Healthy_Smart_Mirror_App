@@ -89,17 +89,17 @@ class _CurvednavigatorState extends State<Curvednavigator> {
                 });
                 // Handle button tap
                 Future.delayed(Duration(milliseconds: 250),(){
-                if(index == 0){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                }else if(index == 1){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityPage()));
-                }else if(index == 2){
-                  _uploadImage();
-                }else if(index == 3){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
-                }else if(index == 4){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SupportChatPage()));
-                }
+                  if(index == 0){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  }else if(index == 1){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityPage()));
+                  }else if(index == 2){
+                    _uploadImage();
+                  }else if(index == 3){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
+                  }else if(index == 4){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SupportChatPage()));
+                  }
                 });
                }
     );
