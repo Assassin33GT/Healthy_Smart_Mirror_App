@@ -216,6 +216,10 @@ class _HomePageState extends State<HomePage> {
     
   @override
   Widget build(BuildContext context) {
+    
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
           width: double.infinity,
@@ -231,7 +235,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
            child:Padding(
-             padding: const EdgeInsets.only(left:30,right: 10),
+             //padding: const EdgeInsets.only(left:30,right: 10),
+             padding: screenWidth > 400? EdgeInsets.only(left: screenWidth * 0.10) : EdgeInsets.only(left: screenWidth * 0.1),
              child: Column(
                crossAxisAlignment: CrossAxisAlignment.stretch,
                mainAxisAlignment: MainAxisAlignment.center,
@@ -239,17 +244,20 @@ class _HomePageState extends State<HomePage> {
                children: [
                  // Header
                  Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 5),
+                   padding: const EdgeInsets.symmetric(horizontal: 0),
                    child: Row(
                      mainAxisSize: MainAxisSize.max,
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
                        // Logo
-                       Image.asset(
-                         "android/assets/images/smart_mirror.png",
-                         width: 60,
-                         height: 60,
-                         color: Colors.white,
+                       Padding(
+                         padding: const EdgeInsets.only(top:8.0),
+                         child: Image.asset(
+                           "android/assets/images/smart_mirror.png",
+                           width: 60,
+                           height: 60,
+                           color: Colors.white,
+                         ),
                        ),
                        // User Icon
                            Center(
@@ -262,18 +270,16 @@ class _HomePageState extends State<HomePage> {
                    ),
                  ),
                  // Name
-                 Padding(
-                   padding: const EdgeInsets.only(left: 2.0),
-                   child: Text(
-                     "Smart Mirror",
-                     style: TextStyle(
-                       color: Colors.white,
-                       fontSize: 10,
-                       fontWeight: FontWeight.bold,
-                     ),
+                 Text(
+                   "Smart Mirror",
+                   style: TextStyle(
+                     color: Colors.white,
+                     fontSize: 10,
+                     fontWeight: FontWeight.bold,
                    ),
                  ),
-                 const SizedBox(height: 20),
+                 //const SizedBox(height: 20),
+                 SizedBox(height: screenHeight * 0.01),
                  Padding(
                    padding: const EdgeInsets.only(top: 70.0),
                    child: Text(
@@ -289,12 +295,12 @@ class _HomePageState extends State<HomePage> {
                    "6 Tasks still not compeleted!",
                    style: TextStyle(color: Colors.white60, fontSize: 15),
                  ),
-                 const SizedBox(height: 40),
-           
+                 //const SizedBox(height: 40),
+                  SizedBox(height: screenHeight * 0.05),
                  // Date and Weather
                  DateWeather(),
-                 const SizedBox(height: 30),
-           
+                 //const SizedBox(height: 30),
+                  SizedBox(height: screenHeight * 0.04),
                  // Mostly Review
                  Text(
                    "Mostly Review",

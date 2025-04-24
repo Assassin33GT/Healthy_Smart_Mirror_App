@@ -6,14 +6,19 @@ class MostlyReview extends StatelessWidget {
   
   @override
   Widget build(context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Row(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 140,
-              height: 160,
+              //width: 140,
+              //height: 160,
+              width: screenWidth * 0.37,
+              height: screenHeight * 0.2,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(188, 124, 77, 255),
                 borderRadius: BorderRadius.circular(13),
@@ -59,8 +64,10 @@ class MostlyReview extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 13.0),
               child: Container(
-                width: 140,
-                height: 90,
+                //width: 140,
+                //height: 90,
+                width: screenWidth * 0.37,
+                height: screenHeight * 0.1,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(188, 124, 77, 255),
                   borderRadius: BorderRadius.circular(13),
@@ -95,8 +102,10 @@ class MostlyReview extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                width: 140,
-                height: 90,
+                //width: 140,
+                //height: 90,
+                width: screenWidth * 0.37,
+                height: screenHeight * 0.1,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(188, 124, 77, 255),
                   borderRadius: BorderRadius.circular(13),
@@ -124,8 +133,10 @@ class MostlyReview extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 13.0),
                 child: Container(
-                  width: 140,
-                  height: 160,
+                  //width: 140,
+                  //height: 160,
+                  width: screenWidth * 0.37,
+                  height: screenHeight * 0.2,
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(188, 124, 77, 255),
                     borderRadius: BorderRadius.circular(13),
