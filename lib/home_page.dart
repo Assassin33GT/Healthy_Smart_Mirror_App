@@ -6,8 +6,9 @@ import 'package:demo/widgets/curvedNavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
 import 'package:demo/widgets/mostly_review.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,12 +21,14 @@ class _HomePageState extends State<HomePage> {
   String? username;
   String? email;
   String? _imagePath;
+  String? _imageUrl;
 
   @override
   void initState(){
     super.initState();
     getUsername();
-    _loadUserImage();
+    //_loadUserImage();
+    _getImageUrl();
   }
 
   void getUsername(){
@@ -39,14 +42,30 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadUserImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedPath = prefs.getString('user_image');
+  // Future<void> _loadUserImage() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? savedPath = prefs.getString('user_image');
+  //   setState(() {
+  //     _imagePath = savedPath;
+  //     print(_imagePath);
+  //   });
+  // }
 
-    setState(() {
-      _imagePath = savedPath;
-      print(_imagePath);
-    });
+  Future<void> _getImageUrl() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      final imageUrl = await FirebaseStorage.instance
+          .ref('user_images/${user?.uid}.jpg')
+          .getDownloadURL();
+      
+      setState(() {
+        _imageUrl = imageUrl;
+      });
+
+      print('Image URL: $imageUrl');
+    } catch (e) {
+      print("Error retrieving image from Firebase Storage: $e");
+    }
   }
 
   // Profile button
@@ -203,10 +222,11 @@ class _HomePageState extends State<HomePage> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: _imagePath == null
+              child: _imageUrl == null
                 ? Icon(Icons.account_circle_outlined, size: 25)
                 : CircleAvatar(
-                  backgroundImage: FileImage(File(_imagePath!)),
+                  radius: 50,
+                  backgroundImage: Image.network(_imageUrl!).image,
                   ),
             ),
           ),

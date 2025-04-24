@@ -149,14 +149,6 @@ class _ActivityPageState extends State<ActivityPage> {
                         ),),
                   ),
                   Center(
-                    // child: Text(
-                    //       "No Data",
-                    //       style: TextStyle(
-                    //         color: Colors.black,
-                    //         fontWeight: FontWeight.bold,
-                    //         fontSize: 17,
-                    //       ),),
-                    //child: buildPlan(),
                     child: dietPlan != null
                       ? buildPlan()
                       : const Text(
@@ -210,6 +202,7 @@ class _ActivityPageState extends State<ActivityPage> {
                             fontSize: 17,
                           ),),
                   ),
+                  const SizedBox(height: 100,),
                 ],
               ),
             ),

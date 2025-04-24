@@ -98,6 +98,7 @@ class NotificationPage extends StatelessWidget{
                             fontSize: 17,
                           ),),
                   ),
+                  const SizedBox(height: 30,),
                 ],
               ),
             ),
