@@ -45,6 +45,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
         .catchError((e) {
           print('Error sending message: $e');
         });
+
+    // Check if chatId already exists in chats_id collection
     final existing =
         await _firestore
             .collection('chats_id')
