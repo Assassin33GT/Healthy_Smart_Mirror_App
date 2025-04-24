@@ -1,11 +1,112 @@
 import 'package:demo/widgets/curvedNavigator.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ActivityPage extends StatelessWidget{
+class ActivityPage extends StatefulWidget{
   const ActivityPage({super.key});
 
   @override
+  State<ActivityPage> createState() => _ActivityPageState();
+}
+
+class _ActivityPageState extends State<ActivityPage> {
+    Map<String, dynamic>? dietPlan;
+
+    Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentSnapshot snapshot =
+        await firestore.collection('diet_plans').doc("today").get();
+
+    if (snapshot.exists) {
+      return snapshot.data() as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  Future<int> fetchSavedPlan() async {
+    final existingPlan = await loadPlanFromFirestore();
+    try {
+      if (existingPlan != null) {
+        setState(() {
+          dietPlan = existingPlan;
+        });
+        return 1;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print("Error loading plan from Firestore: $e");
+      return 0;
+    }
+  }
+
+  Widget buildPlan() {
+    fetchSavedPlan();
+    final meals = dietPlan?["meals"] ?? [];
+    final nutrients = dietPlan?["nutrients"] ?? {};
+
+    return Card(
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "📅 Today's Meal Plan",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            ...meals.map<Widget>((meal) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("🍲 ${meal['title']}"),
+                  Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
+                  //Text("🔗 ${meal['sourceUrl']}"),
+                  GestureDetector(
+                    onTap: () async {
+                      final Uri url = Uri.parse(meal['sourceUrl']);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        throw 'Could not launch ${meal['sourceUrl']}';
+                      }
+                    },
+                    child: Text(
+                      "🔗 ${meal['sourceUrl']}",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+                ],
+              );
+            }).toList(),
+            const Divider(),
+            const Text("📊 Nutrition:"),
+            Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
+            Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
+            Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
+            Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(context){
+    setState(() {
+      fetchSavedPlan();
+    });
     return Scaffold(
       body: Container(
           width: double.infinity,
@@ -40,7 +141,7 @@ class ActivityPage extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.only(top:8.0, left:8.0),
                     child: Text(
-                        "Skin:",
+                        "Meal:",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -48,20 +149,31 @@ class ActivityPage extends StatelessWidget{
                         ),),
                   ),
                   Center(
-                    child: Text(
+                    // child: Text(
+                    //       "No Data",
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontWeight: FontWeight.bold,
+                    //         fontSize: 17,
+                    //       ),),
+                    //child: buildPlan(),
+                    child: dietPlan != null
+                      ? buildPlan()
+                      : const Text(
                           "No Data",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
-                          ),),
+                          ),
+                        ),
                   ),
                   const SizedBox(height: 30,),
                   Divider(color: Colors.black54,),    
                   Padding(
                     padding: const EdgeInsets.only(top:8.0, left:8.0),
                     child: Text(
-                        "Meals:",
+                        "Skin:",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
