@@ -49,7 +49,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
         await _firestore
             .collection('chats_id')
             .where('chatId', isEqualTo: chatId)
-            .limit(0)
+            .limit(1)
             .get();
 
     // Only add if it doesn't already exist
