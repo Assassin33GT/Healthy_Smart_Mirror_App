@@ -15,37 +15,53 @@ class _SupportChatPageState extends State<SupportChatPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String chatId;
-  
+
   @override
   void initState() {
     super.initState();
     chatId = _auth.currentUser!.uid;
   }
 
-  void sendMessage() async {
-  final user = _auth.currentUser;
-  final message = _messageController.text.trim();
+  void sendMessage(String chatId) async {
+    final user = _auth.currentUser;
+    final message = _messageController.text.trim();
 
-  if (message.isEmpty || user == null) return;
+    if (message.isEmpty || user == null) return;
 
-  print('Sending message from: ${user.uid}');
+    print('Sending message from: ${user.uid}');
 
-  await _firestore
-      .collection('chats')
-      .doc(user.uid)
-      .collection('messages')
-      .add({
-    'text': message,
-    'sender': user.displayName ?? 'Anonymous',
-    'timestamp': FieldValue.serverTimestamp(),
-  }).then((_) {
-    print('Message sent!');
-  }).catchError((e) {
-    print('Error sending message: $e');
-  });
+    await _firestore
+        .collection('chats')
+        .doc(user.uid)
+        .collection('messages')
+        .add({
+          'text': message,
+          'sender': user.displayName ?? 'Anonymous',
+          'timestamp': FieldValue.serverTimestamp(),
+        })
+        .then((_) {
+          print('Message sent!');
+        })
+        .catchError((e) {
+          print('Error sending message: $e');
+        });
+    final existing =
+        await _firestore
+            .collection('chats_id')
+            .where('chatId', isEqualTo: chatId)
+            .limit(1)
+            .get();
 
-  _messageController.clear();
-}
+    // Only add if it doesn't already exist
+    if (existing.docs.isEmpty) {
+      await _firestore.collection('chats_id').add({'chatId': chatId});
+      print('chatId saved to chats_id.');
+    } else {
+      print('chatId already exists. Not saving duplicate.');
+    }
+
+    _messageController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +96,20 @@ class _SupportChatPageState extends State<SupportChatPage> {
               Divider(color: Colors.white60),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: _firestore
-                      .collection('chats')
-                      .doc(chatId)
-                      .collection('messages')
-                      .orderBy('timestamp', descending: true)
-                      .snapshots(),
+                  stream:
+                      _firestore
+                          .collection('chats')
+                          .doc(chatId)
+                          .collection('messages')
+                          .orderBy('timestamp', descending: true)
+                          .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text("Error: ${snapshot.error}"));
-                    } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
                       return Center(child: Text("No messages yet."));
                     }
 
@@ -118,7 +136,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Expanded(
@@ -137,7 +158,9 @@ class _SupportChatPageState extends State<SupportChatPage> {
                     SizedBox(width: 8),
                     IconButton(
                       icon: Icon(Icons.send_outlined, color: Colors.purple),
-                      onPressed: sendMessage,
+                      onPressed: () {
+                        sendMessage(chatId);
+                      },
                     ),
                   ],
                 ),

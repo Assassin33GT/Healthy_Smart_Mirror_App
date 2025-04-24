@@ -3,13 +3,65 @@ import 'package:demo/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+//List<String> chatIds = [];
+
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
 
+  // Fetch all chat IDs where users have sent messages
   Future<List<String>> fetchUserChatIds() async {
-    final chatsSnapshot =
-        await FirebaseFirestore.instance.collection('chats').get();
-    return chatsSnapshot.docs.map((doc) => doc.id).toList();
+    final chat_idSnapshot = await FirebaseFirestore.instance
+        .collection('chats_id') // Collection with all chats
+        .get(); // Fetch all chats
+    print(chat_idSnapshot.docs);
+
+    if (chat_idSnapshot.docs.isNotEmpty) {
+      print("Found chats");
+      print(chat_idSnapshot.docs.length);
+
+      List<String> chatIds = [];
+      for(var chatDoc in chat_idSnapshot.docs){
+        final chatId = chatDoc.data()['chatId'] as String?; // Get chat ID
+        if (chatId != null) {
+          chatIds.add(chatId); // Add to list of chat IDs
+        }
+        print(chatId);
+      }
+
+      List<String> chatIdsWithMessages = [];
+
+      int i = 0;
+      print(chat_idSnapshot.docs);
+      // Loop through each chat document
+      for (var chatDoc in chat_idSnapshot.docs) {
+        final messagesSnapshot = await FirebaseFirestore.instance
+            .collection('chats')
+            .doc(chatIds[i])
+            .collection('messages')
+            .get();  // Fetch all messages in the chat
+        i++;
+        // Check if the chat has any messages
+        if (messagesSnapshot.docs.isNotEmpty) {
+          print("Messages found for chat ${chatDoc.id}");
+          
+          // Loop through the messages and print the content
+          for (var messageDoc in messagesSnapshot.docs) {
+            final messageData = messageDoc.data();
+            // Assuming 'text' is the field name storing the message content
+            print("Message: ${messageData['text']}");  // Replace 'text' if needed
+          }
+
+          chatIdsWithMessages.add(chatDoc.id);  // Add chat ID to the list
+        } else {
+          print("No messages found for chat ${chatDoc.id}");
+        }
+      }
+
+      return chatIdsWithMessages;  // Return all chat IDs that have messages
+    } else {
+      print("No chats found");
+      return [];
+    }
   }
 
   @override
@@ -55,17 +107,17 @@ class AdminHomePage extends StatelessWidget {
             return const Center(child: Text("No messages from users yet."));
           }
 
-          final userIds = snapshot.data!;
+          final chatIds = snapshot.data!;
 
           return ListView.builder(
-            itemCount: userIds.length,
+            itemCount: chatIds.length,
             itemBuilder: (context, index) {
-              final uid = userIds[index];
+              final chatId = chatIds[index];
               return ListTile(
-                title: Text("User ID: $uid"),
+                title: Text("Chat ID: $chatId"),
                 trailing: Icon(Icons.chat_bubble_outline),
                 onTap: () {
-                  // Optional: Navigate to chat view for this user
+                  // Optional: Navigate to chat view for this chat ID
                 },
               );
             },
