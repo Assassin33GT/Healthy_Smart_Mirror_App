@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
                       },
                       child: Text(
-                        "Sign Out",
+                        "Sign Out...",
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.white,

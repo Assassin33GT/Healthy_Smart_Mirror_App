@@ -44484,7 +44484,7 @@ l=A.fP(A.ak("Change name",r,r,r,A.aN(r,r,B.j,r,r,r,r,r,r,r,r,13,r,r,r,r,r,!0,r,r
 k=A.fQ(r,r,B.mB,r,r,r,r,r,r,new A.I(170,30),r,r,r,r,r,r,r,r,r,r,r)
 k=A.eC(A.b([new A.aK(B.Fn,l,r),A.fP(A.ak("Change password",r,r,r,A.aN(r,r,B.j,r,r,r,r,r,r,r,r,13,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),r,r),new A.ar8(a,this.b),k)],j),B.I,B.aA,B.G)
 l=A.fQ(r,r,B.c1,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r)
-return A.cJ(r,A.dg(A.b([q,p,o,n,m,s,k,B.cs,A.fP(A.ak("Sign Out",r,r,r,A.aN(r,r,B.j,r,r,r,r,r,r,r,r,13,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),r,r),new A.ar9(a),l)],j),B.I,B.aA,B.G),B.r,r,r,r,r,1000,r,new A.ao(16,16,16,16),r,r,r)},
+return A.cJ(r,A.dg(A.b([q,p,o,n,m,s,k,B.cs,A.fP(A.ak("Sign Out...",r,r,r,A.aN(r,r,B.j,r,r,r,r,r,r,r,r,13,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),r,r),new A.ar9(a),l)],j),B.I,B.aA,B.G),B.r,r,r,r,r,1000,r,new A.ao(16,16,16,16),r,r,r)},
 $S:267}
 A.ar7.prototype={
 $0(){var s,r,q=$.aI,p=(q==null?$.aI=$.c0():q).c2("[DEFAULT]")
@@ -44814,7 +44814,7 @@ s=3
 return A.v(n.C(0,A.ah(["text",g,"sender",o,"timestamp",new A.pB(l,l)],k,j)).by(new A.ave(),t.P).j9(new A.avf()),$async$p6)
 case 3:l=A.mb(m,m.gdT().eY("chats_id")).as9(0,"chatId",a)
 s=7
-return A.v(A.aB9(l.a,l.b.WA(1)).iN(),$async$p6)
+return A.v(A.aB9(l.a,l.b.WA(0)).iN(),$async$p6)
 case 7:s=c.giu().length===0?4:6
 break
 case 4:s=8
