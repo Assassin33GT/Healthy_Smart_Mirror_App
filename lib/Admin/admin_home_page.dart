@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo/Admin/chat_user.dart';
 import 'package:demo/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-//List<String> chatIds = [];
+List<String> names = [];
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -31,7 +32,7 @@ class AdminHomePage extends StatelessWidget {
       List<String> chatIdsWithMessages = [];
 
       int i = 0;
-      print(chat_idSnapshot.docs);
+      
       // Loop through each chat document
       for (var chatDoc in chat_idSnapshot.docs) {
         final messagesSnapshot = await FirebaseFirestore.instance
@@ -40,20 +41,25 @@ class AdminHomePage extends StatelessWidget {
             .collection('messages')
             .get();  // Fetch all messages in the chat
         i++;
+        print(chat_idSnapshot.docs);
+        names.add(messagesSnapshot.docs[0]['sender']);
         // Check if the chat has any messages
         if (messagesSnapshot.docs.isNotEmpty) {
-          print("Messages found for chat ${chatDoc.id}");
+          print("Messages found for chat ${chatDoc['chatId']}");
           
           // Loop through the messages and print the content
           for (var messageDoc in messagesSnapshot.docs) {
             final messageData = messageDoc.data();
+            // if(){
+            //   names.add(messageData['sender']);
+            // }
             // Assuming 'text' is the field name storing the message content
             print("Message: ${messageData['text']}");  // Replace 'text' if needed
           }
 
-          chatIdsWithMessages.add(chatDoc.id);  // Add chat ID to the list
+          chatIdsWithMessages.add(chatDoc['chatId']);  // Add chat ID to the list
         } else {
-          print("No messages found for chat ${chatDoc.id}");
+          print("No messages found for chat ${chatDoc['chatId']}");
         }
       }
 
@@ -79,6 +85,7 @@ class AdminHomePage extends StatelessWidget {
           ),
         ),
         actions: [
+          const SizedBox(width: 20),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black),
             onPressed: () async {
@@ -108,16 +115,21 @@ class AdminHomePage extends StatelessWidget {
           }
 
           final chatIds = snapshot.data!;
-
+          
           return ListView.builder(
-            itemCount: chatIds.length,
+            itemCount: names.length,
             itemBuilder: (context, index) {
               final chatId = chatIds[index];
               return ListTile(
-                title: Text("Chat ID: $chatId"),
+                title: Text("user: ${names[index]}"),
                 trailing: Icon(Icons.chat_bubble_outline),
                 onTap: () {
-                  // Optional: Navigate to chat view for this chat ID
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatUser(chatId: chatId), // Replace with your chat page
+                    ),
+                  );
                 },
               );
             },
