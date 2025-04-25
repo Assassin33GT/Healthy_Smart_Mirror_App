@@ -6,19 +6,23 @@ import 'package:flutter/material.dart';
 
 List<String> names = [];
 
-class AdminHomePage extends StatelessWidget {
+class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
 
+  @override
+  State<AdminHomePage> createState() => _AdminHomePageState();
+}
+
+class _AdminHomePageState extends State<AdminHomePage> {
   // Fetch all chat IDs where users have sent messages
   Future<List<String>> fetchUserChatIds() async {
     final chat_idSnapshot = await FirebaseFirestore.instance
         .collection('chats_id') // Collection with all chats
         .get(); // Fetch all chats
-    print(chat_idSnapshot.docs);
-
+    //print(chat_idSnapshot.docs);
+    names = [];
+ 
     if (chat_idSnapshot.docs.isNotEmpty) {
-      print("Found chats");
-      print(chat_idSnapshot.docs.length);
 
       List<String> chatIds = [];
       for(var chatDoc in chat_idSnapshot.docs){
@@ -41,21 +45,17 @@ class AdminHomePage extends StatelessWidget {
             .collection('messages')
             .get();  // Fetch all messages in the chat
         i++;
-        print(chat_idSnapshot.docs);
+        //print(chat_idSnapshot.docs);
         names.add(messagesSnapshot.docs[0]['sender']);
         // Check if the chat has any messages
         if (messagesSnapshot.docs.isNotEmpty) {
           print("Messages found for chat ${chatDoc['chatId']}");
           
           // Loop through the messages and print the content
-          for (var messageDoc in messagesSnapshot.docs) {
-            final messageData = messageDoc.data();
-            // if(){
-            //   names.add(messageData['sender']);
-            // }
-            // Assuming 'text' is the field name storing the message content
-            print("Message: ${messageData['text']}");  // Replace 'text' if needed
-          }
+          // for (var messageDoc in messagesSnapshot.docs) {
+          //   final messageData = messageDoc.data();
+          //   print("Message: ${messageData['text']}");  // Replace 'text' if needed
+          // }
 
           chatIdsWithMessages.add(chatDoc['chatId']);  // Add chat ID to the list
         } else {
@@ -76,7 +76,7 @@ class AdminHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Center(
           child: Text(
-            "Admin Home Page",
+            "Admin Page",
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -85,6 +85,16 @@ class AdminHomePage extends StatelessWidget {
           ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.refresh,
+              color: Colors.black,
+              ),
+            onPressed: () async {
+              // Refresh the users
+              await fetchUserChatIds(); 
+            },
+            ),
           const SizedBox(width: 20),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black),
@@ -120,17 +130,24 @@ class AdminHomePage extends StatelessWidget {
             itemCount: names.length,
             itemBuilder: (context, index) {
               final chatId = chatIds[index];
-              return ListTile(
-                title: Text("user: ${names[index]}"),
-                trailing: Icon(Icons.chat_bubble_outline),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatUser(chatId: chatId), // Replace with your chat page
-                    ),
-                  );
-                },
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: ListTile(
+                  title: Text("user: ${names[index]}"),
+                  trailing: Icon(Icons.chat_bubble_outline),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  tileColor: const Color.fromARGB(85, 126, 95, 227),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatUser(chatId: chatId), // Replace with your chat page
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
