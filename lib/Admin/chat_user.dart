@@ -21,37 +21,24 @@ class _ChatUserState extends State<ChatUser> {
 
     if (message.isEmpty || user == null) return;
 
-    print('Sending message from: ${user.uid}');
-
     await _firestore
         .collection('chats')
         .doc(widget.chatId)
         .collection('messages')
         .add({
-          'text': message,
-          'sender': 'admin',
-          'timestamp': FieldValue.serverTimestamp(),
-        })
-        .then((_) {
-          print('Message sent!');
-        })
-        .catchError((e) {
-          print('Error sending message: $e');
-        });
+      'text': message,
+      'sender': 'admin',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
 
-    // Check if chatId already exists in chats_id collection
     final existing = await _firestore
         .collection('chats_id')
         .where('chatId', isEqualTo: widget.chatId)
         .limit(1)
         .get();
 
-    // Only add if it doesn't already exist
     if (existing.docs.isEmpty) {
       await _firestore.collection('chats_id').add({'chatId': widget.chatId});
-      print('chatId saved to chats_id.');
-    } else {
-      print('chatId already exists. Not saving duplicate.');
     }
 
     _messageController.clear();
@@ -73,19 +60,9 @@ class _ChatUserState extends State<ChatUser> {
       ),
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                Colors.white,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+          color: Colors.white,
           child: Column(
             children: [
-              Divider(color: Colors.white60),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: _firestore
@@ -96,11 +73,12 @@ class _ChatUserState extends State<ChatUser> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text("Error: ${snapshot.error}"));
-                    } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(child: Text("No messages yet."));
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text("No messages yet."));
                     }
 
                     final messages = snapshot.data!.docs;
@@ -110,14 +88,39 @@ class _ChatUserState extends State<ChatUser> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final msg = messages[index];
-                        return ListTile(
-                          title: Text(
-                            msg['text'],
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          subtitle: Text(
-                            msg['sender'],
-                            style: TextStyle(color: Colors.black54),
+                        final isAdmin = msg['sender'] == 'admin';
+
+                        return Align(
+                          alignment:
+                              isAdmin ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isAdmin
+                                  ? Colors.purple.shade100
+                                  : Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  msg['text'],
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  msg['sender'],
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -126,7 +129,8 @@ class _ChatUserState extends State<ChatUser> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
                 child: Row(
                   children: [
                     Expanded(
@@ -142,9 +146,10 @@ class _ChatUserState extends State<ChatUser> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     IconButton(
-                      icon: Icon(Icons.send_outlined, color: Colors.purple),
+                      icon: const Icon(Icons.send_outlined,
+                          color: Colors.purple),
                       onPressed: sendMessage,
                     ),
                   ],
