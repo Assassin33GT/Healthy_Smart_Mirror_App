@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: [
                       Text(
-                        "Welcome back!\nGlad to see you, Again!",
+                        "Hello there,\nGlad to see you with us!",
                         style: TextStyle(
                           fontSize: 30,
                           color: Colors.white,

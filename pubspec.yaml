@@ -79,6 +79,7 @@ flutter:
      - android/assets/images/Intro.gif
      - android/assets/images/Intro2.gif
      - android/assets/images/person.jpeg
+     - android/assets/images/admin.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
