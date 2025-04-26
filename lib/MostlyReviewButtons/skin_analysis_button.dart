@@ -9,13 +9,26 @@ class SkinAnalysisButton extends StatefulWidget {
 }
 
 class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
+  XFile? image;
+  int i = 0;
   @override
   Widget build(context) {
-    final ImagePicker _picker = ImagePicker();
-    XFile? image;
+    Future<void> _pickImage() async {
+      final ImagePicker _picker = ImagePicker();
+      final XFile? pickedImage = await _picker.pickImage(
+        source: ImageSource.camera,
+      );
+
+      setState(() {
+        image = pickedImage;
+        i++;
+      });
+
+      print(image?.path);
+    }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Skin Analysis..")),
+      appBar: AppBar(title: const Text("Skin Analysis")),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -51,13 +64,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                     borderRadius: BorderRadius.circular(13),
                   ),
                 ),
-                onPressed: () {
-                  setState(() async{
-                    image = await _picker.pickImage(source: ImageSource.camera);
-                  });
-                  //image = await _picker.pickImage(source: ImageSource.camera);
-                  print(image?.path);
-                },
+                onPressed: _pickImage,
                 child: const Icon(
                   Icons.camera_alt,
                   size: 30,
@@ -65,6 +72,16 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                 ),
               ),
               const SizedBox(height: 40),
+              if (i > 0)
+                Text(
+                  "Image captured successfully!",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              const SizedBox(height: 5),
               image != null
                   ? Row(
                     children: [
@@ -111,6 +128,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                     ],
                   )
                   : const SizedBox(),
+              
             ],
           ),
         ),
