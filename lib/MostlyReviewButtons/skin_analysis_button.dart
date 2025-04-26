@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SkinAnalysisButton extends StatefulWidget{
   const SkinAnalysisButton({super.key});
@@ -25,7 +26,37 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(child: Text("No data")),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 40),
+              Text("Use the camera button to analyze your skin",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(188, 124, 77, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                ),
+                onPressed: () {
+                  //CameraDevice camera = CameraDevice.front;
+                  ImagePicker imagePicker = ImagePicker();
+                  //final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                },
+                child: const Icon(Icons.camera_alt, size: 30, color: Colors.white),
+              ),
+            ],
+          )
+          ),
     ),
       );
   }
