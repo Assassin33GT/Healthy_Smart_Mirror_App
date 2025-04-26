@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                        // User Icon
                            Center(
                              child: Padding(
-                               padding: const EdgeInsets.only(top: 20,left:195),
+                               padding: EdgeInsets.only(top: 25,left: screenWidth * 0.5),
                                child: profileButton(),
                               ),
                            ),
@@ -312,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                    ),
                  ),
                  Text(
-                   "6 Tasks still not compeleted!",
+                   "Hope you are doing well!",
                    style: TextStyle(color: Colors.white60, fontSize: 15),
                  ),
                  //const SizedBox(height: 40),

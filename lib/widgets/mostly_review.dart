@@ -1,9 +1,10 @@
 import 'package:demo/MostlyReviewButtons/diet_button.dart';
+import 'package:demo/MostlyReviewButtons/skin_analysis_button.dart';
 import 'package:flutter/material.dart';
 
 class MostlyReview extends StatelessWidget {
   const MostlyReview({super.key});
-  
+
   @override
   Widget build(context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -30,37 +31,35 @@ class MostlyReview extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                   ),
                 ),
-                onPressed: (){
+                onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const DietButton(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const DietButton()),
                   );
                 },
                 child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      "Diet",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        "Diet",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Plans",
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
-                    ),
-                  ],
+                      Text(
+                        "Plans",
+                        style: TextStyle(color: Colors.white70, fontSize: 15),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-                ), 
-              
+
             Padding(
               padding: const EdgeInsets.only(top: 13.0),
               child: Container(
@@ -123,7 +122,7 @@ class MostlyReview extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "In progress",
+                        "Day",
                         style: TextStyle(color: Colors.white70, fontSize: 15),
                       ),
                     ],
@@ -141,23 +140,42 @@ class MostlyReview extends StatelessWidget {
                     color: const Color.fromARGB(188, 124, 77, 255),
                     borderRadius: BorderRadius.circular(13),
                   ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Skin",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(188, 124, 77, 255),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SkinAnalysisButton(),
+                        ),
+                      );
+                    },
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Skin",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Analysis",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                        ),
-                      ],
+                          Text(
+                            "Analysis",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

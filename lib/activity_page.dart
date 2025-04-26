@@ -141,6 +141,53 @@ class _ActivityPageState extends State<ActivityPage> {
                   Padding(
                     padding: const EdgeInsets.only(top:8.0, left:8.0),
                     child: Text(
+                        "Skin:",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),),
+                  ),
+                  const SizedBox(height: 20,),
+                  Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal:10.0),
+                            child: Card(
+                              //margin: const EdgeInsets.only(left:16),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "🧴 Anti-Wrinkle Skin Care",
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text("1. Gentle Cleanser - Protects skin barrier"),
+                                    Text("2. Antioxidant Serum (Vitamin C) - Fights free radicals"),
+                                    Text("3. Retinol at Night - Boosts collagen"),
+                                    Text("4. Rich Moisturizer - Hydrates deeply"),
+                                    Text("5. Broad-Spectrum Sunscreen - Prevents UV damage"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30,),
+                  Divider(color: Colors.black54,),
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0, left:8.0),
+                    child: Text(
                         "Meal:",
                         style: TextStyle(
                           color: Colors.white,
@@ -148,6 +195,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           fontSize: 25,
                         ),),
                   ),
+                  const SizedBox(height: 20,),
                   Center(
                     child: dietPlan != null
                       ? buildPlan()
@@ -161,27 +209,6 @@ class _ActivityPageState extends State<ActivityPage> {
                         ),
                   ),
                   const SizedBox(height: 30,),
-                  Divider(color: Colors.black54,),    
-                  Padding(
-                    padding: const EdgeInsets.only(top:8.0, left:8.0),
-                    child: Text(
-                        "Skin:",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),),
-                  ),
-                  Center(
-                    child: Text(
-                          "No Data",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),),
-                  ),
-                  const SizedBox(height: 30,),
                   Divider(color: Colors.black54,),
                   Padding(
                     padding: const EdgeInsets.only(top:8.0, left:8.0),
@@ -193,16 +220,36 @@ class _ActivityPageState extends State<ActivityPage> {
                           fontSize: 25,
                         ),),
                   ),
+                  const SizedBox(height: 20,),
                   Center(
-                    child: Text(
-                          "No Data",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            margin: const EdgeInsets.only(left:16),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "✨Stay Hydrated",
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text("Drink at least 8 glasses of water a day."),
+                                  Text("Hydration is key for healthy skin."),
+                                  Text("Aim for 7-9 hours of sleep every night."),
+                                  Text("Sleep repairs skin and boosts immunity."),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 100,),
+                  const SizedBox(height: 50,),
                 ],
               ),
             ),

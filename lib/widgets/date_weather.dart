@@ -84,6 +84,9 @@ class _DateWeatherState extends State<DateWeather> {
 
   @override
   Widget build(context) {
+    //final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
     return Column(
       children: [
         Padding(
@@ -92,7 +95,7 @@ class _DateWeatherState extends State<DateWeather> {
             children: [
               Text("Date", style: TextStyle(color: Colors.white, fontSize: 15)),
               Padding(
-                padding: const EdgeInsets.only(left: 150.0, right: 8.0),
+                padding: EdgeInsets.only(left: screenWidth * 0.4, right: 8.0),
                 // child: Text (
                 //   "${getCity()}",
                 //   style: TextStyle(color: Colors.white, fontSize: 15),
@@ -112,7 +115,7 @@ class _DateWeatherState extends State<DateWeather> {
               style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: EdgeInsets.only(left: screenWidth * 0.2),
               child: Row(
                 children: [
                   // Image.asset(
