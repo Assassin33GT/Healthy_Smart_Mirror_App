@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SkinAnalysisButton extends StatefulWidget{
+class SkinAnalysisButton extends StatefulWidget {
   const SkinAnalysisButton({super.key});
 
   @override
@@ -10,7 +10,10 @@ class SkinAnalysisButton extends StatefulWidget{
 
 class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
   @override
-  Widget build(context){
+  Widget build(context) {
+    final ImagePicker _picker = ImagePicker();
+    XFile? image;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Skin Analysis")),
       body: Container(
@@ -31,7 +34,8 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              Text("Use the camera button to analyze your skin",
+              Text(
+                "Use the camera button to analyze your skin",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -47,17 +51,67 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                     borderRadius: BorderRadius.circular(13),
                   ),
                 ),
-                onPressed: () {
-                  //CameraDevice camera = CameraDevice.front;
-                  ImagePicker imagePicker = ImagePicker();
-                  //final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                onPressed: () async {
+                  image = await _picker.pickImage(source: ImageSource.camera);
+                  print(image?.path);
                 },
-                child: const Icon(Icons.camera_alt, size: 30, color: Colors.white),
+                child: const Icon(
+                  Icons.camera_alt,
+                  size: 30,
+                  color: Colors.white,
+                ),
               ),
+              const SizedBox(height: 40),
+              image != null
+                  ? Row(
+                    children: [
+                      Expanded(
+                        child: Card(
+                          margin: const EdgeInsets.all(12),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    "Result",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Text(
+                                  "Your skin type has been detected as normal with minimal wrinkles.",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 15),
+                                Text(
+                                  "Hydration: 78% | Pores: Slightly Enlarged | Acne: No major breakouts detected",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                  : const SizedBox(),
             ],
-          )
           ),
-    ),
-      );
+        ),
+      ),
+    );
   }
 }
