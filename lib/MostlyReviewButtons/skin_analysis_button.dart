@@ -15,7 +15,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
     XFile? image;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Skin Analysis")),
+      appBar: AppBar(title: const Text("Skin Analysis.")),
       body: Container(
         width: double.infinity,
         height: double.infinity,

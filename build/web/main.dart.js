@@ -44079,7 +44079,7 @@ l=A.Y(m).i("a1<1,aA>")
 B.b.U(g,A.X(new A.a1(m,new A.apx(p),l),!0,l.i("af.E")))}g.push(B.dQ)
 g.push(A.f4(B.VG,new A.apy(p),A.f5(o,o,B.E,o,o,o,o,o,o,o,o,o,o,o,o,o,new A.cf(A.cI(13),B.n),o,o,o,o)))
 g.push(B.bk)
-g.push(A.dS(A.b([A.f4(B.VO,new A.apz(p,a),A.f5(o,o,B.LL,o,o,o,o,o,o,o,o,o,o,o,o,o,new A.cf(A.cI(13),B.n),o,o,o,o)),A.f4(B.VL,new A.apA(p,a),A.f5(o,o,B.j1,o,o,o,o,o,o,o,o,o,o,o,o,o,new A.cf(A.cI(13),B.n),o,o,o,o))],q),B.C,B.k6,B.u))
+g.push(A.dS(A.b([A.f4(B.VP,new A.apz(p,a),A.f5(o,o,B.LL,o,o,o,o,o,o,o,o,o,o,o,o,o,new A.cf(A.cI(13),B.n),o,o,o,o)),A.f4(B.VL,new A.apA(p,a),A.f5(o,o,B.j1,o,o,o,o,o,o,o,o,o,o,o,o,o,new A.cf(A.cI(13),B.n),o,o,o,o))],q),B.C,B.k6,B.u))
 if(p.f)g.push(B.N_)
 m=p.r
 if(m.length!==0)g.push(new A.aA(B.cl,A.a8(m,o,o,o,B.UI,o,o),o))
@@ -44182,7 +44182,7 @@ $0(){if($.az9().a.a.length!==0){$.ay4=1
 this.a.v0()}else A.aLg(new A.apn(),this.b,t.z)},
 $S:0}
 A.apn.prototype={
-$1(a){return A.aDp(A.b([A.akp(B.zY,new A.apk(a),null)],t.p),B.VP,B.zW)},
+$1(a){return A.aDp(A.b([A.akp(B.zY,new A.apk(a),null)],t.p),B.VQ,B.zW)},
 $S:152}
 A.apk.prototype={
 $0(){A.dC(this.a,!1).f5()},
@@ -44192,7 +44192,7 @@ a9(){return new A.XR()}}
 A.XR.prototype={
 L(a){var s,r,q,p=null,o={}
 o.a=null
-s=A.Ka(p,p,B.VQ,p)
+s=A.Ka(p,p,B.VO,p)
 r=A.b([A.aw(255,126,95,227),A.aw(255,60,30,182)],t.c)
 q=A.a8("Use the camera button to analyze your skin",p,p,p,A.aN(p,p,B.j,p,p,p,p,p,p,p,p,18,p,p,B.t,p,p,!0,p,p,p,p,p,p,p,p),B.hW,p)
 o=A.f4(B.GP,new A.av7(o,new A.MT()),A.f5(p,p,B.cH,p,p,p,p,p,p,p,p,p,p,p,p,p,new A.cf(A.cI(13),B.n),p,p,p,p))
@@ -97185,10 +97185,10 @@ B.VJ=new A.dx("No diet plan found.",null,null,null,null,null,null,null,null)
 B.zX=new A.dx("\ud83d\udcc5 Today's Meal Plan",null,B.l1,null,null,null,null,null,null)
 B.VL=new A.dx("Get New Diet Plan",null,B.l2,null,null,null,null,null,null)
 B.VN=new A.dx("\ud83e\uddf4 Anti-Wrinkle Skin Care",null,B.l1,null,null,null,null,null,null)
-B.VO=new A.dx("Show Saved Diet Plan",null,B.l2,null,null,null,null,null,null)
+B.VO=new A.dx("Skin Analysis.",null,null,null,null,null,null,null,null)
+B.VP=new A.dx("Show Saved Diet Plan",null,B.l2,null,null,null,null,null,null)
 B.zY=new A.dx("OK",null,null,null,null,null,null,null,null)
-B.VP=new A.dx("Please enter your calories.",null,null,null,null,null,null,null,null)
-B.VQ=new A.dx("Skin Analysis",null,null,null,null,null,null,null,null)
+B.VQ=new A.dx("Please enter your calories.",null,null,null,null,null,null,null,null)
 B.Zf=new A.al6(0,"system")
 B.My=new A.i(0.056,0.024)
 B.MN=new A.i(0.108,0.3085)
