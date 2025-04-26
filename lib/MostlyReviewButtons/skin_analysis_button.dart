@@ -15,7 +15,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
     XFile? image;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Skin Analysis.")),
+      appBar: AppBar(title: const Text("Skin Analysis..")),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -51,8 +51,11 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                     borderRadius: BorderRadius.circular(13),
                   ),
                 ),
-                onPressed: () async {
-                  image = await _picker.pickImage(source: ImageSource.camera);
+                onPressed: () {
+                  setState(() async{
+                    image = await _picker.pickImage(source: ImageSource.camera);
+                  });
+                  //image = await _picker.pickImage(source: ImageSource.camera);
                   print(image?.path);
                 },
                 child: const Icon(
