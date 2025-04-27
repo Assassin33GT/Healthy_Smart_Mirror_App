@@ -233,21 +233,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(62, 155, 39, 176),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AboutPage()),
-                      );
-                    },
-                    child: Text(
-                      "About",
-                      style: TextStyle(fontSize: 13, color: Colors.white),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(62, 155, 39, 176),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => AboutPage()),
+                  //     );
+                  //   },
+                  //   child: Text(
+                  //     "About",
+                  //     style: TextStyle(fontSize: 13, color: Colors.white),
+                  //   ),
+                  // ),
                 ],
               ),
             );

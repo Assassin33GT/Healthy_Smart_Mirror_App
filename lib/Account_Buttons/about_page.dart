@@ -7,7 +7,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Admin About"),
+        title: const Text("User About"),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         centerTitle: true,
         elevation: 4.0,
@@ -33,15 +33,15 @@ class AboutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                // CircleAvatar for Admin Image
+                // CircleAvatar for User Image
                 CircleAvatar(
                   radius: 60,
-                  backgroundImage: AssetImage('assets/images/admin.jpg'), // Make sure this path is correct
-                  backgroundColor: Colors.transparent,
+                  backgroundImage: AssetImage('android/assets/images/person2.jpg'), // New image path for user
+                  backgroundColor: Colors.white,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Admin Name",
+                  "Joe Johnson",
                   style: TextStyle(
                     fontSize: 28,
                     color: Colors.white,
@@ -51,7 +51,7 @@ class AboutPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Admin Role & Manager",
+                  "Mobile App Designer & Developer",
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white70,
@@ -62,7 +62,7 @@ class AboutPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Text(
-                    "I am the admin responsible for overseeing the project, ensuring things run smoothly, and supporting the development team. My goal is to help facilitate the best possible user experience through collaboration.",
+                    "I am a passionate mobile app designer and developer with a strong focus on creating user-friendly and visually appealing apps. I enjoy crafting seamless user experiences and constantly learning new techniques to improve my designs.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -76,16 +76,16 @@ class AboutPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildPersonaInfo("Name", "Admin Name"),
-                      _buildPersonaInfo("Age", "35"),
-                      _buildPersonaInfo("Gender", "Male"),
-                      _buildPersonaInfo("Location", "City, Country"),
-                      _buildPersonaInfo("Goals", "Oversee project management and ensure smooth collaboration."),
-                      _buildPersonaInfo("Pain Points", "Struggles with balancing multiple teams and priorities."),
-                      _buildPersonaInfo("Personality", "Organized, decisive, collaborative, supportive."),
-                      _buildPersonaInfo("Preferred Platforms", "Web, iOS, Android"),
+                      _buildPersonaInfo("Name", "Sara Johnson"),
+                      _buildPersonaInfo("Age", "27"),
+                      _buildPersonaInfo("Gender", "Female"),
+                      _buildPersonaInfo("Location", "San Francisco, USA"),
+                      _buildPersonaInfo("Goals", "Design intuitive and beautiful user interfaces for mobile apps."),
+                      _buildPersonaInfo("Pain Points", "Finding the right balance between creativity and usability in app design."),
+                      _buildPersonaInfo("Personality", "Creative, detail-oriented, collaborative, proactive."),
+                      _buildPersonaInfo("Preferred Platforms", "Android, iOS, Flutter"),
                       _buildPersonaInfo("Typical Day", 
-                        "Start the day with team meetings, review the progress of ongoing tasks, troubleshoot any issues with the team, and strategize for the next phase of the project."),
+                        "I start my day by checking the latest design trends, followed by working on new UI concepts for ongoing projects. In the afternoon, I participate in team meetings and assist in implementing designs into the app."),
                     ],
                   ),
                 ),
@@ -103,7 +103,7 @@ class AboutPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 50.0),
                   ),
                   child: Text(
-                    "Contact Admin",
+                    "Contact Sara",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
