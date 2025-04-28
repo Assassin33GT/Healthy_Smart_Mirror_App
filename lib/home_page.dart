@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:demo/Account_Buttons/about_page.dart';
+//import 'package:demo/Account_Buttons/about_page.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/login_page.dart';
