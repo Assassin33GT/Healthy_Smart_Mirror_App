@@ -122,23 +122,39 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final msg = messages[index];
-                        return msg['sender'] == "admin"? ListTile(
-                          title: Text(
-                            msg['text'],
-                            style: TextStyle(color: const Color.fromARGB(255, 229, 80, 255)),
-                          ),
-                          subtitle: Text(
-                            msg['sender'],
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ): ListTile(
-                          title: Text(
-                            msg['text'],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            msg['sender'],
-                            style: TextStyle(color: Colors.white70),
+                        final isAdmin = msg['sender'] == 'admin';
+
+                        return Align(
+                          alignment:
+                              isAdmin ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isAdmin
+                                  ? const Color.fromARGB(255, 220, 115, 238)
+                                  : Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  msg['text'],
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  msg['sender'],
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
