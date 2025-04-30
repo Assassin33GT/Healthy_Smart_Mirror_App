@@ -1,4 +1,5 @@
 import 'package:demo/buttons/form_container_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -108,7 +109,7 @@ class _DietButtonState extends State<DietButton> {
       'diet_plans',
     );
 
-    await dietCollection.doc("today").set({
+    await dietCollection.doc(FirebaseAuth.instance.currentUser!.email).set({
       'timestamp': Timestamp.now(),
       'meals': plan['meals'] ?? [],
       'nutrients': plan['nutrients'] ?? {},
@@ -118,7 +119,7 @@ class _DietButtonState extends State<DietButton> {
   Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await firestore.collection('diet_plans').doc("today").get();
+        await firestore.collection('diet_plans').doc(FirebaseAuth.instance.currentUser!.email).get();
 
     if (snapshot.exists) {
       return snapshot.data() as Map<String, dynamic>;
@@ -151,12 +152,6 @@ class _DietButtonState extends State<DietButton> {
     });
 
     try {
-      //final existingPlan = await loadPlanFromFirestore();
-
-      // if (existingPlan != null && flag == 0) {
-      //   dietPlan = existingPlan;
-      // } else {
-      // variables
       final result = await planner.getDietPlan(
         calories: calories.text.isNotEmpty ? int.parse(calories.text) : 2000,
         diet: selectedDiet,

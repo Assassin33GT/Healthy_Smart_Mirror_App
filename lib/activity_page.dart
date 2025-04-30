@@ -1,4 +1,5 @@
 import 'package:demo/widgets/curvedNavigator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,7 +17,7 @@ class _ActivityPageState extends State<ActivityPage> {
     Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await firestore.collection('diet_plans').doc("today").get();
+        await firestore.collection('diet_plans').doc(FirebaseAuth.instance.currentUser!.email).get();
 
     if (snapshot.exists) {
       return snapshot.data() as Map<String, dynamic>;

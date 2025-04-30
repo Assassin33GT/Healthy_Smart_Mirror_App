@@ -134,7 +134,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                                 horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
                               color: isAdmin
-                                  ? const Color.fromARGB(255, 220, 115, 238)
+                                  ? const Color.fromARGB(255, 216, 81, 240)
                                   : Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -150,7 +150,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                                   msg['sender'],
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey.shade600,
+                                    color: const Color.fromARGB(255, 94, 91, 91),
                                   ),
                                 ),
                               ],
@@ -184,7 +184,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                     ),
                     SizedBox(width: 8),
                     IconButton(
-                      icon: Icon(Icons.send_outlined, color: Colors.purple),
+                      icon: Icon(Icons.send_outlined, color: const Color.fromARGB(255, 255, 255, 255)),
                       onPressed: () {
                         sendMessage(chatId);
                       },
