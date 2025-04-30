@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 
 class SkinAnalysisButton extends StatefulWidget {
   const SkinAnalysisButton({super.key});
@@ -12,7 +11,7 @@ class SkinAnalysisButton extends StatefulWidget {
 class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
   XFile? image;
   int i = 0;
-
+  
   // Future<void> classifySkin() async {
   // final interpreter = await Interpreter.fromAsset('skin_model.tflite');
   // var input = image; // Your preprocessing

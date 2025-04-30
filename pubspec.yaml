@@ -49,8 +49,10 @@ dependencies:
   firebase_dynamic_links: ^6.1.5
   geolocator: ^14.0.0
   url_launcher: ^6.3.1
-  tflite_flutter: ^0.11.0
-  image: ^4.5.4
+  image: ^3.0.2
+  #tflite_flutter_helper: ^0.3.1
+  #tflite_flutter: ^0.9.1
+  camera: ^0.9.8+1
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +85,7 @@ flutter:
      - android/assets/images/admin.jpg
      - android/assets/images/person.jpeg
      - android/assets/images/person2.jpg
+     - android/assets/models/skin_condition_classifier_v2_quantized.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

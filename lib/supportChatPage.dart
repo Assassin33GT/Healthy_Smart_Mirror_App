@@ -122,7 +122,16 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final msg = messages[index];
-                        return ListTile(
+                        return msg['sender'] == "admin"? ListTile(
+                          title: Text(
+                            msg['text'],
+                            style: TextStyle(color: const Color.fromARGB(255, 229, 80, 255)),
+                          ),
+                          subtitle: Text(
+                            msg['sender'],
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ): ListTile(
                           title: Text(
                             msg['text'],
                             style: TextStyle(color: Colors.white),
