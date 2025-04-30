@@ -45,6 +45,13 @@ class _CurvednavigatorState extends State<Curvednavigator> {
       User? user = FirebaseAuth.instance.currentUser;
       String userId = user?.uid ?? "anonymous";
       String fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final CollectionReference imageCollection = firestore.collection('user_images',);
+      await imageCollection.add({
+        'userId': userId,
+        'fileName': fileName,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
       final storageRef = FirebaseStorage.instance.ref().child("user_images/$userId/$fileName");
       await storageRef.putFile(file);
       final imageUrl = await storageRef.getDownloadURL();

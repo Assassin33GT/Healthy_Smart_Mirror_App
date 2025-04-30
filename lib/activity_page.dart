@@ -17,7 +17,7 @@ class _ActivityPageState extends State<ActivityPage> {
     Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await firestore.collection('diet_plans').doc(FirebaseAuth.instance.currentUser!.email).get();
+        await firestore.collection('diet_plans').doc(FirebaseAuth.instance.currentUser!.uid).get();
 
     if (snapshot.exists) {
       return snapshot.data() as Map<String, dynamic>;
