@@ -1,5 +1,6 @@
 //import 'package:demo/Account_Buttons/about_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/login_page.dart';
@@ -8,7 +9,7 @@ import 'package:demo/widgets/date_weather.dart';
 import 'package:demo/widgets/mostly_review.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,15 +21,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? username;
   String? email;
-  //String? _imagePath;
-  String? _imageUrl;
+  String? _imagePath;
+  //String? _imageUrl;
 
   @override
   void initState() {
     super.initState();
     getUsername();
-    //_loadUserImage();
-    _getImageUrl();
+    _loadUserImage();
+    //_getImageUrl();
   }
 
   void getUsername() {
@@ -42,39 +43,39 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Future<void> _loadUserImage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? savedPath = prefs.getString('user_image');
-  //   setState(() {
-  //     _imagePath = savedPath;
-  //     print(_imagePath);
-  //   });
-  // }
-
-  Future<void> _getImageUrl() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        DocumentSnapshot snapshot =
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(user.uid)
-                .get();
-
-        if (snapshot.exists) {
-          final data = snapshot.data() as Map<String, dynamic>;
-          final imageUrl = data['profileImageUrl'];
-          if (imageUrl != null) {
-            setState(() {
-              _imageUrl = imageUrl;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("❌ Error fetching image URL: $e");
-    }
+  Future<void> _loadUserImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedPath = prefs.getString('user_image');
+    setState(() {
+      _imagePath = savedPath;
+      print(_imagePath);
+    });
   }
+
+  // Future<void> _getImageUrl() async {
+  //   try {
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       DocumentSnapshot snapshot =
+  //           await FirebaseFirestore.instance
+  //               .collection('users')
+  //               .doc(user.uid)
+  //               .get();
+
+  //       if (snapshot.exists) {
+  //         final data = snapshot.data() as Map<String, dynamic>;
+  //         final imageUrl = data['profileImageUrl'];
+  //         if (imageUrl != null) {
+  //           setState(() {
+  //             _imageUrl = imageUrl;
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("❌ Error fetching image URL: $e");
+  //   }
+  // }
 
   //   Future<void> _getImageUrl() async {
   //   try {
@@ -105,6 +106,7 @@ class _HomePageState extends State<HomePage> {
   //     print("Error retrieving image from Firestore: $e");
   //   }
   // }
+
   // Profile button
   Widget profileButton() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -165,10 +167,12 @@ class _HomePageState extends State<HomePage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child:
-                              _imageUrl != null
+                              _imagePath != null
                                   ? CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: NetworkImage(_imageUrl!),
+                                    backgroundImage: FileImage(
+                                      File(_imagePath!),
+                                    ),
                                   )
                                   : Icon(Icons.account_circle_outlined),
                         ),
@@ -292,11 +296,11 @@ class _HomePageState extends State<HomePage> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child:
-                _imageUrl == null
+                _imagePath == null
                     ? Icon(Icons.account_circle_outlined, size: 25)
                     : CircleAvatar(
                       radius: 50,
-                      backgroundImage: Image.network(_imageUrl!).image,
+                      backgroundImage: FileImage(File(_imagePath!)),
                     ),
           ),
         ),
