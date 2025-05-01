@@ -174,7 +174,10 @@ class _HomePageState extends State<HomePage> {
                                       File(_imagePath!),
                                     ),
                                   )
-                                  : Icon(Icons.account_circle_outlined),
+                                  : Icon(
+                                    Icons.account_circle_outlined,
+                                    size: 70,
+                                  ),
                         ),
                       ),
                     ],
