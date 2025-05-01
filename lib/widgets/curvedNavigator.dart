@@ -20,10 +20,8 @@ class Curvednavigator extends StatefulWidget{
 }
 
 class _CurvednavigatorState extends State<Curvednavigator> {
-  final ImagePicker _picker = ImagePicker();
 
   // Future<void> _openCamera() async {
-
   //   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
   //   if (image != null) {
   //     setState(() {
@@ -37,39 +35,76 @@ class _CurvednavigatorState extends State<Curvednavigator> {
   //   }
   // }
 
-  Future<void> _uploadImage() async {
-  final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-  if (image != null) {
-    File file = File(image.path);
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      String userId = user?.uid ?? "anonymous";
-      String fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final CollectionReference imageCollection = firestore.collection('user_images',);
-      await imageCollection.add({
-        'userId': userId,
-        'fileName': fileName,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      final storageRef = FirebaseStorage.instance.ref().child("user_images/$userId/$fileName");
-      await storageRef.putFile(file);
-      final imageUrl = await storageRef.getDownloadURL();
-      print("Image uploaded to Firebase: $imageUrl");
+//   Future<void> _uploadImage() async {
+//   try {
+//     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+//     if (image != null) {
+//       File file = File(image.path);
 
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({'profileImageUrl': imageUrl}, SetOptions(merge: true));
+//       User? user = FirebaseAuth.instance.currentUser;
+//       if (user == null) return;
 
-        print("✅ Image URL saved to Firestore");
+//       String userId = user.uid;
+//       String fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+//       // Upload to Firebase Storage
+//       final storageRef = FirebaseStorage.instance
+//           .ref()
+//           .child("user_images/$userId/$fileName");
+//       await storageRef.putFile(file);
+//       final imageUrl = await storageRef.getDownloadURL();
+//       print("✅ Image uploaded: $imageUrl");
+
+//       // Save metadata to a subcollection
+//       final firestore = FirebaseFirestore.instance;
+//       await firestore
+//           .collection('user_images')
+//           .doc(userId)
+//           .collection('images')
+//           .add({
+//         'userId': userId,
+//         'fileName': fileName,
+//         'timestamp': FieldValue.serverTimestamp(),
+//       });
+
+//       // Save image URL to user document
+//       await firestore
+//           .collection('users')
+//           .doc(userId)
+//           .set({'profileImageUrl': imageUrl}, SetOptions(merge: true));
+//       print("✅ Image URL saved to Firestore");
+//     }
+//   } catch (e) {
+//     print("❌ Error uploading image: $e");
+//   }
+// }
+
+final ImagePicker _picker = ImagePicker();
+String? imageUrl;
+
+Future<void> _pickAndUploadImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      File imageFile = File(image.path);
+
+      try {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        Reference ref = FirebaseStorage.instance.ref().child('uploads/$fileName.jpg');
+
+        await ref.putFile(imageFile);
+        String downloadURL = await ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadURL;
+        });
+
+        print('Upload successful: $downloadURL');
+      } catch (e) {
+        print('Upload failed: $e');
       }
-    } catch (e) {
-      print("Error uploading image: $e");
     }
   }
-}
 
   @override
   Widget build(context){
@@ -101,7 +136,8 @@ class _CurvednavigatorState extends State<Curvednavigator> {
                   }else if(index == 1){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityPage()));
                   }else if(index == 2){
-                    _uploadImage();
+                    //_uploadImage();
+                    _pickAndUploadImage();
                   }else if(index == 3){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
                   }else if(index == 4){

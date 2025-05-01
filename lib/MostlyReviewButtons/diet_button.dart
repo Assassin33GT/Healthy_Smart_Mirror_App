@@ -119,7 +119,10 @@ class _DietButtonState extends State<DietButton> {
   Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await firestore.collection('diet_plans').doc(FirebaseAuth.instance.currentUser!.uid).get();
+        await firestore
+            .collection('diet_plans')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
 
     if (snapshot.exists) {
       return snapshot.data() as Map<String, dynamic>;
@@ -179,58 +182,216 @@ class _DietButtonState extends State<DietButton> {
     final meals = dietPlan?["meals"] ?? [];
     final nutrients = dietPlan?["nutrients"] ?? {};
 
-    return Card(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
       margin: const EdgeInsets.all(16),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "📅 Today's Meal Plan",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            ...meals.map<Widget>((meal) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.purple.shade300, Colors.purple.shade500],
+                ),
+              ),
+              child: const Row(
                 children: [
-                  Text("🍲 ${meal['title']}"),
-                  Text("⏱️ Ready in: ${meal['readyInMinutes']} mins"),
-                  //Text("🔗 ${meal['sourceUrl']}"),
-                  GestureDetector(
-                    onTap: () async {
-                      final Uri url = Uri.parse(meal['sourceUrl']);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(
-                          url,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      } else {
-                        throw 'Could not launch ${meal['sourceUrl']}';
-                      }
-                    },
-                    child: Text(
-                      "🔗 ${meal['sourceUrl']}",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
+                  Icon(Icons.calendar_today, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    "Today's Meal Plan",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-
-                  const SizedBox(height: 6),
                 ],
-              );
-            }).toList(),
-            const Divider(),
-            const Text("📊 Nutrition:"),
-            Text("Calories: ${nutrients['calories'] ?? 'N/A'}"),
-            Text("Protein: ${nutrients['protein'] ?? 'N/A'}g"),
-            Text("Fat: ${nutrients['fat'] ?? 'N/A'}g"),
-            Text("Carbs: ${nutrients['carbohydrates'] ?? 'N/A'}g"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...meals.asMap().entries.map((entry) {
+                    final meal = entry.value;
+                    return TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: Duration(milliseconds: 500),
+                      builder: (context, double value, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 20.0 * (1 - value)),
+                          child: Opacity(
+                            opacity: value,
+                            child: Card(
+                              elevation: 2,
+                              margin: const EdgeInsets.only(bottom: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.restaurant,
+                                          color: Colors.purple.shade300,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            meal['title'],
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.timer, size: 16),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "${meal['readyInMinutes']} mins",
+                                          style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    InkWell(
+                                      onTap: () async {
+                                        final Uri url = Uri.parse(
+                                          meal['sourceUrl'],
+                                        );
+                                        if (await canLaunchUrl(url)) {
+                                          await launchUrl(
+                                            url,
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.link,
+                                            size: 16,
+                                            color: Colors.blue.shade400,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "View Recipe",
+                                            style: TextStyle(
+                                              color: Colors.blue.shade400,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                  const Divider(height: 32),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.monitor_heart, color: Colors.purple),
+                            SizedBox(width: 8),
+                            Text(
+                              "Nutrition Summary",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _buildNutrientRow(
+                          "Calories",
+                          "${nutrients['calories'] ?? 'N/A'}",
+                          Icons.local_fire_department,
+                        ),
+                        _buildNutrientRow(
+                          "Protein",
+                          "${nutrients['protein'] ?? 'N/A'}g",
+                          Icons.fitness_center,
+                        ),
+                        _buildNutrientRow(
+                          "Fat",
+                          "${nutrients['fat'] ?? 'N/A'}g",
+                          Icons.water_drop,
+                        ),
+                        _buildNutrientRow(
+                          "Carbs",
+                          "${nutrients['carbohydrates'] ?? 'N/A'}g",
+                          Icons.grain,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildNutrientRow(String label, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.purple.shade300),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(fontSize: 16)),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

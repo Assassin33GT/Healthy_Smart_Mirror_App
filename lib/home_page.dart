@@ -1,5 +1,5 @@
-import 'dart:io';
 //import 'package:demo/Account_Buttons/about_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/login_page.dart';
@@ -7,7 +7,6 @@ import 'package:demo/widgets/curvedNavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
 import 'package:demo/widgets/mostly_review.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? username;
   String? email;
-  String? _imagePath;
+  //String? _imagePath;
   String? _imageUrl;
 
   @override
@@ -55,21 +54,57 @@ class _HomePageState extends State<HomePage> {
   Future<void> _getImageUrl() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      final imageUrl =
-          await FirebaseStorage.instance
-              .ref('user_images/${user?.uid}.jpg')
-              .getDownloadURL();
+      if (user != null) {
+        DocumentSnapshot snapshot =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get();
 
-      setState(() {
-        _imageUrl = imageUrl;
-      });
-
-      print('Image URL: $imageUrl');
+        if (snapshot.exists) {
+          final data = snapshot.data() as Map<String, dynamic>;
+          final imageUrl = data['profileImageUrl'];
+          if (imageUrl != null) {
+            setState(() {
+              _imageUrl = imageUrl;
+            });
+          }
+        }
+      }
     } catch (e) {
-      print("Error retrieving image from Firebase Storage: $e");
+      print("❌ Error fetching image URL: $e");
     }
   }
 
+  //   Future<void> _getImageUrl() async {
+  //   try {
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       DocumentSnapshot snapshot = await FirebaseFirestore.instance
+  //           .collection('user_images')
+  //           .doc(user.uid)
+  //           .get();
+  //       print("data:${snapshot.data()}");
+
+  //       if (snapshot.exists) {
+  //         final data = snapshot.data() as Map<String, dynamic>;
+  //         final imageUrl = data['profileImageUrl'];
+  //         print(imageUrl);
+  //         if (imageUrl != null) {
+  //           setState(() {
+  //             _imageUrl = imageUrl;
+  //           });
+
+  //           print('Image URL: $imageUrl');
+  //         } else {
+  //           print("No image URL found in user document.");
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("Error retrieving image from Firestore: $e");
+  //   }
+  // }
   // Profile button
   Widget profileButton() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -130,17 +165,12 @@ class _HomePageState extends State<HomePage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child:
-                              _imagePath == null
-                                  ? Icon(
-                                    Icons.account_circle_outlined,
-                                    size: 60,
-                                  )
-                                  : CircleAvatar(
+                              _imageUrl != null
+                                  ? CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: FileImage(
-                                      File(_imagePath!),
-                                    ),
-                                  ),
+                                    backgroundImage: NetworkImage(_imageUrl!),
+                                  )
+                                  : Icon(Icons.account_circle_outlined),
                         ),
                       ),
                     ],
