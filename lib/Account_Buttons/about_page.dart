@@ -42,7 +42,7 @@ class AboutPage extends StatelessWidget {
                 //   ),
                 // ),
                 const SizedBox(height: 20),
-
+                
                 Container(
                   padding: const EdgeInsets.all(20),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
