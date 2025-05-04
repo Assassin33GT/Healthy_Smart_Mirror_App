@@ -1,4 +1,5 @@
 import 'package:demo/widgets/curvedNavigator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -9,6 +10,35 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    initFirebaseMessaging();
+  }
+
+  void initFirebaseMessaging() {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // Request permission
+  messaging.requestPermission();
+
+  // Get the token
+  messaging.getToken().then((token) {
+    print("FCM Token: $token");
+  });
+
+  // Foreground message handling
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("Foreground notification: ${message.notification?.title}");
+  });
+
+  // App opened from background
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("Opened from notification: ${message.notification?.title}");
+  });
+}
+
   @override
   Widget build(context) {
     return Scaffold(
