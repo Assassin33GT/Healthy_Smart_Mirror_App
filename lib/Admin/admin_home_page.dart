@@ -46,7 +46,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
             .get();  // Fetch all messages in the chat
         i++;
         //print(chat_idSnapshot.docs);
-        names.add(messagesSnapshot.docs[0]['sender']);
+        for(int j = 0;j<messagesSnapshot.docs.length;j++){
+          if(messagesSnapshot.docs[j]['sender'] != 'admin')
+            {
+              names.add(messagesSnapshot.docs[j]['sender']);
+              break;
+            }
+        }
+        
         // Check if the chat has any messages
         if (messagesSnapshot.docs.isNotEmpty) {
           print("Messages found for chat ${chatDoc['chatId']}");
