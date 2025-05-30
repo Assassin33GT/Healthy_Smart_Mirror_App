@@ -115,7 +115,7 @@ class _DateWeatherState extends State<DateWeather> {
               style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: EdgeInsets.only(left: screenWidth * 0.2),
+              padding: _temperature!.length < 5? EdgeInsets.only(left: screenWidth * 0.2) : EdgeInsets.only(left: screenWidth * 0.1),
               child: Row(
                 children: [
                   // Image.asset(
