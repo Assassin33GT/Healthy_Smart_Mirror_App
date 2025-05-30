@@ -152,45 +152,42 @@ class _QRScannerState extends State<QRScanner> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Scan QR Code',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                backgroundColor: Colors.black54,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            if (hasPermission)
-              Center(
-                child: Container(
-                  width: screenWidth * 0.8,
-                  height: screenHeight * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: MobileScanner(
-                    controller: controller,
-                    onDetect: onDetect,
-                    fit: BoxFit.fill,
-                  ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Scan QR Code',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  backgroundColor: Colors.black54,
                 ),
-              )
-            else
-              const Center(child: Text('Waiting for camera permission...')),
-            const SizedBox(height: 20),
-            if (isSending) const Center(child: CircularProgressIndicator()),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Center(
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              if (hasPermission)
+                Center(
+                  child: Container(
+                    width: screenWidth * 0.8,
+                    height: screenHeight * 0.35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: MobileScanner(
+                      controller: controller,
+                      onDetect: onDetect,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                )
+              else
+                const Center(child: Text('Waiting for camera permission...')),
+              const SizedBox(height: 20),
+              if (isSending) const Center(child: CircularProgressIndicator()),
+              Center(
                 child: Text(
                   user == null
                       ? 'Please log in to scan QR codes'
@@ -202,8 +199,8 @@ class _QRScannerState extends State<QRScanner> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Curvednavigator(),
