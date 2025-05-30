@@ -136,6 +136,8 @@ class _QRScannerState extends State<QRScanner> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -150,34 +152,39 @@ class _QRScannerState extends State<QRScanner> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                'Scan QR Code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  backgroundColor: Colors.black54,
-                ),
-                textAlign: TextAlign.center,
+            Text(
+              'Scan QR Code',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                backgroundColor: Colors.black54,
               ),
+              textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 30),
             if (hasPermission)
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: MobileScanner(
-                  controller: controller,
-                  onDetect: onDetect,
-                  fit: BoxFit.contain,
+              Center(
+                child: Container(
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: MobileScanner(
+                    controller: controller,
+                    onDetect: onDetect,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               )
             else
               const Center(child: Text('Waiting for camera permission...')),
+            const SizedBox(height: 20),
             if (isSending) const Center(child: CircularProgressIndicator()),
             Positioned(
               bottom: 20,
