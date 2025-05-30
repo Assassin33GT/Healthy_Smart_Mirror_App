@@ -91,133 +91,131 @@ class _SupportChatPageState extends State<SupportChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(255, 126, 95, 227),
-                Color.fromARGB(255, 60, 30, 182),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 126, 95, 227),
+              Color.fromARGB(255, 60, 30, 182),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 45),
-                child: Center(
-                  child: Text(
-                    "Support",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                    ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 45),
+              child: Center(
+                child: Text(
+                  "Support",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
                   ),
                 ),
               ),
-              Divider(color: Colors.white60),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream:
-                      _firestore
-                          .collection('chats')
-                          .doc(chatId)
-                          .collection('messages')
-                          .orderBy('timestamp', descending: true)
-                          .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
-                    } else if (!snapshot.hasData ||
-                        snapshot.data!.docs.isEmpty) {
-                      return Center(child: Text("No messages yet."));
-                    }
-
-                    final messages = snapshot.data!.docs;
-
-                    return ListView.builder(
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final msg = messages[index];
-                        final isAdmin = msg['sender'] == 'admin';
-                        updateMessage(chatId);
-
-                        return Align(
-                          alignment:
-                              isAdmin ? Alignment.centerRight : Alignment.centerLeft,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: isAdmin
-                                  ? const Color.fromARGB(255, 216, 81, 240)
-                                  : Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  msg['text'],
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  msg['sender'],
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: const Color.fromARGB(255, 94, 91, 91),
-                                  ),
-                                ),
-                              ],
-                            ),
+            ),
+            Divider(color: Colors.white60),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    _firestore
+                        .collection('chats')
+                        .doc(chatId)
+                        .collection('messages')
+                        .orderBy('timestamp', descending: true)
+                        .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text("No messages yet."));
+                  }
+      
+                  final messages = snapshot.data!.docs;
+      
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final msg = messages[index];
+                      final isAdmin = msg['sender'] == 'admin';
+                      updateMessage(chatId);
+      
+                      return Align(
+                        alignment:
+                            isAdmin ? Alignment.centerRight : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isAdmin
+                                ? const Color.fromARGB(255, 216, 81, 240)
+                                : Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                msg['text'],
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                msg['sender'],
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color.fromARGB(255, 94, 91, 91),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: InputDecoration(
-                          hintText: "Enter message...",
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 8,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: "Enter message...",
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),
-                    SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(Icons.send_outlined, color: const Color.fromARGB(255, 255, 255, 255)),
-                      onPressed: () {
-                        sendMessage(chatId);
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(Icons.send_outlined, color: const Color.fromARGB(255, 255, 255, 255)),
+                    onPressed: () {
+                      sendMessage(chatId);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: Curvednavigator(),
