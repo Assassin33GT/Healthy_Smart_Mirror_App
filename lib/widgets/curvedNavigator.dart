@@ -145,7 +145,11 @@ class _CurvednavigatorState extends State<Curvednavigator> {
               MaterialPageRoute(builder: (context) => ActivityPage()),
             );
           } else if (index == 2) {
-            QRScanner();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => QRScanner()),
+              (route) => false,
+            );
             //_openCamera();
           } else if (index == 3) {
             Navigator.push(
