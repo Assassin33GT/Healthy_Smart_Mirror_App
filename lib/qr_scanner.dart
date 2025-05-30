@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ class QRScanner extends StatefulWidget {
 
 class _QRScannnerState extends State<QRScanner> {
   bool isSending = false;
+  User? user = FirebaseAuth.instance.currentUser;
 
   void onDetect(BarcodeCapture capture) async {
     if (isSending) return;
@@ -20,10 +22,13 @@ class _QRScannnerState extends State<QRScanner> {
 
     try {
       final uri = Uri.parse('http://192.168.1.100:5000/userid'); // Pi's IP
-      await http.post(uri, body: {'user_id': code});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sent User ID: $code')),
+      await http.post(
+        uri,
+        body: {'user_id': user?.uid ?? 'unknown', 'data': code},
       );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sent User ID: $code')));
     } catch (e) {
       print('Error sending to Pi: $e');
     } finally {
