@@ -25,11 +25,11 @@ class _QRScannerState extends State<QRScanner> {
   @override
   void initState() {
     super.initState();
+    print('Initializing QRScanner, user: ${user?.uid}');
     controller = MobileScannerController(
-      facing: CameraFacing.back,
+      // facing: CameraFacing.back, // Auto-select camera to avoid issues
       torchEnabled: false,
     );
-    // Delay permission check to ensure context is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndRequestCameraPermission();
     });
@@ -37,10 +37,12 @@ class _QRScannerState extends State<QRScanner> {
 
   Future<void> _checkAndRequestCameraPermission() async {
     final status = await Permission.camera.status;
+    print('Camera permission status: $status');
     if (status.isGranted) {
       setState(() => hasPermission = true);
     } else {
       final result = await Permission.camera.request();
+      print('Camera permission request result: $result');
       if (result.isGranted) {
         setState(() => hasPermission = true);
       } else if (result.isPermanentlyDenied) {
@@ -58,8 +60,12 @@ class _QRScannerState extends State<QRScanner> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Camera permission is required to scan QR codes.'),
+            SnackBar(
+              content: const Text('Camera permission is required to scan QR codes.'),
+              action: SnackBarAction(
+                label: 'Retry',
+                onPressed: _checkAndRequestCameraPermission,
+              ),
             ),
           );
         }
@@ -83,6 +89,7 @@ class _QRScannerState extends State<QRScanner> {
     }
 
     setState(() => isSending = true);
+    print('Sending QR code: $code for user: ${user!.uid}');
 
     try {
       final uri = Uri.parse(serverUrl);
@@ -94,11 +101,12 @@ class _QRScannerState extends State<QRScanner> {
           )
           .timeout(const Duration(seconds: 10));
 
+      print('Server response: ${response.statusCode}');
       if (response.statusCode == 200) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Sent User ID: ${user!.uid}')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sent User ID: ${user!.uid}')),
+          );
         }
       } else {
         if (mounted) {
@@ -130,19 +138,21 @@ class _QRScannerState extends State<QRScanner> {
   void onDetect(BarcodeCapture capture) {
     final code = capture.barcodes.first.rawValue;
     if (code != null) {
+      print('Detected QR code: $code');
       _sendToPi(code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    print('Building QRScanner: hasPermission=$hasPermission, isSending=$isSending');
     final screenWidth = MediaQuery.of(context).size.width;
+    final scannerSize = screenWidth * 0.7; // Square scanner for better UX
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Color.fromARGB(255, 126, 95, 227),
@@ -152,58 +162,75 @@ class _QRScannerState extends State<QRScanner> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Scan QR Code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  backgroundColor: Colors.black54,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-              if (hasPermission)
-                Center(
-                  child: Container(
-                    width: screenWidth * 0.8,
-                    height: screenHeight * 0.35,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: MobileScanner(
-                      controller: controller,
-                      onDetect: onDetect,
-                      fit: BoxFit.fill,
-                    ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Scan QR Code',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    backgroundColor: Colors.black87, // Higher opacity for readability
                   ),
-                )
-              else
-                const Center(child: Text('Waiting for camera permission...')),
-              const SizedBox(height: 20),
-              if (isSending) const Center(child: CircularProgressIndicator()),
-              Center(
-                child: Text(
+                ),
+                const SizedBox(height: 30),
+                if (hasPermission)
+                  Container(
+                    width: scannerSize,
+                    height: scannerSize,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16), // Slightly rounded corners
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: MobileScanner(
+                        controller: controller,
+                        onDetect: onDetect,
+                        fit: BoxFit.cover, // Preserve aspect ratio
+                      ),
+                    ),
+                  )
+                else
+                  Column(
+                    children: [
+                      const Text(
+                        'Waiting for camera permission...',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _checkAndRequestCameraPermission,
+                        child: const Text('Retry Permission'),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 20),
+                if (isSending)
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                const SizedBox(height: 20),
+                Text(
                   user == null
                       ? 'Please log in to scan QR codes'
                       : 'Scan a QR code to send to Magic Mirror',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    backgroundColor: Colors.black54,
+                    backgroundColor: Colors.black87, // Higher opacity
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-      bottomNavigationBar: Curvednavigator(),
+      bottomNavigationBar: const Curvednavigator(),
     );
   }
 }
