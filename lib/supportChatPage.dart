@@ -22,6 +22,29 @@ class _SupportChatPageState extends State<SupportChatPage> {
     chatId = _auth.currentUser!.uid;
   }
 
+  void updateMessage(String chatId) async{
+    final user = _auth.currentUser;
+    final message = _messageController.text.trim();
+    if (message.isEmpty || user == null) return;
+
+    DocumentSnapshot doc = await _firestore
+                              .collection('chats')
+                              .doc(user.uid)
+                              .collection('messages')
+                              .doc(chatId).get();
+    if(doc.exists){
+      if(doc['sender'] != user.displayName || doc['sender'] != 'admin'){
+        await _firestore
+              .collection('chats')
+              .doc(user.uid)
+              .collection('messages')
+              .doc(chatId).update({
+                'sender': user.displayName,
+      });
+      }
+    }
+  }
+
   void sendMessage(String chatId) async {
     final user = _auth.currentUser;
     final message = _messageController.text.trim();
@@ -123,6 +146,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       itemBuilder: (context, index) {
                         final msg = messages[index];
                         final isAdmin = msg['sender'] == 'admin';
+                        updateMessage(chatId);
 
                         return Align(
                           alignment:

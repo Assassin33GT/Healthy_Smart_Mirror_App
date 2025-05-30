@@ -2,6 +2,7 @@
 import 'package:demo/activity_page.dart';
 import 'package:demo/home_page.dart';
 import 'package:demo/notification_page.dart';
+import 'package:demo/qr_scanner.dart';
 import 'package:demo/supportChatPage.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
@@ -144,7 +145,8 @@ class _CurvednavigatorState extends State<Curvednavigator> {
               MaterialPageRoute(builder: (context) => ActivityPage()),
             );
           } else if (index == 2) {
-            _openCamera();
+            QRScanner();
+            //_openCamera();
           } else if (index == 3) {
             Navigator.push(
               context,
