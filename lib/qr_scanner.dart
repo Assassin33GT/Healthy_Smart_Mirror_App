@@ -14,13 +14,16 @@ class QRScanner extends StatefulWidget {
 }
 
 class _QRScannerState extends State<QRScanner> {
+  void closeQRCamera(MobileScannerController controller) async {
+    await controller.stop();
+  }
   bool isSending = false;
   bool hasPermission = false;
   late final MobileScannerController controller;
   User? user = FirebaseAuth.instance.currentUser;
 
   // Configurable server URL (replace with your Raspberry Pi's IP or use mDNS)
-  final String serverUrl = 'http://192.168.1.100:5000/userid';
+  final String serverUrl = 'http://192.168.1.21:5000/userid';
 
   @override
   void initState() {
@@ -143,6 +146,8 @@ class _QRScannerState extends State<QRScanner> {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     print('Building QRScanner: hasPermission=$hasPermission, isSending=$isSending');
@@ -225,6 +230,14 @@ class _QRScannerState extends State<QRScanner> {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => closeQRCamera(controller),
+                  child: Text(
+                    'Close Camera',
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                )
               ],
             ),
           ),
