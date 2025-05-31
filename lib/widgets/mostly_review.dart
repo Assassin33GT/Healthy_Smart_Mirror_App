@@ -16,8 +16,6 @@ class MostlyReview extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              //width: 140,
-              //height: 160,
               width: screenWidth * 0.37,
               height: screenHeight * 0.2,
               decoration: BoxDecoration(

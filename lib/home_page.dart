@@ -219,6 +219,16 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: const Color.fromARGB(198, 155, 39, 176),
                     ),
                     onPressed: () {
+                      changeBackgroundColor();
+                    },
+                    child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                    ),
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -230,20 +240,6 @@ class _HomePageState extends State<HomePage> {
                       "User QR Code",
                       style: TextStyle(fontSize: 13, color: Colors.white),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
-                    ),
-                    onPressed: () {
-                      changeBackgroundColor();
-                    },
-                    child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
-                    // Text(
-                    //   color1 == Colors.black87? "Light Mode" : "Dark Mode",
-                    //   style: TextStyle(fontSize: 13, color: Colors.white),
-                    // ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
