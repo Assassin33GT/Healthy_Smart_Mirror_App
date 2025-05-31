@@ -46050,10 +46050,12 @@ l=p.d
 l=l!=null?l:n
 l=A.aa(l,o,o,o,A.aL(o,o,B.f,o,o,o,o,o,o,o,o,16,o,o,B.w,o,o,!0,o,o,o,o,o,o,o,o),o,o)
 s=p.f
-r=s.length<5?new A.ak(m*0.2,0,0,0):new A.ak(m*0.1,0,0,0)
-s=A.aa(s+"\xb0C",o,o,o,B.XE,o,o)
-q=p.e
-return A.bK(A.b([new A.au(B.Ib,k,o),A.cD(A.b([l,new A.au(r,A.cD(A.b([s,B.Uf,A.aa(q!=null?q:"Loading weather...",o,o,o,B.X7,o,o)],j),B.v,B.u,B.n),o)],j),B.v,B.u,B.n)],j),B.v,B.u,B.n)}}
+r=s!=null
+if(r)q=s.length<5?new A.ak(m*0.2,0,0,0):new A.ak(m*0.1,0,0,0)
+else q=new A.ak(m*0.2,0,0,0)
+s=A.aa(r?s+"\xb0C":"Loading temperature...",o,o,o,B.XE,o,o)
+r=p.e
+return A.bK(A.b([new A.au(B.Ib,k,o),A.cD(A.b([l,new A.au(q,A.cD(A.b([s,B.Uf,A.aa(r!=null?r:"Loading weather...",o,o,o,B.X7,o,o)],j),B.v,B.u,B.n),o)],j),B.v,B.u,B.n)],j),B.v,B.u,B.n)}}
 A.aqS.prototype={
 $0(){this.a.d=A.aSF("yMMMMd").AI(this.b)},
 $S:0}
