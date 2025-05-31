@@ -214,17 +214,19 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
-                    ),
-                    onPressed: () {
-                      changeBackgroundColor();
-                    },
-                    child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                        ),
+                        onPressed: () {
+                          changeBackgroundColor();
+                        },
+                        child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
+                      ),
+                      ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(198, 155, 39, 176),
                     ),
@@ -236,12 +238,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     },
-                    child: Text(
-                      "User QR Code",
-                      style: TextStyle(fontSize: 13, color: Colors.white),
-                    ),
+                    child: const Icon(Icons.qr_code, size: 20, color: Colors.white)
                   ),
-                  const SizedBox(height: 20),
+                    ],
+                  ),                  
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
