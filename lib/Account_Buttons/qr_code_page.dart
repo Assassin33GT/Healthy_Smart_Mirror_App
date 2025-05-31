@@ -1,4 +1,3 @@
-import 'package:demo/widgets/curvedNavigator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -13,6 +12,16 @@ class QRCodePage extends StatelessWidget {
     final uid = user?.uid ?? 'No user signed in';
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'User QR Code',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 126, 95, 227),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -70,7 +79,7 @@ class QRCodePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Curvednavigator(),
+      //bottomNavigationBar: Curvednavigator(),
     );
   }
 }

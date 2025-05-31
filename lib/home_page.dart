@@ -3,8 +3,9 @@ import 'dart:io';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
+import 'package:demo/Account_Buttons/qr_code_page.dart';
 import 'package:demo/login_page.dart';
-import 'package:demo/widgets/curvedNavigator.dart';
+import 'package:demo/widgets/curvednavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
 import 'package:demo/widgets/mostly_review.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -250,6 +251,24 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QRCodePage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "User QR Code",
+                      style: TextStyle(fontSize: 13, color: Colors.white),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(

@@ -1,12 +1,11 @@
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/activity_page.dart';
 import 'package:demo/home_page.dart';
 import 'package:demo/notification_page.dart';
-import 'package:demo/qr_code_page.dart';
-import 'package:demo/qr_scanner.dart';
 import 'package:demo/supportChatPage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 int _index = 0;
   
@@ -19,21 +18,21 @@ class Curvednavigator extends StatefulWidget {
 }
 
 class _CurvednavigatorState extends State<Curvednavigator> {
-  // final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
 
-  // Future<void> _openCamera() async {
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-  //   if (image != null) {
-  //     setState(() {
-  //       _index = 0;
-  //       print(image.path);
-  //     });
-  //     // Save image path
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString('user_image', image.path);
-  //     print("✅ Image path saved: ${image.path}");
-  //   }
-  // }
+  Future<void> _openCamera() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        _index = 0;
+        print(image.path);
+      });
+      // Save image path
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_image', image.path);
+      print("✅ Image path saved: ${image.path}");
+    }
+  }
 
   @override
   Widget build(context) {
@@ -71,12 +70,12 @@ class _CurvednavigatorState extends State<Curvednavigator> {
               MaterialPageRoute(builder: (context) => ActivityPage()),
             );
           } else if (index == 2) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => QRCodePage()),
-              (route) => false,
-            );
-            //_openCamera();
+            // Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => QRCodePage()),
+            //   (route) => false,
+            // );
+            _openCamera();
           } else if (index == 3) {
             Navigator.push(
               context,
