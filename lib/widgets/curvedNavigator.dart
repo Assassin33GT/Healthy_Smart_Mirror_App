@@ -2,6 +2,7 @@
 import 'package:demo/activity_page.dart';
 import 'package:demo/home_page.dart';
 import 'package:demo/notification_page.dart';
+import 'package:demo/qr_code_page.dart';
 import 'package:demo/qr_scanner.dart';
 import 'package:demo/supportChatPage.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _CurvednavigatorState extends State<Curvednavigator> {
           } else if (index == 2) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => QRScanner()),
+              MaterialPageRoute(builder: (context) => QRCodePage()),
               (route) => false,
             );
             //_openCamera();
