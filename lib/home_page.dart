@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 Color color1 = Color.fromARGB(255, 126, 95, 227);
 Color color2 = const Color.fromARGB(255, 60, 30, 182);
 
