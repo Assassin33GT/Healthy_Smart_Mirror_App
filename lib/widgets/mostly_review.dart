@@ -1,5 +1,6 @@
 import 'package:demo/MostlyReviewButtons/diet_button.dart';
 import 'package:demo/MostlyReviewButtons/skin_analysis_button.dart';
+import 'package:demo/control_mirror.dart';
 import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -55,30 +56,38 @@ class MostlyReview extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.only(top: 13.0),
-              child: Container(
-                width: screenWidth * 0.37,
-                height: screenHeight * 0.1,
-                decoration: BoxDecoration(
-                  color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "10",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ControlMirror()),
+                  );
+                },
+                child: Container(
+                  width: screenWidth * 0.37,
+                  height: screenHeight * 0.1,
+                  decoration: BoxDecoration(
+                    color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Mirror",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Ongoing",
-                        style: TextStyle(color: Colors.white70, fontSize: 15),
-                      ),
-                    ],
+                        Text(
+                          "Control",
+                          style: TextStyle(color: Colors.white70, fontSize: 15),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
