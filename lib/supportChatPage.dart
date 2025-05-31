@@ -1,3 +1,4 @@
+import 'package:demo/home_page.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -95,8 +96,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

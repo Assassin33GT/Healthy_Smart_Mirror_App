@@ -1,3 +1,4 @@
+import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -7,7 +8,6 @@ class QRCodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the current user's UID
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid ?? 'No user signed in';
 
@@ -28,8 +28,8 @@ class QRCodePage extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

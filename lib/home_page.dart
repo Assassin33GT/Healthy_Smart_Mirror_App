@@ -12,6 +12,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+Color color1 = Color.fromARGB(255, 126, 95, 227);
+Color color2 = const Color.fromARGB(255, 60, 30, 182);
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -33,6 +37,18 @@ class _HomePageState extends State<HomePage> {
     //_getImageUrl();
   }
 
+  void changeBackgroundColor(){
+    setState(() {
+      if(color1 == Color.fromARGB(255, 126, 95, 227)){
+        color1 = Colors.black87;
+      }else{
+        color1 = Color.fromARGB(255, 126, 95, 227);
+      }
+        
+    });
+  }
+
+
   void getUsername() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -52,61 +68,6 @@ class _HomePageState extends State<HomePage> {
       print(_imagePath);
     });
   }
-
-  // Future<void> _getImageUrl() async {
-  //   try {
-  //     User? user = FirebaseAuth.instance.currentUser;
-  //     if (user != null) {
-  //       DocumentSnapshot snapshot =
-  //           await FirebaseFirestore.instance
-  //               .collection('users')
-  //               .doc(user.uid)
-  //               .get();
-
-  //       if (snapshot.exists) {
-  //         final data = snapshot.data() as Map<String, dynamic>;
-  //         final imageUrl = data['profileImageUrl'];
-  //         if (imageUrl != null) {
-  //           setState(() {
-  //             _imageUrl = imageUrl;
-  //           });
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("❌ Error fetching image URL: $e");
-  //   }
-  // }
-
-  //   Future<void> _getImageUrl() async {
-  //   try {
-  //     User? user = FirebaseAuth.instance.currentUser;
-  //     if (user != null) {
-  //       DocumentSnapshot snapshot = await FirebaseFirestore.instance
-  //           .collection('user_images')
-  //           .doc(user.uid)
-  //           .get();
-  //       print("data:${snapshot.data()}");
-
-  //       if (snapshot.exists) {
-  //         final data = snapshot.data() as Map<String, dynamic>;
-  //         final imageUrl = data['profileImageUrl'];
-  //         print(imageUrl);
-  //         if (imageUrl != null) {
-  //           setState(() {
-  //             _imageUrl = imageUrl;
-  //           });
-
-  //           print('Image URL: $imageUrl');
-  //         } else {
-  //           print("No image URL found in user document.");
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error retrieving image from Firestore: $e");
-  //   }
-  // }
 
   // Profile button
   Widget profileButton() {
@@ -273,6 +234,20 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                    ),
+                    onPressed: () {
+                      changeBackgroundColor();
+                    },
+                    child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
+                    // Text(
+                    //   color1 == Colors.black87? "Light Mode" : "Dark Mode",
+                    //   style: TextStyle(fontSize: 13, color: Colors.white),
+                    // ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
                     onPressed: () {
@@ -342,8 +317,8 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

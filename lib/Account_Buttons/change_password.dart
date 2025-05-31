@@ -1,4 +1,5 @@
 import 'package:demo/buttons/form_container_widget.dart';
+import 'package:demo/home_page.dart';
 import 'package:demo/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,8 +26,8 @@ class _ChangeNameState extends State<ChangePassword> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color.fromARGB(255, 126, 95, 227),
-                Color.fromARGB(255, 60, 30, 182),
+                color1,
+                color2,
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

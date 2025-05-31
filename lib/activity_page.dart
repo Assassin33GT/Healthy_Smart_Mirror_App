@@ -1,3 +1,4 @@
+import 'package:demo/home_page.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -276,8 +277,8 @@ class _ActivityPageState extends State<ActivityPage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
