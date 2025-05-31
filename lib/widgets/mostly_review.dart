@@ -1,5 +1,6 @@
 import 'package:demo/MostlyReviewButtons/diet_button.dart';
 import 'package:demo/MostlyReviewButtons/skin_analysis_button.dart';
+import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 
 class MostlyReview extends StatelessWidget {
@@ -15,26 +16,20 @@ class MostlyReview extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: screenWidth * 0.37,
-              height: screenHeight * 0.2,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(188, 124, 77, 255),
-                borderRadius: BorderRadius.circular(13),
-              ),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(188, 124, 77, 255),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
+            GestureDetector(
+              onTap: (){
+                Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const DietButton()),
+                );
+              },
+              child: Container(
+                width: screenWidth * 0.37,
+                height: screenHeight * 0.2,
+                decoration: BoxDecoration(
+                  color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
+                  borderRadius: BorderRadius.circular(13),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const DietButton()),
-                  );
-                },
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -61,12 +56,10 @@ class MostlyReview extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 13.0),
               child: Container(
-                //width: 140,
-                //height: 90,
                 width: screenWidth * 0.37,
                 height: screenHeight * 0.1,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(188, 124, 77, 255),
+                  color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                   borderRadius: BorderRadius.circular(13),
                 ),
                 child: Center(
@@ -99,13 +92,10 @@ class MostlyReview extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                //width: 140,
-                //height: 90,
                 width: screenWidth * 0.37,
                 height: screenHeight * 0.1,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(188, 124, 77, 255),
-                  borderRadius: BorderRadius.circular(13),
+                  color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                 ),
                 child: Center(
                   child: Column(
@@ -129,30 +119,22 @@ class MostlyReview extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 13.0),
-                child: Container(
-                  //width: 140,
-                  //height: 160,
-                  width: screenWidth * 0.37,
-                  height: screenHeight * 0.2,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(188, 124, 77, 255),
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(188, 124, 77, 255),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(13),
-                      ),
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SkinAnalysisButton(),
+                          ),
+                    );
+                  },
+                  child: Container(
+                    width: screenWidth * 0.37,
+                    height: screenHeight * 0.2,
+                    decoration: BoxDecoration(
+                      color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SkinAnalysisButton(),
-                        ),
-                      );
-                    },
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

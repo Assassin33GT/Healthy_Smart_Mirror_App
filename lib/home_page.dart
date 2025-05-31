@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/Account_Buttons/qr_code_page.dart';
+import 'package:demo/control_mirror.dart';
 import 'package:demo/login_page.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
@@ -241,7 +242,25 @@ class _HomePageState extends State<HomePage> {
                     child: const Icon(Icons.qr_code, size: 20, color: Colors.white)
                   ),
                     ],
-                  ),                  
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ControlMirror(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Control Mirror",
+                      style: TextStyle(fontSize: 13, color: Colors.white),
+                    ),
+                  ),     
                   const SizedBox(height: 40),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
