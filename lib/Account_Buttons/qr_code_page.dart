@@ -20,7 +20,7 @@ class QRCodePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 126, 95, 227),
+        backgroundColor: Colors.white,
       ),
       body: Container(
         width: double.infinity,

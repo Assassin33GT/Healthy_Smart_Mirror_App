@@ -44807,7 +44807,7 @@ s=A.e2(new A.bK(k)).gcH()
 l=s==null
 r=l?n:s.a.c.a.a
 if(r==null)r=m
-q=A.tV(n,A.a3(255,126,95,227),B.a1m,n)
+q=A.tV(n,B.h,B.a1m,n)
 p=A.a([$.eh(),B.bc],t.O)
 o=A.a([A.aa("Scan this QR code by the Raspberry Pi Camera",n,n,n,A.aH(n,n,B.h,n,n,n,n,n,n,n,n,20,n,n,B.w,n,n,!0,n,n,n,n,n,n,n,n),B.di,n),B.aL],t.p)
 l=!l
