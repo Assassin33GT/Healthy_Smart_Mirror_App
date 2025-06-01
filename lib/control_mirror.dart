@@ -15,6 +15,8 @@ class _ControlMirrorState extends State<ControlMirror> {
   );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  double brightnessValue = 100; // Initial brightness value (0-200)
+
   Future<void> sendCommand(
     String action, {
     Map<String, dynamic>? payload,
@@ -48,14 +50,17 @@ class _ControlMirrorState extends State<ControlMirror> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void toggleModule(String moduleName, bool show) {
     final action = show ? "SHOW" : "HIDE";
     sendCommand(action, payload: {"module": moduleName});
+  }
+
+  void toggleAllModules(bool show) {
+    final action = show ? "SHOW" : "HIDE";
+    sendCommand(action, payload: {"module": "all"});
   }
 
   void hideAllQRCodes() {
@@ -76,6 +81,17 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("REFRESH");
   }
 
+  void shutdownMagicMirror() {
+    sendCommand("SHUTDOWN");
+  }
+
+  void adjustBrightness(double value) {
+    setState(() {
+      brightnessValue = value;
+    });
+    sendCommand("BRIGHTNESS", payload: {"value": brightnessValue.toInt()});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,54 +110,131 @@ class _ControlMirrorState extends State<ControlMirror> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: ipController,
-                  decoration: const InputDecoration(
-                    labelText: "Enter Mirror IP Address",
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white70,
-                    filled: true,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text("Enter Mirror IP Address",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: ipController,
+                    decoration: const InputDecoration(
+                      //labelText: "Enter Mirror IP Address",
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.white70,
+                      filled: true,
+                    ),
+                    validator: (value) =>
+                        value == null || value.isEmpty
+                            ? "Please enter an IP address"
+                            : null,
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty
-                          ? "Please enter an IP address"
-                          : null,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => toggleModule("clock", true),
-                  child: const Text("Show Clock"),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => toggleModule("clock", false),
-                  child: const Text("Hide Clock"),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: restartMagicMirror,
-                  child: const Text("Restart Magic Mirror"),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: hideAllQRCodes,
-                  child: const Text("Hide QR Codes"),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: minimizeMagicMirror,
-                  child: const Text("Minimize Magic Mirror"),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: reloadMagicMirror,
-                  child: const Text("Reload Magic Mirror"),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                  Text("hint: you will find it in the buttom left of the mirror screen",
+                      style: TextStyle(fontSize: 14, color: Colors.white70)),
+                  const SizedBox(height: 30),
+
+                  // Module Control Section
+                  const Text(
+                    "Module Controls",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("clock", true),
+                    child: const Text("Show Clock"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("clock", false),
+                    child: const Text("Hide Clock"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("calendar", true),
+                    child: const Text("Show Calendar"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("calendar", false),
+                    child: const Text("Hide Calendar"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("weather", true),
+                    child: const Text("Show Weather"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleModule("weather", false),
+                    child: const Text("Hide Weather"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleAllModules(true),
+                    child: const Text("Show All Modules"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => toggleAllModules(false),
+                    child: const Text("Hide All Modules"),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Brightness Control Section
+                  const Text(
+                    "Brightness Control",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  Slider(
+                    value: brightnessValue,
+                    min: 0,
+                    max: 200,
+                    divisions: 20,
+                    label: brightnessValue.round().toString(),
+                    onChanged: (value) {
+                      adjustBrightness(value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // System Control Section
+                  const Text(
+                    "System Controls",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: restartMagicMirror,
+                    child: const Text("Restart Magic Mirror"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: reloadMagicMirror,
+                    child: const Text("Reload Magic Mirror"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: minimizeMagicMirror,
+                    child: const Text("Minimize Magic Mirror"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: hideAllQRCodes,
+                    child: const Text("Hide QR Codes"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: shutdownMagicMirror,
+                    child: const Text("Shutdown Magic Mirror"),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),
