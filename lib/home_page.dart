@@ -333,7 +333,7 @@ class _HomePageState extends State<HomePage> {
       body: AnimatedContainer(
         width: double.infinity,
         height: double.infinity,
-        duration: const Duration(milliseconds: 3000),
+        duration: const Duration(milliseconds: 2000),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

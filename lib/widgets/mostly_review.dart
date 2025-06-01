@@ -24,9 +24,10 @@ class MostlyReview extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const DietButton()),
                 );
               },
-              child: Container(
+              child: AnimatedContainer(
                 width: screenWidth * 0.37,
                 height: screenHeight * 0.2,
+                duration: const Duration(milliseconds: 2000),
                 decoration: BoxDecoration(
                   color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                   borderRadius: BorderRadius.circular(13),
@@ -63,9 +64,10 @@ class MostlyReview extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const ControlMirror()),
                   );
                 },
-                child: Container(
+                child: AnimatedContainer(
                   width: screenWidth * 0.37,
                   height: screenHeight * 0.1,
+                  duration: const Duration(milliseconds: 2000),
                   decoration: BoxDecoration(
                     color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                     borderRadius: BorderRadius.circular(13),
@@ -100,9 +102,10 @@ class MostlyReview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
+              AnimatedContainer(
                 width: screenWidth * 0.37,
                 height: screenHeight * 0.1,
+                duration: const Duration(milliseconds: 2000),
                 decoration: BoxDecoration(
                   color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                 ),
@@ -137,9 +140,10 @@ class MostlyReview extends StatelessWidget {
                           ),
                     );
                   },
-                  child: Container(
+                  child: AnimatedContainer(
                     width: screenWidth * 0.37,
                     height: screenHeight * 0.2,
+                    duration: const Duration(milliseconds: 2000),
                     decoration: BoxDecoration(
                       color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
                       borderRadius: BorderRadius.circular(13),
