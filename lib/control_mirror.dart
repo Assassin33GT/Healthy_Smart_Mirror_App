@@ -11,7 +11,7 @@ class ControlMirror extends StatefulWidget {
 
 class _ControlMirrorState extends State<ControlMirror> {
   final TextEditingController ipController = TextEditingController(
-    text: '192.168.1.50',
+    text: '192.168.1.1',
   );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -72,12 +72,16 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("RESTART");
   }
 
+  void reloadMagicMirror() {
+    sendCommand("REFRESH");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Magic Mirror Controller"),
-        ),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -102,11 +106,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                     fillColor: Colors.white70,
                     filled: true,
                   ),
-                  validator:
-                      (value) =>
-                          value == null || value.isEmpty
-                              ? "Please enter an IP address"
-                              : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty
+                          ? "Please enter an IP address"
+                          : null,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -132,6 +135,11 @@ class _ControlMirrorState extends State<ControlMirror> {
                 ElevatedButton(
                   onPressed: minimizeMagicMirror,
                   child: const Text("Minimize Magic Mirror"),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: reloadMagicMirror,
+                  child: const Text("Reload Magic Mirror"),
                 ),
               ],
             ),
