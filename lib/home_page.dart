@@ -330,9 +330,10 @@ class _HomePageState extends State<HomePage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
+      body: AnimatedContainer(
         width: double.infinity,
         height: double.infinity,
+        duration: const Duration(milliseconds: 3000),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
