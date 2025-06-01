@@ -115,15 +115,10 @@ class _DateWeatherState extends State<DateWeather> {
               style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: _temperature != null? _temperature!.length < 5? EdgeInsets.only(left: screenWidth * 0.2) : EdgeInsets.only(left: screenWidth * 0.1) : EdgeInsets.only(left: screenWidth * 0.2),
+              padding: _temperature != null? _temperature!.toString().length < 8? EdgeInsets.only(left: screenWidth * 0.2) : EdgeInsets.only(left: screenWidth * 0.1) : EdgeInsets.only(left: screenWidth * 0.2),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // Image.asset(
-                  //   "android/assets/images/weather.png",
-                  //   width: 50,
-                  //   height: 50,
-                  //   color: Colors.white70,
-                  // ),
                   Text(
                   _temperature != null ? '$_temperature°C' : 'Loading temperature...',
                   style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
