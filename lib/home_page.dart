@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 25),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 13, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  //const SizedBox(height: 20),
                   // ElevatedButton(
                   //   style: ElevatedButton.styleFrom(
                   //     backgroundColor: const Color.fromARGB(62, 155, 39, 176),

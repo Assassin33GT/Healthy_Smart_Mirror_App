@@ -63,10 +63,12 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand(action, payload: {"module": "all"});
   }
 
-  void hideAllQRCodes() {
+  void hideMirrorIP() {
     toggleModule("MMM-Remote-Control", false);
-    toggleModule("MMM-QRCode", false);
-    toggleModule("MMM-DynamicQR", false);
+  }
+
+  void showMirrorIP() {
+    toggleModule("MMM-Remote-Control", true);
   }
 
   void minimizeMagicMirror() {
@@ -133,10 +135,26 @@ class _ControlMirrorState extends State<ControlMirror> {
                             : null,
                   ),
                   const SizedBox(height: 10),
-                  Text("hint: you will find it in the buttom left of the mirror screen",
+                  Text("hint: you will find it in the buttom left of the mirror screen (should mirror and phone be connected to the same wifi)",
                       style: TextStyle(fontSize: 14, color: Colors.white70)),
                   const SizedBox(height: 30),
-
+                  // Brightness Control Section
+                  const Text(
+                    "Brightness Control",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  Slider(
+                    value: brightnessValue,
+                    min: 0,
+                    max: 200,
+                    divisions: 20,
+                    label: brightnessValue.round().toString(),
+                    onChanged: (value) {
+                      adjustBrightness(value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   // Module Control Section
                   const Text(
                     "Module Controls",
@@ -174,6 +192,16 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
+                    onPressed: showMirrorIP,
+                    child: const Text("Show Mirror IP"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: hideMirrorIP,
+                    child: const Text("Hide Mirror IP"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
                     onPressed: () => toggleAllModules(true),
                     child: const Text("Show All Modules"),
                   ),
@@ -181,24 +209,6 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ElevatedButton(
                     onPressed: () => toggleAllModules(false),
                     child: const Text("Hide All Modules"),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Brightness Control Section
-                  const Text(
-                    "Brightness Control",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 10),
-                  Slider(
-                    value: brightnessValue,
-                    min: 0,
-                    max: 200,
-                    divisions: 20,
-                    label: brightnessValue.round().toString(),
-                    onChanged: (value) {
-                      adjustBrightness(value);
-                    },
                   ),
                   const SizedBox(height: 20),
 
@@ -221,11 +231,6 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ElevatedButton(
                     onPressed: minimizeMagicMirror,
                     child: const Text("Minimize Magic Mirror"),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: hideAllQRCodes,
-                    child: const Text("Hide QR Codes"),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
