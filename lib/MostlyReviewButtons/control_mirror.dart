@@ -1,5 +1,6 @@
 import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 
 class ControlMirror extends StatefulWidget {
@@ -16,6 +17,7 @@ class _ControlMirrorState extends State<ControlMirror> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   double brightnessValue = 100; // Initial brightness value (0-200)
+  Color _currentColor = Colors.purpleAccent;
 
   Future<void> sendCommand(
     String action, {
@@ -50,7 +52,10 @@ class _ControlMirrorState extends State<ControlMirror> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(milliseconds: 500)));
   }
 
   void toggleModule(String moduleName, bool show) {
@@ -105,12 +110,48 @@ class _ControlMirrorState extends State<ControlMirror> {
   void changeBackgroundColor(String color) {
     sendCommand("CHANGE_BACKGROUND", payload: {"color": color});
   }
+  
+  void _openColorPicker() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pick a Background Color'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: _currentColor,
+            onColorChanged: (color) {
+              setState(() {
+                _currentColor = color;
+              });
+            },
+            
+            pickerAreaHeightPercent: 0.8,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Set'),
+            onPressed: () {
+              changeBackgroundColor('#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}');
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Magic Mirror Controller"),
+        title: const Text("Smart Mirror Controller"),
       ),
       body: Container(
         width: double.infinity,
@@ -266,28 +307,34 @@ class _ControlMirrorState extends State<ControlMirror> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => changeBackgroundColor("red"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: const Text("Set Red Background"),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () => changeBackgroundColor("red"),
+                  //   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  //   child: const Text("Set Red Background"),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // ElevatedButton(
+                  //   onPressed: () => changeBackgroundColor("green"),
+                  //   style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  //   child: const Text("Set Green Background"),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // ElevatedButton(
+                  //   onPressed: () => changeBackgroundColor("blue"),
+                  //   style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  //   child: const Text("Set Blue Background"),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // ElevatedButton(
+                  //   onPressed: () => changeBackgroundColor("black"),
+                  //   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                  //   child: const Text("Set Black Background", style: TextStyle(color: Colors.white)),
+                  // ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () => changeBackgroundColor("green"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: const Text("Set Green Background"),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => changeBackgroundColor("blue"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text("Set Blue Background"),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => changeBackgroundColor("black"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text("Set Black Background", style: TextStyle(color: Colors.white)),
+                    onPressed: _openColorPicker,
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                    child: const Text("Pick Background Color"),
                   ),
                   const SizedBox(height: 30),
                 ],

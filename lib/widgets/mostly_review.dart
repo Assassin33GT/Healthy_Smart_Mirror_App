@@ -108,6 +108,7 @@ class MostlyReview extends StatelessWidget {
                 duration: const Duration(milliseconds: 2000),
                 decoration: BoxDecoration(
                   color: color1 == Color.fromARGB(255, 126, 95, 227) ? Color.fromARGB(188, 124, 77, 255) : const Color.fromARGB(112, 101, 63, 207),
+                  borderRadius: BorderRadius.circular(13),
                 ),
                 child: Center(
                   child: Column(
