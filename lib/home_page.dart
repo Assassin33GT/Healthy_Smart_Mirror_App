@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({
-          'username': username,
+          'userName': username,
         });
   }
 
