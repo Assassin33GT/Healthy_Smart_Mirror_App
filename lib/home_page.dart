@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     getUsername();
     _loadUserImage();
     saveUserName();
+    _loadSavedColors();
   }
 
   void saveUserName() async {
@@ -46,15 +47,16 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  void changeBackgroundColor(){
+  void changeBackgroundColor() async{
     setState(() {
       if(color1 == Color.fromARGB(255, 126, 95, 227)){
         color1 = Colors.black87;
       }else{
         color1 = Color.fromARGB(255, 126, 95, 227);
       }
-        
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('color1', color1.toString());
   }
 
 
@@ -74,6 +76,17 @@ class _HomePageState extends State<HomePage> {
     String? savedPath = prefs.getString('user_image');
     setState(() {
       _imagePath = savedPath;
+      print(_imagePath);
+    });
+  }
+
+  Future<void> _loadSavedColors() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedColor1 = prefs.getString('color1');
+    setState(() {
+      if (savedColor1 == Colors.black87.toString()) {
+        color1 = Colors.black87;
+      }
       print(_imagePath);
     });
   }

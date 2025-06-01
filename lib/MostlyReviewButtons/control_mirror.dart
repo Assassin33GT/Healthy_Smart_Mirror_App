@@ -102,6 +102,10 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("BRIGHTNESS", payload: {"value": brightnessValue.toInt()});
   }
 
+  void changeBackgroundColor(String color) {
+    sendCommand("CHANGE_BACKGROUND", payload: {"color": color});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,8 +136,9 @@ class _ControlMirrorState extends State<ControlMirror> {
                   TextFormField(
                     controller: ipController,
                     decoration: const InputDecoration(
-                      //labelText: "Enter Mirror IP Address",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
                       fillColor: Colors.white70,
                       filled: true,
                     ),
@@ -143,7 +148,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                             : null,
                   ),
                   const SizedBox(height: 10),
-                  Text("hint: you will find it in the buttom left of the mirror screen (should mirror and phone be connected to the same wifi)",
+                  Text("hint: you will find it in the buttom left of the mirror screen (should mirror and phone be connected to the same wifi!)",
                       style: TextStyle(fontSize: 14, color: Colors.white70)),
                   const SizedBox(height: 30),
                   // Brightness Control Section
@@ -254,6 +259,35 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ElevatedButton(
                     onPressed: shutdownMagicMirror,
                     child: const Text("Shutdown Magic Mirror"),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Background Color Control",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => changeBackgroundColor("red"),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text("Set Red Background"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => changeBackgroundColor("green"),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    child: const Text("Set Green Background"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => changeBackgroundColor("blue"),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    child: const Text("Set Blue Background"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => changeBackgroundColor("black"),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                    child: const Text("Set Black Background", style: TextStyle(color: Colors.white)),
                   ),
                   const SizedBox(height: 30),
                 ],

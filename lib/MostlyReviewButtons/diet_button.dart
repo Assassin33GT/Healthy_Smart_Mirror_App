@@ -1,4 +1,5 @@
 import 'package:demo/buttons/form_container_widget.dart';
+import 'package:demo/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -403,11 +404,11 @@ class _DietButtonState extends State<DietButton> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

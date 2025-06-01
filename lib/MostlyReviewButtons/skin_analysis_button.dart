@@ -1,3 +1,4 @@
+import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -44,8 +45,8 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 126, 95, 227),
-              Color.fromARGB(255, 60, 30, 182),
+              color1,
+              color2,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
