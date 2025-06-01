@@ -1,6 +1,6 @@
 import 'package:demo/MostlyReviewButtons/diet_button.dart';
 import 'package:demo/MostlyReviewButtons/skin_analysis_button.dart';
-import 'package:demo/control_mirror.dart';
+import 'package:demo/MostlyReviewButtons/control_mirror.dart';
 import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 

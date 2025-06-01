@@ -71,6 +71,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     toggleModule("MMM-Remote-Control", true);
   }
 
+  void hideDietMeals() {
+    toggleModule("MMM-FirebaseBridge", false);
+  }
+
+  void showDietMeals() {
+    toggleModule("MMM-FirebaseBridge", true);
+  }
+
   void minimizeMagicMirror() {
     sendCommand("MINIMIZE");
   }
@@ -199,6 +207,16 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ElevatedButton(
                     onPressed: hideMirrorIP,
                     child: const Text("Hide Mirror IP"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: showDietMeals,
+                    child: const Text("Show Diets Meals"),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: hideDietMeals,
+                    child: const Text("Hide Diets Meals"),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
