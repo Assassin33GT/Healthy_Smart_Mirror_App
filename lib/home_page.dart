@@ -1,6 +1,7 @@
 //import 'package:demo/Account_Buttons/about_page.dart';
 import 'dart:io';
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/Account_Buttons/qr_code_page.dart';
@@ -26,14 +27,23 @@ class _HomePageState extends State<HomePage> {
   String? username;
   String? email;
   String? _imagePath;
-  //String? _imageUrl;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
     getUsername();
     _loadUserImage();
-    //_getImageUrl();
+    saveUserName();
+  }
+
+  void saveUserName() async {
+    await _firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+          'username': username,
+        });
   }
 
   void changeBackgroundColor(){
