@@ -1,4 +1,3 @@
-import 'package:demo/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -20,7 +19,7 @@ class QRCodePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
       ),
       body: Container(
         width: double.infinity,
@@ -44,7 +43,7 @@ class QRCodePage extends StatelessWidget {
                 "Scan this QR code by the Raspberry Pi Camera",
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -66,14 +65,17 @@ class QRCodePage extends StatelessWidget {
               else
                 const Text(
                   'Please sign in to view your QR code',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    ),
                 ),
               const SizedBox(height: 20),
               Text(
                 user != null ? 'User UID: $uid' : 'No user signed in',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.white
+                  color: Colors.black
                   ),
               ),
             ],
