@@ -34,7 +34,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
 
   @override
   Widget build(context) {
-    List<int> numbers = [1, 2, 3, 4, 5];
+    List<int> numbers = [5, 4, 3, 2, 1];
     return Scaffold(
       appBar: AppBar(title: const Text("Skin Analysis")),
       body: Container(
