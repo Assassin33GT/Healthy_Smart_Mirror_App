@@ -84,7 +84,6 @@ class _DateWeatherState extends State<DateWeather> {
 
   @override
   Widget build(context) {
-    //final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     
     return Column(
@@ -101,8 +100,8 @@ class _DateWeatherState extends State<DateWeather> {
                 //   style: TextStyle(color: Colors.white, fontSize: 15),
                 // ),
                 child: Text(
-              _currentDate != null ? '$_cityName' : 'Loading date...',
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              _currentDate != null ? '$_cityName' : 'Loading City...',
+              style: TextStyle(color: Colors.white, fontSize: 16,),
             ),
               ),
             ],
@@ -115,7 +114,7 @@ class _DateWeatherState extends State<DateWeather> {
               style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: _temperature != null? _temperature!.toString().length < 5? EdgeInsets.only(left: screenWidth * 0.2) : EdgeInsets.only(left: screenWidth * 0.1) : EdgeInsets.only(left: screenWidth * 0.2),
+              padding: EdgeInsets.only(left: screenWidth * 0.2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -124,9 +123,16 @@ class _DateWeatherState extends State<DateWeather> {
                   style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    _currentWeather != null ? '$_currentWeather' : 'Loading weather...',
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: screenWidth * 0.25,
+                        child: Text(
+                          _currentWeather != null ? '$_currentWeather' : 'Loading weather...',
+                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
