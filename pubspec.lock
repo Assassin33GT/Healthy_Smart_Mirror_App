@@ -440,6 +440,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  icons_flutter:
+    dependency: "direct main"
+    description:
+      name: icons_flutter
+      sha256: "51e9a1b4a1952c952ccba0c50e338f8b3a542e10535a856fe10bf378971114a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   image:
     dependency: "direct main"
     description:
