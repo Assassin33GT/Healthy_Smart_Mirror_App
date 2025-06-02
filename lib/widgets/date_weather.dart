@@ -119,7 +119,7 @@ class _DateWeatherState extends State<DateWeather> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                  _temperature != null ? '$_temperature°C' : 'Loading temperature...',
+                  _temperature != null ? '$_temperature°C' : 'Loading tem',
                   style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 10),
@@ -128,7 +128,7 @@ class _DateWeatherState extends State<DateWeather> {
                       SizedBox(
                         width: screenWidth * 0.25,
                         child: Text(
-                          _currentWeather != null ? '$_currentWeather' : 'Loading weather...',
+                          _currentWeather != null ? '$_currentWeather' : 'Loading weather',
                           style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),

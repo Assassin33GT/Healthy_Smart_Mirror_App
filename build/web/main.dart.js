@@ -46344,9 +46344,9 @@ n=q.d
 n=n!=null?n:"Loading date..."
 n=A.aa(n,p,p,p,A.aH(p,p,B.h,p,p,p,p,p,p,p,p,16,p,p,B.w,p,p,!0,p,p,p,p,p,p,p,p),p,p)
 s=q.f
-s=A.aa(s!=null?s+"\xb0C":"Loading temperature...",p,p,p,B.a_G,p,p)
+s=A.aa(s!=null?s+"\xb0C":"Loading tem",p,p,p,B.a_G,p,p)
 r=q.e
-return A.br(A.a([new A.ar(B.I4,m,p),A.bQ(A.a([n,new A.ar(new A.an(o*0.2,0,0,0),A.bQ(A.a([s,B.lT,A.br(A.a([A.c8(A.aa(r!=null?r:"Loading weather...",p,p,p,B.a_a,p,p),p,o*0.25)],l),B.n,B.q,B.m)],l),B.n,B.fg,B.m),p)],l),B.n,B.q,B.m)],l),B.n,B.q,B.m)}}
+return A.br(A.a([new A.ar(B.I4,m,p),A.bQ(A.a([n,new A.ar(new A.an(o*0.2,0,0,0),A.bQ(A.a([s,B.lT,A.br(A.a([A.c8(A.aa(r!=null?r:"Loading weather",p,p,p,B.a_a,p,p),p,o*0.25)],l),B.n,B.q,B.m)],l),B.n,B.fg,B.m),p)],l),B.n,B.q,B.m)],l),B.n,B.q,B.m)}}
 A.asa.prototype={
 $0(){this.a.d=A.aTJ("yMMMMd").B9(this.b)},
 $S:0}
