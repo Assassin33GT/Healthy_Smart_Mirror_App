@@ -71,6 +71,10 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand(action, payload: {"module": "all"});
   }
 
+  void refreshModule(String moduleName) {
+    sendCommand("REFRESH_MODULE", payload: {"module": moduleName});
+  }
+
   void hideMirrorIP() {
     toggleModule("MMM-Remote-Control", false);
   }
@@ -278,6 +282,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                         onPressed: () => toggleModule("clock", false),
                         child: const Icon(Icons.timer_off_outlined),
                       ),
+                      ElevatedButton(
+                        onPressed: () => refreshModule("clock"),
+                        child: const Icon(Icons.refresh),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -295,6 +303,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           Icons.signal_cellular_no_sim_outlined,
                         ),
                       ),
+                      ElevatedButton(
+                        onPressed: () => refreshModule("calendar"),
+                        child: const Icon(Icons.refresh),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -309,6 +321,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ElevatedButton(
                         onPressed: () => toggleModule("weather", false),
                         child: const Icon(Icons.cloud_off_outlined),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => refreshModule("weather"),
+                        child: const Icon(Icons.refresh),
                       ),
                     ],
                   ),
@@ -325,6 +341,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                         onPressed: hideMirrorIP,
                         child: const Icon(Icons.link_off_sharp),
                       ),
+                      ElevatedButton(
+                        onPressed: () => refreshModule("MMM-Remote-Control"),
+                        child: const Icon(Icons.refresh),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -340,6 +360,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ElevatedButton(
                         onPressed: hideDietMeals,
                         child: const Icon(Icons.no_food_outlined),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => refreshModule("MMM-FirebaseBridge"),
+                        child: const Icon(Icons.refresh),
                       ),
                     ],
                   ),
@@ -388,6 +412,9 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 246, 65, 52),
+                    ),
                     onPressed: shutdownMagicMirror,
                     child: const Text("Shutdown Magic Mirror"),
                   ),
@@ -404,9 +431,9 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ElevatedButton(
                     onPressed: _openColorPicker,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: _currentColor,
                     ),
-                    child: const Text("Pick Background Color"),
+                    child: const Icon(Icons.color_lens_outlined),
                   ),
                   const SizedBox(height: 20),
                   const Text(
