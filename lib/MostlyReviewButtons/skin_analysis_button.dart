@@ -61,10 +61,15 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text("${snapshot.hasError}"));
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(
-                          child: const Text(
-                            "No Data",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                        return Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Result$value: No Data",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                            ],
                           ),
                         );
                       }
