@@ -15,7 +15,7 @@ class _ControlMirrorState extends State<ControlMirror> {
     text: '192.168.1.1',
   );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController videoUrlController = TextEditingController();
+  final TextEditingController videoUrlController = TextEditingController(text: "https://youtu.be/yul4gq_LrOI?si=tUY0BkVncvWSrl6b");
 
   double brightnessValue = 100;
   Color _currentColor = Colors.purpleAccent;
