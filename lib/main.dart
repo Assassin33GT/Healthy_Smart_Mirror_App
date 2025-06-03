@@ -14,12 +14,12 @@ Future main() async {
   if(kIsWeb == true){
   await Firebase.initializeApp(
     options: FirebaseOptions(
-    apiKey: "AIzaSyDfnYz0phMnHFHBEiNYKuzY0BjVj1ofAxw",
-    authDomain: "flutter-firebase-9420a.firebaseapp.com",
-    projectId: "flutter-firebase-9420a",
-    storageBucket: "flutter-firebase-9420a.firebasestorage.app",
-    messagingSenderId: "773756769859",
-    appId: "1:773756769859:web:1e438eb467f5a40b6b26f6"
+      apiKey: "AIzaSyDfnYz0phMnHFHBEiNYKuzY0BjVj1ofAxw",
+      authDomain: "flutter-firebase-9420a.firebaseapp.com",
+      projectId: "flutter-firebase-9420a",
+      storageBucket: "flutter-firebase-9420a.firebasestorage.app",
+      messagingSenderId: "773756769859",
+      appId: "1:773756769859:web:1e438eb467f5a40b6b26f6"
     ),
   );
   await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
