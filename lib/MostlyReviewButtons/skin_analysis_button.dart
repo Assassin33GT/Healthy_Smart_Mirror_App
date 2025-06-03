@@ -93,7 +93,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
                         return _buildAnalysisCard(value, data);
                       },
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -109,16 +109,16 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withAlpha(2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withAlpha(1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.history, color: Colors.white, size: 24),
@@ -141,9 +141,9 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withAlpha(2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,7 +151,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withAlpha(1),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -189,14 +189,8 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildInfoRow(
-                  "Acne Level",
-                  data['acne_level'],
-                  Icons.warning_amber_rounded,
-                ),
-                const SizedBox(height: 12),
-                _buildInfoRow(
                   "Skin Condition",
-                  data['skin_condition'],
+                  data['conditions'],
                   Icons.face,
                 ),
                 const SizedBox(height: 12),

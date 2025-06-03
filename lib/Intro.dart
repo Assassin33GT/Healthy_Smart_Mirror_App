@@ -21,10 +21,22 @@ class _IntroState extends State<Intro> {
     });
   }
 
+  // Future<void>? fetchStartTime() async {
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  //   String user = auth.currentUser!.uid;
+  //   DocumentSnapshot snapshot =
+  //       await firestore.collection('users').doc(user).get();
+
+  //   Map<String, dynamic> x = snapshot.data() as Map<String, dynamic>;
+  //   counter =int.parse(x['counter']);
+  // }
+
   @override
   void initState() {
     super.initState();
     _loadSavedColors();
+    //fetchStartTime();
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
         context,
@@ -44,10 +56,7 @@ class _IntroState extends State<Intro> {
         duration: Duration(seconds: 2),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color1,
-              color2,
-            ],
+            colors: [color1,color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

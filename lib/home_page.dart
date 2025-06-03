@@ -36,13 +36,16 @@ class _HomePageState extends State<HomePage> {
     _loadUserImage();
     saveUserName();
     _loadSavedColors();
+    setState(() {
+    //increaseCounter();
+    });
   }
 
   void saveUserName() async {
     await _firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
+        .update({
           'userName': username,
         });
   }
@@ -65,7 +68,6 @@ class _HomePageState extends State<HomePage> {
     if (user != null) {
       username = user.displayName;
       email = user.email;
-      print(username);
     } else {
       print("No user is logged in.");
     }
@@ -87,7 +89,6 @@ class _HomePageState extends State<HomePage> {
       if (savedColor1 == Colors.black87.toString()) {
         color1 = Colors.black87;
       }
-      print(_imagePath);
     });
   }
 
