@@ -13,17 +13,23 @@ class MostlyReview extends StatefulWidget {
   State<MostlyReview> createState() => _MostlyReviewState();
 }
 
-int counter = 0;
-String timeOfStart = '';
-
 class _MostlyReviewState extends State<MostlyReview> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  int counter = 0;
+  String timeOfStart = '';
 
   @override
   void initState() {
-    fetchStartTime();
     super.initState();
+    fetchStartTime().then((data) {
+      if (data != null) {
+        setState(() {
+          counter = int.tryParse(data['counter'].toString()) ?? 0;
+          timeOfStart = data['timeOfStart'] ?? '';
+        });
+      }
+    });
   }
 
   Future updateCounter() async {
@@ -36,15 +42,15 @@ class _MostlyReviewState extends State<MostlyReview> {
   }
 
   Future<Map<String, dynamic>?> fetchStartTime() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
     String user = auth.currentUser!.uid;
     DocumentSnapshot snapshot =
         await firestore.collection('users').doc(user).get();
 
-    Map<String,dynamic> save = snapshot.data() as Map<String, dynamic>;
+    Map<String, dynamic> save = snapshot.data() as Map<String, dynamic>;
     print(save['counter']);
-    counter = int.parse(save['counter']);
+    counter = int.tryParse(save['counter'].toString()) ?? 0;
     print(counter);
     timeOfStart = save['timeOfStart'];
     return snapshot.data() as Map<String, dynamic>;
@@ -53,17 +59,20 @@ class _MostlyReviewState extends State<MostlyReview> {
   void increaseCounter() async {
     DateTime currentDate = DateTime.now();
     Map<String, dynamic>? data = await fetchStartTime();
-    timeOfStart = data!['timeOfStart'];
-    counter = int.parse(data['counter']);
-    DateTime savedDate = DateTime.parse(timeOfStart);
-    counter = currentDate.difference(savedDate).inDays + 1;
+    if (data != null && data['timeOfStart'] != null) {
+      DateTime savedDate = DateTime.parse(data['timeOfStart']);
+      int newCounter = currentDate.difference(savedDate).inDays + 1;
+      setState(() {
+        counter = newCounter;
+      });
+    }
   }
 
   @override
   Widget build(context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    fetchStartTime();
+
     return Row(
       children: [
         Column(
@@ -201,29 +210,34 @@ class _MostlyReviewState extends State<MostlyReview> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        counter != 0 ?
-                        Padding(
-                          padding: EdgeInsets.only(right: 3),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  counter = 0;
-                                  timeOfStart = '';
-                                });
-                                updateCounter();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Counter Reset!"),
-                                    duration: Duration(seconds: 1),
+                        counter != 0
+                            ? Padding(
+                              padding: EdgeInsets.only(right: 3),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      counter = 0;
+                                      timeOfStart = '';
+                                    });
+                                    updateCounter();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Counter Reset!"),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.replay_outlined,
+                                    size: 13,
+                                    color: Color.fromARGB(255, 155, 39, 176),
                                   ),
-                                );
-                              },
-                              child: const Icon(Icons.replay_outlined, size: 13,color: Color.fromARGB(255, 155, 39, 176),),
-                            ),
-                          ),
-                        ) : Container(),
+                                ),
+                              ),
+                            )
+                            : Container(),
                         Text(
                           counter == 0 ? "Counter" : counter.toString(),
                           style: TextStyle(
