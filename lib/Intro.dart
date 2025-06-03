@@ -38,9 +38,10 @@ class _IntroState extends State<Intro> {
   @override
   Widget build(context) {
     return Scaffold(
-      body: Container(
+      body: AnimatedContainer(
         width: double.infinity,
         height: double.infinity,
+        duration: Duration(seconds: 2),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
