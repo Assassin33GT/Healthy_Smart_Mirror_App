@@ -6,6 +6,7 @@ import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/Account_Buttons/qr_code_page.dart';
 import 'package:demo/login_page.dart';
+import 'package:demo/main.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
 import 'package:demo/widgets/mostly_review.dart';
@@ -13,8 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Color color1 = Color.fromARGB(255, 126, 95, 227);
-Color color2 = const Color.fromARGB(255, 60, 30, 182);
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

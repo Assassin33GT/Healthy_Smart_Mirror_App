@@ -1,5 +1,5 @@
 import 'package:demo/Admin/admin_home_page.dart';
-import 'package:demo/Intro.dart';
+import 'package:demo/intro.dart';
 import 'package:demo/home_page.dart';
 import 'package:demo/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +7,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+Color color1 = Color.fromARGB(255, 126, 95, 227);
+Color color2 = const Color.fromARGB(255, 60, 30, 182);
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

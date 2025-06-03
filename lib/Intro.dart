@@ -1,5 +1,6 @@
-import 'package:demo/home_page.dart';
+import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Intro extends StatefulWidget {
   const Intro(this.child, {super.key});
@@ -10,8 +11,20 @@ class Intro extends StatefulWidget {
 }
 
 class _IntroState extends State<Intro> {
+  Future<void> _loadSavedColors() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedColor1 = prefs.getString('color1');
+    setState(() {
+      if (savedColor1 == Colors.black87.toString()) {
+        color1 = Colors.black87;
+      }
+    });
+  }
+
   @override
   void initState() {
+    super.initState();
+    _loadSavedColors();
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
         context,
@@ -19,7 +32,7 @@ class _IntroState extends State<Intro> {
         (route) => false,
       );
     });
-    super.initState();
+    
   }
 
   @override

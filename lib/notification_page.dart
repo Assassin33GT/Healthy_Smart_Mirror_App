@@ -1,4 +1,4 @@
-import 'package:demo/home_page.dart';
+import 'package:demo/main.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
