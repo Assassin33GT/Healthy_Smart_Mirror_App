@@ -2,15 +2,15 @@ import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Intro extends StatefulWidget {
-  const Intro(this.child, {super.key});
+class IntroPage extends StatefulWidget {
+  const IntroPage(this.child, {super.key});
   final Widget? child;
 
   @override
-  State<Intro> createState() => _IntroState();
+  State<IntroPage> createState() => _IntroPageState();
 }
 
-class _IntroState extends State<Intro> {
+class _IntroPageState extends State<IntroPage> {
   Future<void> _loadSavedColors() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedColor1 = prefs.getString('color1');
@@ -21,22 +21,10 @@ class _IntroState extends State<Intro> {
     });
   }
 
-  // Future<void>? fetchStartTime() async {
-  // FirebaseFirestore firestore = FirebaseFirestore.instance;
-  // FirebaseAuth auth = FirebaseAuth.instance;
-  //   String user = auth.currentUser!.uid;
-  //   DocumentSnapshot snapshot =
-  //       await firestore.collection('users').doc(user).get();
-
-  //   Map<String, dynamic> x = snapshot.data() as Map<String, dynamic>;
-  //   counter =int.parse(x['counter']);
-  // }
-
   @override
   void initState() {
     super.initState();
     _loadSavedColors();
-    //fetchStartTime();
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
         context,

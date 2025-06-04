@@ -1,5 +1,5 @@
 import 'package:demo/Admin/admin_home_page.dart';
-import 'package:demo/intro.dart';
+import 'package:demo/Pages/intro_page.dart';
 import 'package:demo/pages/home_page.dart';
 import 'package:demo/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: Intro(
+      home: IntroPage(
         choose(),
       ),
     );
