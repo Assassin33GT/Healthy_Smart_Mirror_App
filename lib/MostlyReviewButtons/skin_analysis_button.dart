@@ -138,6 +138,23 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
   }
 
   Widget _buildAnalysisCard(int value, Map<String, dynamic> data) {
+    String skinCondition(){
+      if(data['Acne'] != 0){
+        return "Acne";
+      }else if(data['Eczema'] != 0){
+        return "Eczema";
+      }else if(data['Healthy'] != 0){
+        return "Healthy";
+      }else if(data['Pigmentation'] != 0){
+        return "Pigmentation";
+      }else if(data['Rosacea'] != 0){
+        return "Rosacea";
+      }else if(data['Wrinkles'] != 0){
+        return "Wrinkles";
+      }
+      return "No Result";
+    }
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -190,7 +207,7 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
               children: [
                 _buildInfoRow(
                   "Skin Condition",
-                  data['conditions'],
+                  skinCondition(),
                   Icons.face,
                 ),
                 const SizedBox(height: 12),
