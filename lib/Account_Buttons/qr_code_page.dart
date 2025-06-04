@@ -12,7 +12,13 @@ class QRCodePage extends StatelessWidget {
     final uid = user?.uid ?? 'No user signed in';
 
     return Scaffold(
+      backgroundColor: color1 != Colors.black87 ?Colors.white : color1,
       appBar: AppBar(
+        shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(24)
+          ),
+        ), 
         title: const Text(
           'User QR Code',
           style: TextStyle(

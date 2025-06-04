@@ -31,9 +31,15 @@ class _SkinAnalysisButtonState extends State<SkinAnalysisButton> {
   Widget build(context) {
     List<int> numbers = [5, 4, 3, 2, 1];
     return Scaffold(
+      backgroundColor: color1,
       appBar: AppBar(
         title: const Text("Skin Analysis"),
-        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
+        ),
+        backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: Container(
