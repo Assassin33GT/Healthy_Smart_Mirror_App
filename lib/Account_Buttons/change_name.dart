@@ -1,6 +1,6 @@
-import 'package:demo/buttons/form_container_widget.dart';
-import 'package:demo/home_page.dart';
+import 'package:demo/widgets/form_container_widget.dart';
 import 'package:demo/main.dart';
+import 'package:demo/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

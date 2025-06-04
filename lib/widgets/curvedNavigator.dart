@@ -1,7 +1,7 @@
-import 'package:demo/activity_page.dart';
-import 'package:demo/home_page.dart';
-import 'package:demo/notification_page.dart';
-import 'package:demo/supportChatPage.dart';
+import 'package:demo/pages/activity_page.dart';
+import 'package:demo/pages/home_page.dart';
+import 'package:demo/pages/notification_page.dart';
+import 'package:demo/pages/supportChatPage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:image_picker/image_picker.dart';

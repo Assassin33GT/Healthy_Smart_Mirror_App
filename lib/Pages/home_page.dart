@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
 import 'package:demo/Account_Buttons/qr_code_page.dart';
-import 'package:demo/login_page.dart';
+import 'package:demo/pages/login_page.dart';
 import 'package:demo/main.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:demo/widgets/date_weather.dart';
