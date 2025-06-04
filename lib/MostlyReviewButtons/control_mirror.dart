@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'dart:typed_data';
 
 class ControlMirror extends StatefulWidget {
   const ControlMirror({super.key});
@@ -23,148 +21,35 @@ class _ControlMirrorState extends State<ControlMirror> {
   double brightnessValue = 100;
   Color _currentColor = Colors.purpleAccent;
 
-  // Bluetooth-related variables
-  FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
-  List<BluetoothDevice> _devicesList = [];
-  BluetoothDevice? _selectedDevice;
-  BluetoothConnection? _connection;
-  bool _isBluetoothConnected = false;
-  bool _isDiscovering = false;
-  bool _useBluetooth = false; // Toggle between Wi-Fi and Bluetooth
-
-  @override
-  void initState() {
-    super.initState();
-    _checkBluetoothEnabled();
-  }
-
-  // Check if Bluetooth is enabled and request to enable it if not
-  Future<void> _checkBluetoothEnabled() async {
-    bool isEnabled = await _bluetooth.isEnabled ?? false;
-    if (!isEnabled) {
-      await _bluetooth.requestEnable();
-    }
-  }
-
-  // Discover Bluetooth devices
-  Future<void> _discoverDevices() async {
-    setState(() {
-      _isDiscovering = true;
-      _devicesList = [];
-    });
-
-    try {
-      var devices = await _bluetooth.getBondedDevices();
-      setState(() {
-        _devicesList = devices;
-        _isDiscovering = false;
-      });
-
-      if (devices.isEmpty) {
-        _showSnackBar("No Bluetooth devices found. Ensure the Magic Mirror is paired.");
-      }
-    } catch (e) {
-      setState(() {
-        _isDiscovering = false;
-      });
-      _showSnackBar("Error discovering devices: $e");
-    }
-  }
-
-  // Connect to a Bluetooth device
-  Future<void> _connectToDevice(BluetoothDevice device) async {
-    if (_connection != null && _connection!.isConnected) {
-      await _connection!.close();
-    }
-
-    try {
-      BluetoothConnection connection = await BluetoothConnection.toAddress(device.address);
-      setState(() {
-        _connection = connection;
-        _selectedDevice = device;
-        _isBluetoothConnected = true;
-        _useBluetooth = true; // Switch to Bluetooth mode
-      });
-      _showSnackBar("Connected to ${device.name ?? device.address}");
-    } catch (e) {
-      setState(() {
-        _isBluetoothConnected = false;
-        _useBluetooth = false;
-      });
-      _showSnackBar("Error connecting to device: $e");
-    }
-  }
-
-  // Disconnect from the Bluetooth device
-  Future<void> _disconnectBluetooth() async {
-    if (_connection != null && _connection!.isConnected) {
-      await _connection!.close();
-    }
-    setState(() {
-      _connection = null;
-      _selectedDevice = null;
-      _isBluetoothConnected = false;
-      _useBluetooth = false; // Switch back to Wi-Fi mode
-    });
-    _showSnackBar("Disconnected from Bluetooth device");
-  }
-
-  // Send command over Bluetooth
-  Future<void> _sendBluetoothCommand(String command) async {
-    if (_connection == null || !_connection!.isConnected) {
-      _showSnackBar("Not connected to any Bluetooth device");
-      return;
-    }
-
-    try {
-      _connection!.output.add(Uint8List.fromList(command.codeUnits));
-      await _connection!.output.allSent;
-      _showSnackBar("Command '$command' sent via Bluetooth!");
-    } catch (e) {
-      _showSnackBar("Error sending Bluetooth command: $e");
-    }
-  }
-
   Future<void> sendCommand(
     String action, {
     Map<String, dynamic>? payload,
   }) async {
-    if (_useBluetooth) {
-      // Send via Bluetooth
-      final queryParams = {
-        "action": action,
-        ...?payload?.map((key, value) => MapEntry(key, value.toString())),
-      };
-      final command = Uri(path: "/remote", queryParameters: queryParams).toString();
-      await _sendBluetoothCommand(command);
-    } else {
-      // Send via Wi-Fi (original implementation)
-      final ip = ipController.text.trim();
-      if (ip.isEmpty) {
-        _showSnackBar("Please enter a valid IP address");
-        return;
-      }
+    final ip = ipController.text.trim();
+    if (ip.isEmpty) {
+      _showSnackBar("Please enter a valid IP address");
+      return;
+    }
 
-      final queryParams = {
-        "action": action,
-        ...?payload?.map((key, value) => MapEntry(key, value.toString())),
-      };
-      final url = Uri.parse(
-        'http://$ip:8080/remote',
-      ).replace(queryParameters: queryParams);
+    final queryParams = {
+      "action": action,
+      ...?payload?.map((key, value) => MapEntry(key, value.toString())),
+    };
+    final url = Uri.parse(
+      'http://$ip:8080/remote',
+    ).replace(queryParameters: queryParams);
 
-      try {
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          _showSnackBar("Command '$action' sent successfully!");
-        } else {
-          _showSnackBar(
-            "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
-          );
-        }
-      } catch (e) {
-        _showSnackBar("Error: $e");
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        _showSnackBar("Command '$action' sent successfully!");
+      } else {
+        _showSnackBar(
+          "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
+        );
       }
+    } catch (e) {
+      _showSnackBar("Error: $e");
     }
   }
 
@@ -237,37 +122,39 @@ class _ControlMirrorState extends State<ControlMirror> {
   void _openColorPicker() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pick a Background Color'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: _currentColor,
-            onColorChanged: (color) {
-              setState(() {
-                _currentColor = color;
-              });
-            },
-            pickerAreaHeightPercent: 0.8,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Pick a Background Color'),
+            content: SingleChildScrollView(
+              child: ColorPicker(
+                pickerColor: _currentColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    _currentColor = color;
+                  });
+                },
+
+                pickerAreaHeightPercent: 0.8,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Set'),
+                onPressed: () {
+                  changeBackgroundColor(
+                    '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Set'),
-            onPressed: () {
-              changeBackgroundColor(
-                '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
-              );
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -305,13 +192,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
+        //title: const Text("Smart Mirror Controller"),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(24),
-          ),
+            bottom: Radius.circular(24)
+          )
         ),
         backgroundColor: const Color.fromARGB(175, 120, 137, 120),
-      ),
+        ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -347,88 +235,18 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter an IP address"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter an IP address"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "hint: you will find it in the bottom left of the mirror screen (should mirror and phone be connected to the same wifi!)",
+                    "hint: you will find it in the buttom left of the mirror screen (should mirror and phone be connected to the same wifi!)",
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
-                  const SizedBox(height: 20),
-                  // Bluetooth Control Section
-                  const Text(
-                    "Bluetooth Controls",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          side: BorderSide(color: Colors.green),
-                        ),
-                        onPressed: _isDiscovering ? null : _discoverDevices,
-                        child: _isDiscovering
-                            ? CircularProgressIndicator(color: Colors.white70)
-                            : const Text("Discover Devices", style: TextStyle(color: Colors.white70)),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          side: BorderSide(color: Colors.green),
-                        ),
-                        onPressed: _isBluetoothConnected ? _disconnectBluetooth : null,
-                        child: const Text("Disconnect", style: TextStyle(color: Colors.white70)),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  if (_devicesList.isNotEmpty)
-                    Column(
-                      children: [
-                        const Text(
-                          "Available Devices:",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        ..._devicesList.map((device) => ListTile(
-                              title: Text(
-                                device.name ?? device.address,
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              trailing: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  side: BorderSide(color: Colors.green),
-                                ),
-                                onPressed: () => _connectToDevice(device),
-                                child: const Text("Connect", style: TextStyle(color: Colors.white70)),
-                              ),
-                            )),
-                      ],
-                    ),
-                  if (_isBluetoothConnected)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        "Connected to: ${_selectedDevice!.name ?? _selectedDevice!.address}",
-                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   // Brightness Control Section
                   const Text(
                     "Brightness Control",
@@ -601,6 +419,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                         onPressed: showDietMeals,
                         child: const Icon(Icons.fastfood_outlined, color: Colors.white70,),
                       ),
+
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
@@ -643,7 +462,9 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 20),
+
                   // System Control Section
                   const Text(
                     "System Controls",
@@ -686,15 +507,15 @@ class _ControlMirrorState extends State<ControlMirror> {
                       backgroundColor: const Color.fromARGB(0, 198, 74, 65),
                       side: BorderSide(
                         color: Colors.green,
-                      ),
+                      )
                     ),
                     onPressed: shutdownMagicMirror,
                     child: const Text(
                       "Shutdown Magic Mirror",
                       style: TextStyle(
-                        color: Colors.red,
+                        color: Colors.red
                       ),
-                    ),
+                      ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -712,7 +533,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                       backgroundColor: _currentColor,
                       side: BorderSide(
                         color: Colors.green,
-                      ),
+                      )
                     ),
                     child: const Icon(Icons.color_lens_outlined, color: Colors.white70,),
                   ),
@@ -736,19 +557,20 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter a URL"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a URL"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      side: BorderSide(
-                        color: Colors.green,
-                      ),
-                    ),
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(
+                            color: Colors.green
+                          )
+                        ),
                     onPressed: playVideo,
                     child: const Text("Play Video", style: TextStyle(color: Colors.white70)),
                   ),
@@ -760,8 +582,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                            color: Colors.green,
-                          ),
+                            color: Colors.green
+                          )
                         ),
                         onPressed: minimizeVideo,
                         child: const Icon(Icons.minimize, color: Colors.white70,),
@@ -770,8 +592,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                            color: Colors.green,
-                          ),
+                            color: Colors.green
+                          )
                         ),
                         onPressed: maximizeVideo,
                         child: const Icon(Icons.fullscreen, color: Colors.white70,),
@@ -780,8 +602,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                            color: Colors.green,
-                          ),
+                            color: Colors.green
+                          )
                         ),
                         onPressed: closeVideo,
                         child: const Icon(Icons.close, color: Colors.white70,),
@@ -796,8 +618,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                            color: Colors.green,
-                          ),
+                            color: Colors.green
+                          )
                         ),
                         onPressed: decreaseVolume,
                         child: const Icon(Icons.volume_down, color: Colors.white70,),
@@ -806,8 +628,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                            color: Colors.green,
-                          ),
+                            color: Colors.green
+                          )
                         ),
                         onPressed: increaseVolume,
                         child: const Icon(Icons.volume_up, color: Colors.white70,),
@@ -822,11 +644,5 @@ class _ControlMirrorState extends State<ControlMirror> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _connection?.close();
-    super.dispose();
   }
 }
