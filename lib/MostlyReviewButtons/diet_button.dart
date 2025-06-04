@@ -400,7 +400,15 @@ class _DietButtonState extends State<DietButton> {
   @override
   Widget build(context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Meal Plan")),
+      backgroundColor: color1,
+      appBar: AppBar(
+        title: const Text("Meal Plan"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24)
+          ),
+        ),
+        ),
       body: Container(
         width: double.infinity,
         height: double.infinity,

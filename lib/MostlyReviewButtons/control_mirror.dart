@@ -190,7 +190,7 @@ class _ControlMirrorState extends State<ControlMirror> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black87,
       appBar: AppBar(
         //title: const Text("Smart Mirror Controller"),
         shape: RoundedRectangleBorder(
