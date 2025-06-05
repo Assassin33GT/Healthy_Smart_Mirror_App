@@ -265,6 +265,91 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
+  Future<Map<String, dynamic>?> getSkinAnalysis(int n) async {
+    FirebaseAuth user = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentSnapshot snapshot =
+        await firestore
+            .collection("users")
+            .doc(user.currentUser!.uid)
+            .collection("skin_analysis_history")
+            .doc("result$n")
+            .get();
+    if (snapshot.exists) {
+      return snapshot.data() as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  Future<Widget> buildSkinCareStep(int n) async {
+    Map<String, dynamic>? data = await getSkinAnalysis(n);
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 500),
+      builder: (context, double value, child) {
+        return Transform.translate(
+          offset: Offset(0, 20.0 * (1 - value)),
+          child: Opacity(
+            opacity: value,
+            child: Card(
+              elevation: 2,
+              margin: const EdgeInsets.only(bottom: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    Icon(Icons.water_drop, color: Colors.purple.shade300),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Acne: ${data!['Acne'] * 100}%, Eczema: ${data['Eczema'] * 100}%, Healthy: ${data['Healthy'] * 100}%, Pigmentation: ${data['Pigmentation'] * 100}%, Rosacea: ${data['Rosacea'] * 100}%, Wrinkles: ${data['Wrinkles'] * 100}%",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            data['recommendation'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureBuilder getSavedSkinAnalysis(int n) {
+    return FutureBuilder(
+      future: buildSkinCareStep(n),
+      builder: (context, snapshot) {
+        if (ConnectionState.active == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        } else if (!snapshot.hasData) {
+          return Center(child: Text("No Data"));
+        }
+        return snapshot.data!;
+      },
+    );
+  }
+
   @override
   Widget build(context) {
     setState(() {
@@ -276,7 +361,7 @@ class _ActivityPageState extends State<ActivityPage> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color1,color2,],
+            colors: [color1, color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -352,7 +437,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                         Icon(Icons.spa, color: Colors.white),
                                         SizedBox(width: 8),
                                         Text(
-                                          "Anti-Wrinkle Skin Care",
+                                          "Skin Analysis Results",
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -368,31 +453,11 @@ class _ActivityPageState extends State<ActivityPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _buildSkinCareStep(
-                                          "1. Gentle Cleanser",
-                                          "Protects skin barrier",
-                                          Icons.cleaning_services,
-                                        ),
-                                        _buildSkinCareStep(
-                                          "2. Antioxidant Serum",
-                                          "Fights free radicals",
-                                          Icons.water_drop,
-                                        ),
-                                        _buildSkinCareStep(
-                                          "3. Retinol at Night",
-                                          "Boosts collagen",
-                                          Icons.nightlight,
-                                        ),
-                                        _buildSkinCareStep(
-                                          "4. Rich Moisturizer",
-                                          "Hydrates deeply",
-                                          Icons.opacity,
-                                        ),
-                                        _buildSkinCareStep(
-                                          "5. Broad-Spectrum Sunscreen",
-                                          "Prevents UV damage",
-                                          Icons.wb_sunny,
-                                        ),
+                                        getSavedSkinAnalysis(1),
+                                        getSavedSkinAnalysis(2),
+                                        getSavedSkinAnalysis(3),
+                                        getSavedSkinAnalysis(4),
+                                        getSavedSkinAnalysis(5),
                                       ],
                                     ),
                                   ),
@@ -541,58 +606,6 @@ class _ActivityPageState extends State<ActivityPage> {
         ),
       ),
       bottomNavigationBar: Curvednavigator(),
-    );
-  }
-
-  Widget _buildSkinCareStep(String title, String description, IconData icon) {
-    return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 500),
-      builder: (context, double value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20.0 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: Card(
-              elevation: 2,
-              margin: const EdgeInsets.only(bottom: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Icon(icon, color: Colors.purple.shade300),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            description,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 

@@ -30,6 +30,7 @@ class _MostlyReviewState extends State<MostlyReview> {
         });
       }
     });
+    increaseCounter();
   }
 
   Future updateCounter() async {
