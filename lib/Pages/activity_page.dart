@@ -108,7 +108,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: Opacity(
                             opacity: value,
                             child: Card(
-                              color: Colors.white70,
+                              color:const Color.fromARGB(150, 255, 255, 255),
                               elevation: 2,
                               margin: const EdgeInsets.only(bottom: 12),
                               shape: RoundedRectangleBorder(
@@ -196,7 +196,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white70,
+                      color: const Color.fromARGB(150, 255, 255, 255),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -293,7 +293,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
-              color: Colors.white70,
+              color: const Color.fromARGB(150, 255, 255, 255),
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
@@ -303,14 +303,17 @@ class _ActivityPageState extends State<ActivityPage> {
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
-                    Icon(Icons.water_drop, color: Colors.purple.shade300),
+                    Padding(
+                      padding: const EdgeInsets.only(right:8.0),
+                      child: Text("$n", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.purple.shade300)),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Acne: ${data!['Acne'] * 100}%, Eczema: ${data['Eczema'] * 100}%, Healthy: ${data['Healthy'] * 100}%, Pigmentation: ${data['Pigmentation'] * 100}%, Rosacea: ${data['Rosacea'] * 100}%, Wrinkles: ${data['Wrinkles'] * 100}%",
+                            "Acne: ${(data!['Acne'] * 100).toInt()}%, Eczema: ${(data['Eczema'] * 100).toInt()}%, Healthy: ${(data['Healthy'] * 100).toInt()}%, Pigmentation: ${(data['Pigmentation'] * 100).toInt()}%, Rosacea: ${(data['Rosacea'] * 100).toInt()}%, Wrinkles: ${(data['Wrinkles'] * 100).toInt()}%",
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -418,7 +421,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          Colors.purple.shade300,
+                                          const Color.fromARGB(255, 186, 104, 200),
                                           Colors.purple.shade500,
                                         ],
                                       ),
@@ -588,7 +591,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
-              color: Colors.white70,
+              color: const Color.fromARGB(150, 255, 255, 255),
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
