@@ -74,7 +74,7 @@ class _ActivityPageState extends State<ActivityPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.purple.shade300, Colors.purple.shade500],
+                  colors: [color1, Colors.purple.shade500],
                 ),
               ),
               child: const Row(
@@ -421,7 +421,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          const Color.fromARGB(255, 186, 104, 200),
+                                          color1,
                                           Colors.purple.shade500,
                                         ],
                                       ),
@@ -511,7 +511,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Colors.purple.shade300,
+                                        color1,
                                         Colors.purple.shade500,
                                       ],
                                     ),
