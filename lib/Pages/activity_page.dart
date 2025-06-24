@@ -55,7 +55,7 @@ class _ActivityPageState extends State<ActivityPage> {
       duration: const Duration(milliseconds: 500),
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromARGB(178, 255, 255, 255),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -108,6 +108,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: Opacity(
                             opacity: value,
                             child: Card(
+                              color: Colors.white70,
                               elevation: 2,
                               margin: const EdgeInsets.only(bottom: 12),
                               shape: RoundedRectangleBorder(
@@ -195,7 +196,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
+                      color: Colors.white70,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -292,6 +293,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
+              color: Colors.white70,
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
@@ -384,17 +386,6 @@ class _ActivityPageState extends State<ActivityPage> {
                   ),
                 ),
                 Divider(color: Colors.white60),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(
-                    "Skin:",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20),
                 Center(
                   child: Row(
@@ -407,7 +398,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 500),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: const Color.fromARGB(178, 255, 255, 255),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -472,17 +463,6 @@ class _ActivityPageState extends State<ActivityPage> {
                 ),
                 const SizedBox(height: 30),
                 Divider(color: Colors.black54),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(
-                    "Meal:",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20),
                 Center(
                   child:
@@ -499,17 +479,6 @@ class _ActivityPageState extends State<ActivityPage> {
                 ),
                 const SizedBox(height: 30),
                 Divider(color: Colors.black54),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(
-                    "Tips:",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20),
                 Center(
                   child: Row(
@@ -519,7 +488,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           duration: const Duration(milliseconds: 500),
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color.fromARGB(178, 255, 255, 255),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -619,6 +588,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
+              color: Colors.white70,
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(

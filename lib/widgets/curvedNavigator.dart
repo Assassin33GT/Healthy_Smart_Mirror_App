@@ -8,11 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 int _index = 0;
-  
+
 class Curvednavigator extends StatefulWidget {
-  const Curvednavigator({
-    super.key,
-    });
+  const Curvednavigator({super.key});
   @override
   State<Curvednavigator> createState() => _CurvednavigatorState();
 }
