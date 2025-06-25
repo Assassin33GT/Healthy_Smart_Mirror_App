@@ -59,8 +59,6 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
     if (message.isEmpty || user == null) return;
 
-    print('Sending message from: ${user.uid}');
-
     await _firestore
         .collection('chats')
         .doc(user.uid)
