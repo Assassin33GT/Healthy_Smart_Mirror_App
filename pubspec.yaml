@@ -57,6 +57,7 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   icons_flutter: ^0.0.5
   timezone: ^0.9.4
+  flutter_local_notifications: ^18.0.1
   #tflite_flutter_helper: ^0.3.1
   #tflite_flutter: ^0.9.1
   #camera: ^0.9.8+1
