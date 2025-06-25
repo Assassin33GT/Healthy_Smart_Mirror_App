@@ -23,25 +23,27 @@ class _SupportChatPageState extends State<SupportChatPage> {
     chatId = _auth.currentUser!.uid;
   }
 
-  void updateMessage(String chatId) async{
+  void updateMessage(String chatId) async {
     final user = _auth.currentUser;
     final message = _messageController.text.trim();
     if (message.isEmpty || user == null) return;
 
-    DocumentSnapshot doc = await _firestore
-                              .collection('chats')
-                              .doc(user.uid)
-                              .collection('messages')
-                              .doc(chatId).get();
-    if(doc.exists){
-      if(doc['sender'] != user.displayName || doc['sender'] != 'admin'){
+    DocumentSnapshot doc =
         await _firestore
-              .collection('chats')
-              .doc(user.uid)
-              .collection('messages')
-              .doc(chatId).update({
-                'sender': user.displayName,
-      });
+            .collection('chats')
+            .doc(user.uid)
+            .collection('messages')
+            .doc(chatId)
+            .get();
+
+    if (doc.exists) {
+      if (doc['sender'] != user.displayName || doc['sender'] != 'admin') {
+        await _firestore
+            .collection('chats')
+            .doc(user.uid)
+            .collection('messages')
+            .doc(chatId)
+            .update({'sender': user.displayName});
       }
     }
   }
@@ -70,6 +72,13 @@ class _SupportChatPageState extends State<SupportChatPage> {
           print('Error sending message: $e');
         });
 
+    await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .set({
+          'sender': "support",
+          'timestamp': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
     // Check if chatId already exists in chats_id collection
     final existing =
         await _firestore
@@ -95,10 +104,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color1,
-              color2,
-            ],
+            colors: [color1, color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -133,13 +139,12 @@ class _SupportChatPageState extends State<SupportChatPage> {
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
-                  } else if (!snapshot.hasData ||
-                      snapshot.data!.docs.isEmpty) {
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return Center(child: Text("No messages yet."));
                   }
-      
+
                   final messages = snapshot.data!.docs;
-      
+
                   return ListView.builder(
                     reverse: true,
                     itemCount: messages.length,
@@ -147,19 +152,26 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       final msg = messages[index];
                       final isAdmin = msg['sender'] == 'admin';
                       updateMessage(chatId);
-      
+
                       return Align(
                         alignment:
-                            isAdmin ? Alignment.centerRight : Alignment.centerLeft,
+                            isAdmin
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                         child: Container(
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
-                            color: isAdmin
-                                ? const Color.fromARGB(255, 216, 81, 240)
-                                : Colors.grey.shade300,
+                            color:
+                                isAdmin
+                                    ? const Color.fromARGB(255, 216, 81, 240)
+                                    : Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
@@ -187,10 +199,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
               child: Row(
                 children: [
                   Expanded(
@@ -208,7 +217,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
                   ),
                   SizedBox(width: 8),
                   IconButton(
-                    icon: Icon(Icons.send_outlined, color: const Color.fromARGB(255, 255, 255, 255)),
+                    icon: Icon(
+                      Icons.send_outlined,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
                     onPressed: () {
                       sendMessage(chatId);
                     },
