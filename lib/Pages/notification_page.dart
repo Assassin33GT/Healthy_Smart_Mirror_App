@@ -124,7 +124,14 @@ class _NotificationPageState extends State<NotificationPage> {
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    var scheduled = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
@@ -144,33 +151,67 @@ class _NotificationPageState extends State<NotificationPage> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 45.0),
+        child: SafeArea(
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(
-                  child: Text(
-                    "Notification",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                    ),
+                // Custom Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          //const SizedBox(width: 12),
+                          const Text(
+                            "Notifications",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                const Divider(color: Colors.white60),
-                buildSection("Skin:", "✨Apply Sunscreen!",
-                    "Protect your skin daily with SPF 30+ to prevent wrinkles and sun damage."),
-                const SizedBox(height: 30),
-                const Divider(color: Colors.black54),
-                buildSection("Meals:", "🍎 Healthy Eating Tip!",
-                    "Add a serving of greens to your lunch today — rich in vitamins for glowing skin!"),
-                const SizedBox(height: 30),
-                const Divider(color: Colors.black54),
-                buildSection("Tips:", "🧘 Mental Health Reminder!",
-                    "Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!"),
+                const SizedBox(height: 10),
+                // Notification Sections
+                _buildSection(
+                  icon: Icons.wb_sunny_outlined,
+                  title: "Skin",
+                  cardTitle: "✨ Apply Sunscreen!",
+                  message:
+                      "Protect your skin daily with SPF 30+ to prevent wrinkles and sun damage.",
+                  cardColor: Colors.orange.shade100.withOpacity(0.7),
+                  iconColor: Colors.orange.shade700,
+                ),
+                _buildSection(
+                  icon: Icons.restaurant,
+                  title: "Meals",
+                  cardTitle: "🍎 Healthy Eating Tip!",
+                  message:
+                      "Add a serving of greens to your lunch today — rich in vitamins for glowing skin!",
+                  cardColor: Colors.green.shade100.withOpacity(0.7),
+                  iconColor: Colors.green.shade700,
+                ),
+                _buildSection(
+                  icon: Icons.self_improvement,
+                  title: "Tips",
+                  cardTitle: "🧘 Mental Health Reminder!",
+                  message:
+                      "Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!",
+                  cardColor: Colors.purple.shade100.withOpacity(0.7),
+                  iconColor: Colors.purple.shade700,
+                ),
                 const SizedBox(height: 30),
               ],
             ),
@@ -181,40 +222,83 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  Widget buildSection(String title, String cardTitle, String message) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
+  Widget _buildSection({
+    required IconData icon,
+    required String title,
+    required String cardTitle,
+    required String message,
+    required Color cardColor,
+    required Color iconColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: 22),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+            ],
           ),
-        ),
-        Center(
-          child: Card(
-            margin: const EdgeInsets.all(12),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(cardTitle,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18)),
-                  const SizedBox(height: 8),
-                  Text(message),
+          const SizedBox(height: 10),
+          Center(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: cardColor,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.07),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cardTitle,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      message,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

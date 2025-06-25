@@ -53,7 +53,7 @@ class _ActivityPageState extends State<ActivityPage> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
-      margin: const EdgeInsets.all(16),
+      //margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color.fromARGB(178, 255, 255, 255),
         borderRadius: BorderRadius.circular(20),
@@ -108,7 +108,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: Opacity(
                             opacity: value,
                             child: Card(
-                              color:const Color.fromARGB(150, 255, 255, 255),
+                              color: const Color.fromARGB(150, 255, 255, 255),
                               elevation: 2,
                               margin: const EdgeInsets.only(bottom: 12),
                               shape: RoundedRectangleBorder(
@@ -304,8 +304,15 @@ class _ActivityPageState extends State<ActivityPage> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right:8.0),
-                      child: Text("$n", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.purple.shade300)),
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        "$n",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.purple.shade300,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -372,23 +379,23 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 45.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    "Activitys",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                    ),
+                const SizedBox(height: 20),
+                Text(
+                  "Activitys",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    letterSpacing: 1.2,
                   ),
                 ),
-                Divider(color: Colors.white60),
+                //Divider(color: Colors.white60),
                 const SizedBox(height: 20),
                 Center(
                   child: Row(
@@ -397,7 +404,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 500),
                             decoration: BoxDecoration(
@@ -489,7 +496,7 @@ class _ActivityPageState extends State<ActivityPage> {
                       Expanded(
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          //margin: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(178, 255, 255, 255),
                             borderRadius: BorderRadius.circular(20),
@@ -510,10 +517,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                      colors: [
-                                        color1,
-                                        Colors.purple.shade500,
-                                      ],
+                                      colors: [color1, Colors.purple.shade500],
                                     ),
                                   ),
                                   child: const Row(
@@ -534,34 +538,32 @@ class _ActivityPageState extends State<ActivityPage> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildHealthTip(
-                                        "Stay Hydrated",
-                                        "Drink at least 8 glasses of water a day",
-                                        Icons.water,
-                                      ),
-                                      _buildHealthTip(
-                                        "Skin Health",
-                                        "Hydration is key for healthy skin",
-                                        Icons.face,
-                                      ),
-                                      _buildHealthTip(
-                                        "Sleep Well",
-                                        "Aim for 7-9 hours of sleep every night",
-                                        Icons.bedtime,
-                                      ),
-                                      _buildHealthTip(
-                                        "Skin Repair",
-                                        "Sleep repairs skin and boosts immunity",
-                                        Icons.healing,
-                                      ),
-                                    ],
-                                  ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 12),
+                                    _buildHealthTip(
+                                      "Stay Hydrated",
+                                      "Drink at least 8 glasses of water a day",
+                                      Icons.water,
+                                    ),
+                                    _buildHealthTip(
+                                      "Skin Health",
+                                      "Hydration is key for healthy skin",
+                                      Icons.face,
+                                    ),
+                                    _buildHealthTip(
+                                      "Sleep Well",
+                                      "Aim for 7-9 hours of sleep every night",
+                                      Icons.bedtime,
+                                    ),
+                                    _buildHealthTip(
+                                      "Skin Repair",
+                                      "Sleep repairs skin and boosts immunity",
+                                      Icons.healing,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -590,41 +592,44 @@ class _ActivityPageState extends State<ActivityPage> {
           offset: Offset(0, 20.0 * (1 - value)),
           child: Opacity(
             opacity: value,
-            child: Card(
-              color: const Color.fromARGB(150, 255, 255, 255),
-              elevation: 2,
-              margin: const EdgeInsets.only(bottom: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Icon(icon, color: Colors.purple.shade300),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3),
+              child: Card(
+                color: const Color.fromARGB(150, 255, 255, 255),
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(icon, color: Colors.purple.shade300),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            description,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
+                            Text(
+                              description,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

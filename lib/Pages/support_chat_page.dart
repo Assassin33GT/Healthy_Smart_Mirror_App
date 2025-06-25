@@ -22,7 +22,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
     super.initState();
     chatId = _auth.currentUser!.uid;
   }
-  
+
   void updateMessage(String chatId) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -33,7 +33,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
             .collection('messages')
             .doc(chatId)
             .get();
-    
+
     if (doc.exists) {
       if (doc['sender'] != user.displayName && doc['sender'] != 'admin') {
         await _firestore
@@ -43,12 +43,9 @@ class _SupportChatPageState extends State<SupportChatPage> {
             .doc(chatId)
             .update({'sender': user.displayName});
 
-        await _firestore
-            .collection('chats')
-            .doc(user.uid)
-            .update({
-              'userName': user.displayName,
-            });
+        await _firestore.collection('chats').doc(user.uid).update({
+          'userName': user.displayName,
+        });
       }
     }
   }
@@ -75,13 +72,10 @@ class _SupportChatPageState extends State<SupportChatPage> {
           print('Error sending message: $e');
         });
 
-    await _firestore
-        .collection('chats')
-        .doc(chatId)
-        .set({
-          'userName': user.displayName ?? 'Anonymous',
-          'timestamp': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+    await _firestore.collection('chats').doc(chatId).set({
+      'userName': user.displayName ?? 'Anonymous',
+      'timestamp': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     _messageController.clear();
   }
@@ -98,21 +92,22 @@ class _SupportChatPageState extends State<SupportChatPage> {
           ),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(top: 45),
-              child: Center(
-                child: Text(
-                  "Support",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "Support",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                 ),
               ),
             ),
-            Divider(color: Colors.white60),
+            //Divider(color: Colors.white60),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream:
