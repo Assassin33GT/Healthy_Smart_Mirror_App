@@ -76,24 +76,9 @@ class _SupportChatPageState extends State<SupportChatPage> {
         .collection('chats')
         .doc(chatId)
         .set({
-          'sender': "support",
+          'userName': user.displayName ?? 'Anonymous',
           'timestamp': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
-    // Check if chatId already exists in chats_id collection
-    final existing =
-        await _firestore
-            .collection('chats_id')
-            .where('chatId', isEqualTo: chatId)
-            .limit(1)
-            .get();
-
-    // Only add if it doesn't already exist
-    if (existing.docs.isEmpty) {
-      await _firestore.collection('chats_id').add({'chatId': chatId});
-      print('chatId saved to chats_id.');
-    } else {
-      print('chatId already exists. Not saving duplicate.');
-    }
 
     _messageController.clear();
   }

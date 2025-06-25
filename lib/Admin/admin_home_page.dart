@@ -4,7 +4,7 @@ import 'package:demo/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-List<String> names = [];
+
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -12,69 +12,34 @@ class AdminHomePage extends StatefulWidget {
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
 }
-
+    List<String> usersName = [];
 class _AdminHomePageState extends State<AdminHomePage> {
   // Fetch all chat IDs where users have sent messages
   Future<List<String>> fetchUserChatIds() async {
-    final chat_idSnapshot = await FirebaseFirestore.instance
-        .collection('chats_id') // Collection with all chats
-        .get(); // Fetch all chats
-    //print(chat_idSnapshot.docs);
-    names = [];
- 
-    if (chat_idSnapshot.docs.isNotEmpty) {
-
-      List<String> chatIds = [];
-      for(var chatDoc in chat_idSnapshot.docs){
-        final chatId = chatDoc.data()['chatId'] as String?; // Get chat ID
-        if (chatId != null) {
-          chatIds.add(chatId); // Add to list of chat IDs
-        }
-        print(chatId);
-      }
-
-      List<String> chatIdsWithMessages = [];
-
-      int i = 0;
-      
-      // Loop through each chat document
-      for (var chatDoc in chat_idSnapshot.docs) {
-        final messagesSnapshot = await FirebaseFirestore.instance
-            .collection('chats')
-            .doc(chatIds[i])
-            .collection('messages')
-            .get();  // Fetch all messages in the chat
-        i++;
-        //print(chat_idSnapshot.docs);
-        for(int j = 0;j<messagesSnapshot.docs.length;j++){
-          if(messagesSnapshot.docs[j]['sender'] != 'admin')
-            {
-              names.add(messagesSnapshot.docs[j]['sender']);
-              break;
-            }
-        }
-        
-        // Check if the chat has any messages
-        if (messagesSnapshot.docs.isNotEmpty) {
-          print("Messages found for chat ${chatDoc['chatId']}");
-          
-          // Loop through the messages and print the content
-          // for (var messageDoc in messagesSnapshot.docs) {
-          //   final messageData = messageDoc.data();
-          //   print("Message: ${messageData['text']}");  // Replace 'text' if needed
-          // }
-
-          chatIdsWithMessages.add(chatDoc['chatId']);  // Add chat ID to the list
-        } else {
-          print("No messages found for chat ${chatDoc['chatId']}");
-        }
-      }
-
-      return chatIdsWithMessages;  // Return all chat IDs that have messages
-    } else {
-      print("No chats found");
-      return [];
+    List<String> usersId = [];
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('chats')
+        .get();
+    print(snapshot.docs);
+    for (var doc in snapshot.docs) {;
+      usersId.add(doc.id);
     }
+    usersName.clear();
+    for (String id in usersId) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('chats')
+          .doc(id)
+          .get();
+      
+      if (userDoc.exists) {
+        String name = userDoc['userName'] ?? 'Unknown User';
+        usersName.add(name);
+      } else {
+        usersName.add('Unknown User');
+      }
+    }
+    
+    return usersId;
   }
 
   @override
@@ -120,7 +85,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         backgroundColor: const Color.fromARGB(255, 126, 95, 227),
         toolbarHeight: 70,
       ),
-      body: FutureBuilder<List<String>>(
+      body: FutureBuilder(
         future: fetchUserChatIds(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -131,16 +96,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
             return const Center(child: Text("No messages from users yet."));
           }
 
-          final chatIds = snapshot.data!;
+          final usersId = snapshot.data!;
           
           return ListView.builder(
-            itemCount: names.length,
+            itemCount: usersId.length,
             itemBuilder: (context, index) {
-              final chatId = chatIds[index];
+              final userId = usersId[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
-                  title: Text("user: ${names[index]}"),
+                  title: Text("user: ${usersName[index]}"),
                   trailing: Icon(Icons.chat_bubble_outline),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -150,7 +115,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatUser(chatId: chatId), // Replace with your chat page
+                        builder: (context) => ChatUser(chatId: userId), // Replace with your chat page
                       ),
                     );
                   },

@@ -26,20 +26,10 @@ class _ChatUserState extends State<ChatUser> {
         .doc(widget.chatId)
         .collection('messages')
         .add({
-      'text': message,
-      'sender': 'admin',
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
-    final existing = await _firestore
-        .collection('chats_id')
-        .where('chatId', isEqualTo: widget.chatId)
-        .limit(1)
-        .get();
-
-    if (existing.docs.isEmpty) {
-      await _firestore.collection('chats_id').add({'chatId': widget.chatId});
-    }
+          'text': message,
+          'sender': 'admin',
+          'timestamp': FieldValue.serverTimestamp(),
+        });
 
     _messageController.clear();
   }
@@ -50,10 +40,7 @@ class _ChatUserState extends State<ChatUser> {
       appBar: AppBar(
         title: const Text(
           "Chat User",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 126, 95, 227),
         toolbarHeight: 70,
@@ -65,12 +52,13 @@ class _ChatUserState extends State<ChatUser> {
             children: [
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: _firestore
-                      .collection('chats')
-                      .doc(widget.chatId)
-                      .collection('messages')
-                      .orderBy('timestamp', descending: true)
-                      .snapshots(),
+                  stream:
+                      _firestore
+                          .collection('chats')
+                          .doc(widget.chatId)
+                          .collection('messages')
+                          .orderBy('timestamp', descending: true)
+                          .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -92,16 +80,23 @@ class _ChatUserState extends State<ChatUser> {
 
                         return Align(
                           alignment:
-                              isAdmin ? Alignment.centerRight : Alignment.centerLeft,
+                              isAdmin
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
                           child: Container(
                             margin: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
-                              color: isAdmin
-                                  ? Colors.purple.shade100
-                                  : Colors.grey.shade300,
+                              color:
+                                  isAdmin
+                                      ? Colors.purple.shade100
+                                      : Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Column(
@@ -129,8 +124,10 @@ class _ChatUserState extends State<ChatUser> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Expanded(
@@ -148,8 +145,10 @@ class _ChatUserState extends State<ChatUser> {
                     ),
                     const SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(Icons.send_outlined,
-                          color: Colors.purple),
+                      icon: const Icon(
+                        Icons.send_outlined,
+                        color: Colors.purple,
+                      ),
                       onPressed: sendMessage,
                     ),
                   ],
