@@ -1,6 +1,4 @@
-//import 'package:demo/Account_Buttons/about_page.dart';
 import 'dart:io';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/Account_Buttons/change_name.dart';
 import 'package:demo/Account_Buttons/change_password.dart';
@@ -59,7 +57,6 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('color1', color1.toString());
   }
-
 
   void getUsername() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -184,12 +181,12 @@ class _HomePageState extends State<HomePage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(160, 30),
-                            backgroundColor: const Color.fromARGB(
+                            backgroundColor: color1 != Colors.black87? const Color.fromARGB(
                               255,
                               207,
                               69,
                               231,
-                            ),
+                            ) : const Color.fromARGB(255, 60, 30, 182),
                           ),
                           onPressed: () {
                             FirebaseAuth.instance.userChanges();
@@ -202,19 +199,19 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Text(
                             "Change name",
-                            style: TextStyle(fontSize: 13, color: Colors.white),
+                            style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           fixedSize: Size(170, 30),
-                          backgroundColor: const Color.fromARGB(
+                          backgroundColor: color1 != Colors.black87 ? const Color.fromARGB(
                             255,
                             207,
                             69,
                             231,
-                          ),
+                          ) : const Color.fromARGB(255, 60, 30, 182),
                         ),
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
@@ -229,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Text(
                           "Change password",
-                          style: TextStyle(fontSize: 13, color: Colors.white),
+                          style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -240,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                          backgroundColor: color1 != Colors.black87? const Color.fromARGB(198, 155, 39, 176) : const Color.fromARGB(255, 60, 30, 182),
                         ),
                         onPressed: () {
                           changeBackgroundColor();
@@ -249,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(198, 155, 39, 176),
+                      backgroundColor: color1 != Colors.black87? const Color.fromARGB(198, 155, 39, 176) : const Color.fromARGB(255, 60, 30, 182),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -266,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 25),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: color1 != Colors.black87 ? Colors.red : const Color.fromARGB(242, 156, 40, 32),
                     ),
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
@@ -278,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Text(
                       "Sign Out",
-                      style: TextStyle(fontSize: 13, color: Colors.white),
+                      style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   //const SizedBox(height: 20),

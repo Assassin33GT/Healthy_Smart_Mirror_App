@@ -77,7 +77,7 @@ class _ActivityPageState extends State<ActivityPage> {
       duration: const Duration(milliseconds: 500),
       //margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(178, 255, 255, 255),
+        color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -96,7 +96,12 @@ class _ActivityPageState extends State<ActivityPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [color1, Colors.purple.shade500],
+                  colors: [
+                    color1 != Colors.black87
+                        ? color1
+                        : const Color.fromARGB(255, 60, 30, 182),
+                    Colors.purple.shade500,
+                  ],
                 ),
               ),
               child: const Row(
@@ -130,7 +135,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: Opacity(
                             opacity: value,
                             child: Card(
-                              color: const Color.fromARGB(150, 255, 255, 255),
+                              color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
                               elevation: 2,
                               margin: const EdgeInsets.only(bottom: 12),
                               shape: RoundedRectangleBorder(
@@ -218,7 +223,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(150, 255, 255, 255),
+                      color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(173, 197, 196, 196),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -315,7 +320,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
-              color: const Color.fromARGB(150, 255, 255, 255),
+              color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
@@ -430,7 +435,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 500),
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(178, 255, 255, 255),
+                              color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -450,7 +455,14 @@ class _ActivityPageState extends State<ActivityPage> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          color1,
+                                          color1 != Colors.black87
+                                              ? color1
+                                              : const Color.fromARGB(
+                                                255,
+                                                60,
+                                                30,
+                                                182,
+                                              ),
                                           Colors.purple.shade500,
                                         ],
                                       ),
@@ -520,7 +532,7 @@ class _ActivityPageState extends State<ActivityPage> {
                           duration: const Duration(milliseconds: 500),
                           //margin: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(178, 255, 255, 255),
+                            color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -539,7 +551,17 @@ class _ActivityPageState extends State<ActivityPage> {
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                      colors: [color1, Colors.purple.shade500],
+                                      colors: [
+                                        color1 != Colors.black87
+                                            ? color1
+                                            : const Color.fromARGB(
+                                              255,
+                                              60,
+                                              30,
+                                              182,
+                                            ),
+                                        Colors.purple.shade500,
+                                      ],
                                     ),
                                   ),
                                   child: const Row(
@@ -653,7 +675,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 vertical: 3,
               ),
               child: Card(
-                color: const Color.fromARGB(150, 255, 255, 255),
+                color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
                 elevation: 2,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(

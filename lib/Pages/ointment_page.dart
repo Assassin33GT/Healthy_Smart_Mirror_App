@@ -14,7 +14,7 @@ class _OintmentPageState extends State<OintmentPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _cardAnimation;
-
+  
   @override
   void initState() {
     super.initState();
@@ -218,6 +218,7 @@ class _OintmentPageState extends State<OintmentPage>
     required Color cardColor,
     required Color iconColor,
   }) {
+    print(_cardAnimation);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Column(

@@ -151,7 +151,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                           decoration: BoxDecoration(
                             color:
                                 isAdmin
-                                    ? const Color.fromARGB(255, 216, 81, 240)
+                                    ? const Color.fromARGB(255, 148, 54, 164)
                                     : Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(12),
                           ),

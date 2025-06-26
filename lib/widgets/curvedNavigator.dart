@@ -1,4 +1,5 @@
 import 'package:demo/Pages/support_chat_page.dart';
+import 'package:demo/main.dart';
 import 'package:demo/pages/activity_page.dart';
 import 'package:demo/pages/home_page.dart';
 import 'package:demo/pages/notification_page.dart';
@@ -23,7 +24,6 @@ class _CurvednavigatorState extends State<Curvednavigator> {
     if (image != null) {
       setState(() {
         _index = 0;
-        print(image.path);
       });
       // Save image path
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,9 +46,9 @@ class _CurvednavigatorState extends State<Curvednavigator> {
       height: 60,
       animationCurve: Curves.easeInOut,
       animationDuration: Duration(milliseconds: 250),
-      color: Color.fromARGB(255, 126, 95, 227),
-      backgroundColor: Color.fromARGB(255, 60, 30, 182),
-      buttonBackgroundColor: Color.fromARGB(255, 60, 30, 182),
+      color: color1 != Colors.black87? Color.fromARGB(255, 126, 95, 227) : const Color.fromARGB(140, 88, 30, 182),
+      backgroundColor: color1 != Colors.black87? Color.fromARGB(255, 60, 30, 182) : const Color.fromARGB(255, 60, 30, 182),
+      buttonBackgroundColor: color1 != Colors.black87? Color.fromARGB(255, 60, 30, 182) : const Color.fromARGB(255, 60, 30, 182),
       items: items,
       index: _index,
       onTap: (index) {
@@ -68,11 +68,6 @@ class _CurvednavigatorState extends State<Curvednavigator> {
               MaterialPageRoute(builder: (context) => ActivityPage()),
             );
           } else if (index == 2) {
-            // Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => QRCodePage()),
-            //   (route) => false,
-            // );
             _openCamera();
           } else if (index == 3) {
             Navigator.push(
