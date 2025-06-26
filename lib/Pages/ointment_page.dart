@@ -59,7 +59,7 @@ class _OintmentPageState extends State<OintmentPage>
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [color1, color2],
+              colors: [color1 != Colors.black87 ? color1 : const Color.fromARGB(255, 85, 22, 96), color2],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

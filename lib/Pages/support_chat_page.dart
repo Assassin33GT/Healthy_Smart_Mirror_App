@@ -151,7 +151,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                           decoration: BoxDecoration(
                             color:
                                 isAdmin
-                                    ? const Color.fromARGB(255, 148, 54, 164)
+                                    ? const Color.fromARGB(255, 177, 63, 197)
                                     : Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -188,10 +188,13 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       controller: _messageController,
                       decoration: InputDecoration(
                         hintText: "Enter message...",
-                        fillColor: Colors.white,
+                        fillColor:
+                            color1 != Colors.black87
+                                ? Colors.white
+                                : Colors.white38,
                         filled: true,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
