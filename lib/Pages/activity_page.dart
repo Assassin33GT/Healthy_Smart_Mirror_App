@@ -1,3 +1,4 @@
+import 'package:demo/Pages/ointment_page.dart';
 import 'package:demo/main.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +16,12 @@ class ActivityPage extends StatefulWidget {
 class _ActivityPageState extends State<ActivityPage> {
   Map<String, dynamic>? dietPlan;
 
+  @override
+  void initState() {
+    super.initState();
+    getSkinTips();
+  }
+
   Future<Map<String, dynamic>?> loadPlanFromFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
@@ -27,6 +34,21 @@ class _ActivityPageState extends State<ActivityPage> {
       return snapshot.data() as Map<String, dynamic>;
     }
     return null;
+  }
+
+  Future<Map<String, dynamic>> getSkinTips() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    var userId = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot snapshot = await firestore
+        .collection("users")
+        .doc(userId)
+        .collection("skin_analysis_history")
+        .doc("result5")
+        .get(GetOptions(source: Source.server));
+
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    data = data['cosmetic'] as Map<String, dynamic>;
+    return data;
   }
 
   Future<int> fetchSavedPlan() async {
@@ -539,8 +561,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                   ),
                                 ),
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 12),
                                     _buildHealthTip(
@@ -548,10 +569,44 @@ class _ActivityPageState extends State<ActivityPage> {
                                       "Drink at least 8 glasses of water a day",
                                       Icons.water,
                                     ),
-                                    _buildHealthTip(
-                                      "Skin Health",
-                                      "Hydration is key for healthy skin",
-                                      Icons.face,
+                                    FutureBuilder(
+                                      future: getSkinTips(),
+                                      builder: (context, snapshot) {
+                                        if (ConnectionState.active ==
+                                            ConnectionState.waiting) {
+                                          return _buildHealthTip(
+                                            "Loading...",
+                                            "Loading...",
+                                            Icons.face,
+                                          );
+                                        }
+                                        if (!snapshot.hasData ||
+                                            snapshot.hasError) {
+                                          return _buildHealthTip(
+                                            "Skin Health",
+                                            "Hydration is key for healthy skin",
+                                            Icons.face,
+                                          );
+                                        }
+                                        Map<String, dynamic> data =
+                                            snapshot.data!;
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) => OintmentPage(),
+                                              ),
+                                            );
+                                          },
+                                          child: _buildHealthTip(
+                                            "${data['name']}",
+                                            "${data['brand']} : Click for more details!",
+                                            Icons.face,
+                                          ),
+                                        );
+                                      },
                                     ),
                                     _buildHealthTip(
                                       "Sleep Well",
@@ -593,7 +648,10 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 3,
+              ),
               child: Card(
                 color: const Color.fromARGB(150, 255, 255, 255),
                 elevation: 2,

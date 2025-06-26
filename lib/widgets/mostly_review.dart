@@ -50,9 +50,7 @@ class _MostlyReviewState extends State<MostlyReview> {
         await firestore.collection('users').doc(user).get();
 
     Map<String, dynamic> save = snapshot.data() as Map<String, dynamic>;
-    print(save['counter']);
     counter = int.tryParse(save['counter'].toString()) ?? 0;
-    print(counter);
     timeOfStart = save['timeOfStart'];
     return snapshot.data() as Map<String, dynamic>;
   }
