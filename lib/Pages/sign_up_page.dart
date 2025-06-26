@@ -17,7 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   int flag = 0;
-  String? text; 
+  String? text;
 
   @override
   void dispose() {
@@ -39,10 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color1,
-              color2,
-            ],
+            colors: [color1, color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -55,19 +52,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                  padding: const EdgeInsets.only(bottom:50.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Hello! Register to get\nstarted",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                    ],
+                    padding: const EdgeInsets.only(bottom: 50.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Hello! Register to get\nstarted",
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                   Text(
                     "Sign Up",
                     style: TextStyle(
@@ -92,14 +90,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   FormContainerWidget(
                     controller: _passwordController,
                     hintText: "Password",
-                    isPasswordField: true, 
+                    isPasswordField: true,
                   ),
                   if (flag == 1) displayText(),
                   SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: _signUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 162, 21, 187),
+                      backgroundColor:
+                          color1 != Colors.black87
+                              ? const Color.fromARGB(255, 178, 49, 201)
+                              : const Color.fromARGB(237, 123, 31, 162),
                     ),
                     child: Center(
                       child: Text(
@@ -119,7 +120,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(width: 5),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         child: Text(
                           "Login",
@@ -149,61 +156,60 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // add the user to the firebase database
-  void _signUp() async{
-    
+  void _signUp() async {
     String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    if(_usernameController.text.length < 3){
+    if (_usernameController.text.length < 3) {
       setState(() {
         flag = 1;
         text = "Name must be 3 letters at least";
       });
-    }else if(isValidEmail(email) == false){
+    } else if (isValidEmail(email) == false) {
       setState(() {
         flag = 1;
         text = "Email is not valid";
       });
-    }
-    else if(_passwordController.text.length < 6){
+    } else if (_passwordController.text.length < 6) {
       setState(() {
         flag = 1;
-        text = "Password must be 6 letters at least";  
+        text = "Password must be 6 letters at least";
       });
-    }else{
+    } else {
       flag = 0;
       try {
-      // Register the user with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      User? user = userCredential.user;
+        // Register the user with email and password
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
+        User? user = userCredential.user;
 
-      if (user != null) {
-        // Send the email verification link (OTP)
-        await user.sendEmailVerification();
-        print("User is successfully created");
-        await user.updateDisplayName(username);
-        await user.reload();
+        if (user != null) {
+          // Send the email verification link (OTP)
+          await user.sendEmailVerification();
+          print("User is successfully created");
+          await user.updateDisplayName(username);
+          await user.reload();
+          setState(() {
+            flag = 0;
+            print(username);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false,
+            );
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        }
+      } catch (e) {
         setState(() {
-          flag = 0;
-          print(username);
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage()), (route) => false);});
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginPage(),
-          ),
-        );
+          flag = 1;
+          text = "Error: ${e.toString()}";
+        });
       }
-    } catch (e) {
-      setState(() {
-        flag = 1;
-        text = "Error: ${e.toString()}";
-      });
     }
-    }
-}
+  }
 }

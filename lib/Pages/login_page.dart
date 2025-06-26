@@ -29,11 +29,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget displayText() {
-    if(flag == 1){
-      return Text("Wrong email or password", style: TextStyle(color: Colors.red));
-    }
-    else{
-      return Text("Your account is not verified yet!", style: TextStyle(color: Colors.red));
+    if (flag == 1) {
+      return Text(
+        "Wrong email or password",
+        style: TextStyle(color: Colors.red),
+      );
+    } else {
+      return Text(
+        "Your account is not verified yet!",
+        style: TextStyle(color: Colors.red),
+      );
     }
   }
 
@@ -45,10 +50,7 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color1,
-              color2,
-            ],
+            colors: [color1, color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -99,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: _signIn,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 162, 21, 187),
+                    backgroundColor:
+                        color1 != Colors.black87
+                            ? const Color.fromARGB(255, 178, 49, 201)
+                            : const Color.fromARGB(237, 123, 31, 162),
                   ),
                   child: Center(
                     child: Text(
@@ -173,40 +178,42 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
-    
-    if(user != null && email == "team712347@gmail.com" && password == "123123"){
+
+    if (user != null &&
+        email == "team712347@gmail.com" &&
+        password == "123123") {
       print("admin");
       await user.reload();
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => AdminHomePage()),
-          (route) => false,
-        );
+        context,
+        MaterialPageRoute(builder: (context) => AdminHomePage()),
+        (route) => false,
+      );
     }
 
     if (user != null) {
       await user.reload();
       user = FirebaseAuth.instance.currentUser;
-      if(user!.emailVerified){
+      if (user!.emailVerified) {
         flag = 0;
         print("User is successfully signedIn");
-      setState(() {
-        flag = 0;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-          (route) => false,
-        );
-      });
-      }else{
         setState(() {
-          flag = 2;  
+          flag = 0;
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+            (route) => false,
+          );
+        });
+      } else {
+        setState(() {
+          flag = 2;
         });
         print("User is not verified yet");
       }
     } else {
       setState(() {
-        flag = 1;  
+        flag = 1;
       });
       print(flag);
       print("Some error happend");

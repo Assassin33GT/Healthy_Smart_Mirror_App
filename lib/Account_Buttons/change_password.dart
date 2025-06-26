@@ -67,23 +67,23 @@ class _ChangeNameState extends State<ChangePassword> {
                 const SizedBox(height: 10,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: color1 != Colors.black87 ? Colors.red : const Color.fromARGB(242, 156, 40, 32),
                   ),
                   onPressed: (){
                     updateUserPass(_currentPasswordController.text, _newPasswordController.text);
-                    //checkUserStatus();
                   },
                   child: Text(
                     "Submit",
                     style: TextStyle(
                       color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                     )
                   ),
                   const SizedBox(height: 30,),
                   ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
+                    backgroundColor: color1 != Colors.black87 ? Colors.purple : const Color.fromARGB(255, 92, 23, 104),
                   ),
                   onPressed: (){
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
