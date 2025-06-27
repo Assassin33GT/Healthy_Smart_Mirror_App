@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ControlMirror extends StatefulWidget {
   const ControlMirror({super.key});
@@ -17,16 +18,20 @@ class _ControlMirrorState extends State<ControlMirror> {
   final TextEditingController videoUrlController = TextEditingController(
     text: "https://youtu.be/ko2OffMrn2s?si=G_van8LJBjwbKuYl",
   );
+  final TextEditingController wifiSsidController = TextEditingController();
+  final TextEditingController wifiPasswordController = TextEditingController();
 
   double brightnessValue = 100;
   Color _currentColor = Colors.purpleAccent;
+  bool qrCode = false;
 
   Future<void> sendCommand(
     String action, {
     Map<String, dynamic>? payload,
+    bool useSetupIp = false,
   }) async {
-    final ip = ipController.text.trim();
-    if (ip.isEmpty) {
+    String ip = useSetupIp ? '192.168.4.1' : ipController.text.trim();
+    if (ip.isEmpty && !useSetupIp) {
       _showSnackBar("Please enter a valid IP address");
       return;
     }
@@ -40,9 +45,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     ).replace(queryParameters: queryParams);
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(Duration(seconds: 10));
       if (response.statusCode == 200) {
         _showSnackBar("Command '$action' sent successfully!");
+        if (action == "CONFIGURE_WIFI" && useSetupIp) {
+          _showSnackBar(
+            "Wi-Fi configuration sent. Please reconnect to your Wi-Fi network and update the IP address.",
+          );
+        }
       } else {
         _showSnackBar(
           "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
@@ -57,7 +67,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: const Duration(milliseconds: 500),
+        duration: Duration(seconds: 1),
+        backgroundColor: const Color.fromARGB(110, 76, 175, 79),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
       ),
     );
   }
@@ -90,6 +107,14 @@ class _ControlMirrorState extends State<ControlMirror> {
 
   void showDietMeals() {
     toggleModule("MMM-FirebaseBridge", true);
+  }
+
+  void hideSkinAnalysis() {
+    toggleModule("MMM-SkinAnalysis", false);
+  }
+
+  void showSkinAnalysis() {
+    toggleModule("MMM-SkinAnalysis", true);
   }
 
   void minimizeMagicMirror() {
@@ -133,7 +158,6 @@ class _ControlMirrorState extends State<ControlMirror> {
                     _currentColor = color;
                   });
                 },
-
                 pickerAreaHeightPercent: 0.8,
               ),
             ),
@@ -192,21 +216,17 @@ class _ControlMirrorState extends State<ControlMirror> {
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
-        //title: const Text("Smart Mirror Controller"),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(24)
-          )
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         backgroundColor: const Color.fromARGB(175, 120, 137, 120),
-        ),
+        title: Text("Magic Mirror Control"),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: [Colors.green, Colors.black87],
-          ),
+          gradient: RadialGradient(colors: [Colors.green, Colors.black87]),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -217,6 +237,42 @@ class _ControlMirrorState extends State<ControlMirror> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Setup Mode Toggle
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text(
+                  //       "Wi-Fi Setup Mode",
+                  //       style: TextStyle(
+                  //         fontSize: 18,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //     Switch(
+                  //       value: isSetupMode,
+                  //       activeColor: Colors.green,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           isSetupMode = value;
+                  //           if (isSetupMode) {
+                  //             ipController.text = '192.168.4.1';
+                  //           } else {
+                  //             ipController.text = '192.168.1.1';
+                  //           }
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                  // if (isSetupMode) ...[
+                  //   Text(
+                  //     "Connect to the 'MagicMirror-Setup' Wi-Fi network on your phone, then enter the Wi-Fi credentials below.",
+                  //     style: TextStyle(fontSize: 14, color: Colors.white70),
+                  //   ),
+                  //   const SizedBox(height: 10),
+                  // ],
+                  // IP Address Input
                   Text(
                     "Enter Mirror IP Address",
                     style: TextStyle(
@@ -243,9 +299,101 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "hint: you will find it in the buttom left of the mirror screen (should mirror and phone be connected to the same wifi!)",
+                    "Hint: Find the IP in the bottom left of the mirror screen (phone and mirror must be on the same Wi-Fi).",
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
+                  const SizedBox(height: 30),
+                  // Wi-Fi Configuration Section
+                  const Text(
+                    "Wi-Fi Configuration",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: wifiSsidController,
+                    decoration: const InputDecoration(
+                      labelText: "Wi-Fi SSID",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      fillColor: Colors.white70,
+                      filled: true,
+                    ),
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a Wi-Fi SSID"
+                                : null,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: wifiPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: "Wi-Fi Password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      fillColor: Colors.white70,
+                      filled: true,
+                    ),
+                    obscureText: true,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a Wi-Fi password"
+                                : null,
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: Colors.green),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (wifiSsidController.text.isNotEmpty &&
+                            wifiPasswordController.text.isNotEmpty) {
+                          qrCode = true;
+                        } else {
+                          _showSnackBar(
+                            "Please enter SSID and Password!",
+                          );
+                        }
+                      });
+                    },
+                    child: const Text(
+                      "Generate Wi-Fi QRcode",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Generate QRcode for Wi-Fi
+                  if (qrCode &&
+                      wifiSsidController.text.isNotEmpty &&
+                      wifiPasswordController.text.isNotEmpty)
+                    Stack(
+                      children: [
+                        Center(
+                          child: QrImageView(
+                            data: 'WIFI:T:WPA;S:${wifiSsidController.text};P:${wifiPasswordController.text};;',
+                            version: QrVersions.auto,
+                            size: 200.0,
+                            gapless: false,
+                            backgroundColor: Colors.white,
+                            errorStateBuilder: (cxt, err) {
+                              return const Text(
+                                'Error generating QR code',
+                                style: TextStyle(color: Colors.red),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 30),
                   // Brightness Control Section
                   const Text(
@@ -290,7 +438,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleModule("clock", true),
-                        child: const Icon(Icons.timer_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.timer_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -298,7 +449,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleModule("clock", false),
-                        child: const Icon(Icons.timer_off_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.timer_off_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -306,7 +460,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("clock"),
-                        child: const Icon(Icons.refresh, color: Colors.white70,),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -321,7 +475,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleModule("calendar", true),
-                        child: const Icon(Icons.calendar_month_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -340,7 +497,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("calendar"),
-                        child: const Icon(Icons.refresh, color: Colors.white70,),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -355,7 +512,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleModule("weather", true),
-                        child: Icon(Icons.cloud_outlined, color: Colors.white70,),
+                        child: Icon(
+                          Icons.cloud_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -363,7 +523,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleModule("weather", false),
-                        child: const Icon(Icons.cloud_off_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.cloud_off_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -371,7 +534,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("weather"),
-                        child: const Icon(Icons.refresh, color: Colors.white70,),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -386,7 +549,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: showMirrorIP,
-                        child: const Icon(Icons.link_sharp, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.link_sharp,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -394,7 +560,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: hideMirrorIP,
-                        child: const Icon(Icons.link_off_sharp, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.link_off_sharp,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -402,7 +571,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("MMM-Remote-Control"),
-                        child: const Icon(Icons.refresh, color: Colors.white70,),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -417,16 +586,21 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: showDietMeals,
-                        child: const Icon(Icons.fastfood_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.fastfood_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
-
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: hideDietMeals,
-                        child: const Icon(Icons.no_food_outlined, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.no_food_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -434,7 +608,41 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("MMM-FirebaseBridge"),
-                        child: const Icon(Icons.refresh, color: Colors.white70,),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: showSkinAnalysis,
+                        child: const Icon(Icons.face, color: Colors.white70),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: hideSkinAnalysis,
+                        child: const Icon(
+                          Icons.face_retouching_off,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: () => refreshModule("MMM-SkinAnalysis"),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -449,22 +657,25 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleAllModules(true),
-                        child: const Text("Show All Modules", style: TextStyle(color: Colors.white70,),),
+                        child: const Text(
+                          "Show All Modules",
+                          style: TextStyle(color: Colors.white70),
+                        ),
                       ),
-                      const SizedBox(height: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => toggleAllModules(false),
-                        child: const Text("Hide All Modules", style: TextStyle(color: Colors.white70,),),
+                        child: const Text(
+                          "Hide All Modules",
+                          style: TextStyle(color: Colors.white70),
+                        ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
                   // System Control Section
                   const Text(
                     "System Controls",
@@ -481,7 +692,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       side: BorderSide(color: Colors.green),
                     ),
                     onPressed: restartMagicMirror,
-                    child: const Text("Restart Magic Mirror", style: TextStyle(color: Colors.white70),),
+                    child: const Text(
+                      "Restart Magic Mirror",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -490,7 +704,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       side: BorderSide(color: Colors.green),
                     ),
                     onPressed: reloadMagicMirror,
-                    child: const Text("Reload Magic Mirror", style: TextStyle(color: Colors.white70)),
+                    child: const Text(
+                      "Reload Magic Mirror",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -499,23 +716,22 @@ class _ControlMirrorState extends State<ControlMirror> {
                       side: BorderSide(color: Colors.green),
                     ),
                     onPressed: minimizeMagicMirror,
-                    child: const Text("Minimize Magic Mirror", style: TextStyle(color: Colors.white70)),
+                    child: const Text(
+                      "Minimize Magic Mirror",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(0, 198, 74, 65),
-                      side: BorderSide(
-                        color: Colors.green,
-                      )
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: Colors.green),
                     ),
                     onPressed: shutdownMagicMirror,
                     child: const Text(
                       "Shutdown Magic Mirror",
-                      style: TextStyle(
-                        color: Colors.red
-                      ),
-                      ),
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -531,11 +747,12 @@ class _ControlMirrorState extends State<ControlMirror> {
                     onPressed: _openColorPicker,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _currentColor,
-                      side: BorderSide(
-                        color: Colors.green,
-                      )
+                      side: BorderSide(color: Colors.green),
                     ),
-                    child: const Icon(Icons.color_lens_outlined, color: Colors.white70,),
+                    child: const Icon(
+                      Icons.color_lens_outlined,
+                      color: Colors.white70,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -566,13 +783,14 @@ class _ControlMirrorState extends State<ControlMirror> {
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
-                        ),
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: Colors.green),
+                    ),
                     onPressed: playVideo,
-                    child: const Text("Play Video", style: TextStyle(color: Colors.white70)),
+                    child: const Text(
+                      "Play Video",
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -581,32 +799,32 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
+                          side: BorderSide(color: Colors.green),
                         ),
                         onPressed: minimizeVideo,
-                        child: const Icon(Icons.minimize, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.minimize,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
+                          side: BorderSide(color: Colors.green),
                         ),
                         onPressed: maximizeVideo,
-                        child: const Icon(Icons.fullscreen, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.fullscreen,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
+                          side: BorderSide(color: Colors.green),
                         ),
                         onPressed: closeVideo,
-                        child: const Icon(Icons.close, color: Colors.white70,),
+                        child: const Icon(Icons.close, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -617,22 +835,24 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
+                          side: BorderSide(color: Colors.green),
                         ),
                         onPressed: decreaseVolume,
-                        child: const Icon(Icons.volume_down, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.volume_down,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          side: BorderSide(
-                            color: Colors.green
-                          )
+                          side: BorderSide(color: Colors.green),
                         ),
                         onPressed: increaseVolume,
-                        child: const Icon(Icons.volume_up, color: Colors.white70,),
+                        child: const Icon(
+                          Icons.volume_up,
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),

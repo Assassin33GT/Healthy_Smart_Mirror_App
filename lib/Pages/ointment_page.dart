@@ -46,7 +46,6 @@ class _OintmentPageState extends State<OintmentPage>
         .get(GetOptions(source: Source.server));
 
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    data = data['cosmetic'] as Map<String, dynamic>;
     return data;
   }
 
@@ -133,7 +132,9 @@ class _OintmentPageState extends State<OintmentPage>
                 );
               }
 
-              Map<String, dynamic> data = snapshot.data!;
+              Map<String, dynamic> allData = snapshot.data!;
+              Map<String, dynamic> data = allData['cosmetic'];
+              String recommendation = allData['recommendation'];
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +200,13 @@ class _OintmentPageState extends State<OintmentPage>
                       value: data['ingredients'],
                       cardColor: Colors.pink.shade100.withOpacity(0.7),
                       iconColor: Colors.pink.shade700,
+                    ),
+                    _buildOintmentSection(
+                      icon: Icons.recommend,
+                      title: "Recommendation",
+                      value: recommendation,
+                      cardColor: Colors.yellow.shade100.withOpacity(0.7),
+                      iconColor: Colors.yellow.shade700,
                     ),
                     const SizedBox(height: 30),
                   ],
