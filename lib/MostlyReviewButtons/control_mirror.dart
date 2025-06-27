@@ -22,7 +22,7 @@ class _ControlMirrorState extends State<ControlMirror> {
   final TextEditingController wifiPasswordController = TextEditingController();
 
   double brightnessValue = 100;
-  Color _currentColor = Colors.purpleAccent;
+  Color _currentColor = Colors.transparent;
   bool qrCode = false;
 
   Future<void> sendCommand(
@@ -123,6 +123,14 @@ class _ControlMirrorState extends State<ControlMirror> {
 
   void showSkinAnalysisChart() {
     toggleModule("MMM-SkinAnalysisChart", true);
+  }
+
+  void hideQRScanner() {
+    toggleModule("MMM-QRScanner", false);
+  }
+
+  void showQRScanner() {
+    toggleModule("MMM-QRScanner", true);
   }
 
   void minimizeMagicMirror() {
@@ -459,7 +467,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                         ),
                         onPressed: () => toggleModule("calendar", false),
                         child: const Icon(
-                          Icons.signal_cellular_no_sim_outlined,
+                          Icons.not_interested,
                           color: Colors.white70,
                         ),
                       ),
@@ -629,7 +637,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: showSkinAnalysisChart,
-                        child: const Icon(Icons.analytics, color: Colors.white70),
+                        child: const Icon(
+                          Icons.analytics,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -648,6 +659,43 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("MMM-SkinAnalysisChart"),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: showQRScanner,
+                        child: const Icon(
+                          Icons.qr_code_scanner,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: hideQRScanner,
+                        child: const Icon(
+                          Icons.not_interested_sharp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: () => refreshModule("MMM-QRScanner"),
                         child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
