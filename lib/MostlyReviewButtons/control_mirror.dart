@@ -46,11 +46,13 @@ class _ControlMirrorState extends State<ControlMirror> {
     try {
       if (action == "CHANGE_BACKGROUND_IMAGE" && payload?["image"] != null) {
         // Use POST for image data
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'action': action, 'image': payload!['image']}),
-        ).timeout(const Duration(seconds: 10));
+        final response = await http
+            .post(
+              url,
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'action': action, 'image': payload!['image']}),
+            )
+            .timeout(const Duration(seconds: 10));
         if (response.statusCode == 200) {
           _showSnackBar("Background image sent successfully! (Check Mirror)");
           print("Response body: ${response.body}"); // Debug log
@@ -66,9 +68,9 @@ class _ControlMirrorState extends State<ControlMirror> {
           "action": action,
           ...?payload?.map((key, value) => MapEntry(key, value.toString())),
         };
-        final response = await http.get(
-          url.replace(queryParameters: queryParams),
-        ).timeout(const Duration(seconds: 10));
+        final response = await http
+            .get(url.replace(queryParameters: queryParams))
+            .timeout(const Duration(seconds: 10));
         if (response.statusCode == 200) {
           _showSnackBar("Command '$action' sent successfully!");
           if (action == "CONFIGURE_WIFI" && useSetupIp) {
@@ -158,6 +160,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     toggleModule("MMM-QRScanner", true);
   }
 
+  void openBluetooth() {
+    sendCommand("OPEN_BLUETOOTH");
+  }
+
+  void closeBluetooth() {
+    sendCommand("CLOSE_BLUETOOTH");
+  }
+
   void minimizeMagicMirror() {
     sendCommand("MINIMIZE");
   }
@@ -188,37 +198,38 @@ class _ControlMirrorState extends State<ControlMirror> {
   void _openColorPicker() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pick a Background Color'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: _currentColor,
-            onColorChanged: (color) {
-              setState(() {
-                _currentColor = color;
-              });
-            },
-            pickerAreaHeightPercent: 0.8,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Pick a Background Color'),
+            content: SingleChildScrollView(
+              child: ColorPicker(
+                pickerColor: _currentColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    _currentColor = color;
+                  });
+                },
+                pickerAreaHeightPercent: 0.8,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Set'),
+                onPressed: () {
+                  changeBackgroundColor(
+                    '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Set'),
-            onPressed: () {
-              changeBackgroundColor(
-                '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
-              );
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -326,10 +337,11 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter an IP address"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter an IP address"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -357,10 +369,11 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter a Wi-Fi SSID"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a Wi-Fi SSID"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
@@ -374,10 +387,11 @@ class _ControlMirrorState extends State<ControlMirror> {
                       filled: true,
                     ),
                     obscureText: true,
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter a Wi-Fi password"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a Wi-Fi password"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -781,6 +795,43 @@ class _ControlMirrorState extends State<ControlMirror> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  const Text(
+                    "Bluetooth Control",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: openBluetooth,
+                        child: const Icon(
+                          Icons.bluetooth,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: closeBluetooth,
+                        child: const Icon(
+                          Icons.bluetooth_disabled,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   // System Control Section
                   const Text(
                     "System Controls",
@@ -900,10 +951,11 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator: (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter a URL"
-                            : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter a URL"
+                                : null,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
