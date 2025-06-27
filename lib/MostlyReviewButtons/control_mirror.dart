@@ -117,6 +117,14 @@ class _ControlMirrorState extends State<ControlMirror> {
     toggleModule("MMM-SkinAnalysis", true);
   }
 
+  void hideSkinAnalysisChart() {
+    toggleModule("MMM-SkinAnalysisChart", false);
+  }
+
+  void showSkinAnalysisChart() {
+    toggleModule("MMM-SkinAnalysisChart", true);
+  }
+
   void minimizeMagicMirror() {
     sendCommand("MINIMIZE");
   }
@@ -237,41 +245,6 @@ class _ControlMirrorState extends State<ControlMirror> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Setup Mode Toggle
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       "Wi-Fi Setup Mode",
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.bold,
-                  //         color: Colors.white,
-                  //       ),
-                  //     ),
-                  //     Switch(
-                  //       value: isSetupMode,
-                  //       activeColor: Colors.green,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           isSetupMode = value;
-                  //           if (isSetupMode) {
-                  //             ipController.text = '192.168.4.1';
-                  //           } else {
-                  //             ipController.text = '192.168.1.1';
-                  //           }
-                  //         });
-                  //       },
-                  //     ),
-                  //   ],
-                  // ),
-                  // if (isSetupMode) ...[
-                  //   Text(
-                  //     "Connect to the 'MagicMirror-Setup' Wi-Fi network on your phone, then enter the Wi-Fi credentials below.",
-                  //     style: TextStyle(fontSize: 14, color: Colors.white70),
-                  //   ),
-                  //   const SizedBox(height: 10),
-                  // ],
                   // IP Address Input
                   Text(
                     "Enter Mirror IP Address",
@@ -359,9 +332,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                             wifiPasswordController.text.isNotEmpty) {
                           qrCode = true;
                         } else {
-                          _showSnackBar(
-                            "Please enter SSID and Password!",
-                          );
+                          _showSnackBar("Please enter SSID and Password!");
                         }
                       });
                     },
@@ -379,7 +350,8 @@ class _ControlMirrorState extends State<ControlMirror> {
                       children: [
                         Center(
                           child: QrImageView(
-                            data: 'WIFI:T:WPA;S:${wifiSsidController.text};P:${wifiPasswordController.text};;',
+                            data:
+                                'WIFI:T:WPA;S:${wifiSsidController.text};P:${wifiPasswordController.text};;',
                             version: QrVersions.auto,
                             size: 200.0,
                             gapless: false,
@@ -642,6 +614,40 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: () => refreshModule("MMM-SkinAnalysis"),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: showSkinAnalysisChart,
+                        child: const Icon(Icons.analytics, color: Colors.white70),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: hideSkinAnalysisChart,
+                        child: const Icon(
+                          Icons.not_interested_sharp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: () => refreshModule("MMM-SkinAnalysisChart"),
                         child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
