@@ -25,7 +25,7 @@ class _IntroPageState extends State<IntroPage> {
   void initState() {
     super.initState();
     _loadSavedColors();
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => widget.child!),
@@ -52,8 +52,10 @@ class _IntroPageState extends State<IntroPage> {
         child: Padding(
           padding: const EdgeInsets.all(40.0),
           child: Image.asset(
-            "android/assets/images/Intro2.gif",
-            color: const Color.fromARGB(255, 221, 171, 24),
+            "android/assets/images/Intro.gif",
+            color: const Color.fromARGB(197, 221, 172, 24),
+            width: 50,
+            height: 50,
           ),
         ),
       ),

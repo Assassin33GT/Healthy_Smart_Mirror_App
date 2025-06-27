@@ -20,7 +20,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('chats')
         .get();
-    print(snapshot.docs);
     for (var doc in snapshot.docs) {;
       usersId.add(doc.id);
     }
