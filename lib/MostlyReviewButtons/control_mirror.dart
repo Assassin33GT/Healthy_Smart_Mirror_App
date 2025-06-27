@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert'; // For base64 encoding
+import 'package:image/image.dart' as img; // For image compression
 
 class ControlMirror extends StatefulWidget {
   const ControlMirror({super.key});
@@ -24,6 +27,9 @@ class _ControlMirrorState extends State<ControlMirror> {
   double brightnessValue = 100;
   Color _currentColor = Colors.transparent;
   bool qrCode = false;
+  String? _selectedImageBase64;
+
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> sendCommand(
     String action, {
@@ -36,30 +42,49 @@ class _ControlMirrorState extends State<ControlMirror> {
       return;
     }
 
-    final queryParams = {
-      "action": action,
-      ...?payload?.map((key, value) => MapEntry(key, value.toString())),
-    };
-    final url = Uri.parse(
-      'http://$ip:8080/remote',
-    ).replace(queryParameters: queryParams);
-
+    final url = Uri.parse('http://$ip:8080/remote');
     try {
-      final response = await http.get(url).timeout(Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        _showSnackBar("Command '$action' sent successfully!");
-        if (action == "CONFIGURE_WIFI" && useSetupIp) {
+      if (action == "CHANGE_BACKGROUND_IMAGE" && payload?["image"] != null) {
+        // Use POST for image data
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'action': action, 'image': payload!['image']}),
+        ).timeout(const Duration(seconds: 10));
+        if (response.statusCode == 200) {
+          _showSnackBar("Background image sent successfully! (Check Mirror)");
+          print("Response body: ${response.body}"); // Debug log
+        } else {
           _showSnackBar(
-            "Wi-Fi configuration sent. Please reconnect to your Wi-Fi network and update the IP address.",
+            "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
           );
+          print("Error response: ${response.body}"); // Debug log
         }
       } else {
-        _showSnackBar(
-          "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
-        );
+        // Use GET for other commands
+        final queryParams = {
+          "action": action,
+          ...?payload?.map((key, value) => MapEntry(key, value.toString())),
+        };
+        final response = await http.get(
+          url.replace(queryParameters: queryParams),
+        ).timeout(const Duration(seconds: 10));
+        if (response.statusCode == 200) {
+          _showSnackBar("Command '$action' sent successfully!");
+          if (action == "CONFIGURE_WIFI" && useSetupIp) {
+            _showSnackBar(
+              "Wi-Fi configuration sent. Please reconnect to your Wi-Fi network and update the IP address.",
+            );
+          }
+        } else {
+          _showSnackBar(
+            "Failed: ${response.statusCode} - ${response.reasonPhrase} - ${response.body}",
+          );
+        }
       }
     } catch (e) {
       _showSnackBar("Error: $e");
+      print("Exception: $e"); // Debug log
     }
   }
 
@@ -163,38 +188,37 @@ class _ControlMirrorState extends State<ControlMirror> {
   void _openColorPicker() {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Pick a Background Color'),
-            content: SingleChildScrollView(
-              child: ColorPicker(
-                pickerColor: _currentColor,
-                onColorChanged: (color) {
-                  setState(() {
-                    _currentColor = color;
-                  });
-                },
-                pickerAreaHeightPercent: 0.8,
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Set'),
-                onPressed: () {
-                  changeBackgroundColor(
-                    '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
-                  );
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Pick a Background Color'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: _currentColor,
+            onColorChanged: (color) {
+              setState(() {
+                _currentColor = color;
+              });
+            },
+            pickerAreaHeightPercent: 0.8,
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Set'),
+            onPressed: () {
+              changeBackgroundColor(
+                '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -225,6 +249,36 @@ class _ControlMirrorState extends State<ControlMirror> {
 
   void decreaseVolume() {
     sendCommand("DECREASE_VOLUME");
+  }
+
+  Future<void> changeBackgroundImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      img.Image? image = img.decodeImage(bytes);
+      if (image != null) {
+        // Compress image to reduce size (e.g., to 800px width)
+        image = img.copyResize(image, width: 800);
+        final compressedBytes = img.encodeJpg(image, quality: 85);
+        final base64Image = base64Encode(compressedBytes);
+
+        // Check size (limit to ~1MB to avoid issues)
+        if (base64Image.length > 1000000) {
+          _showSnackBar("Image too large. Please select a smaller image.");
+          return;
+        }
+
+        sendCommand("CHANGE_BACKGROUND_IMAGE", payload: {"image": base64Image});
+        setState(() {
+          _selectedImageBase64 = base64Image;
+        });
+        _showSnackBar("Background image sent successfully!");
+      } else {
+        _showSnackBar("Failed to process image");
+      }
+    } else {
+      _showSnackBar("No image selected");
+    }
   }
 
   @override
@@ -272,11 +326,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? "Please enter an IP address"
-                                : null,
+                    validator: (value) =>
+                        value == null || value.isEmpty
+                            ? "Please enter an IP address"
+                            : null,
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -304,11 +357,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? "Please enter a Wi-Fi SSID"
-                                : null,
+                    validator: (value) =>
+                        value == null || value.isEmpty
+                            ? "Please enter a Wi-Fi SSID"
+                            : null,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
@@ -322,11 +374,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       filled: true,
                     ),
                     obscureText: true,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? "Please enter a Wi-Fi password"
-                                : null,
+                    validator: (value) =>
+                        value == null || value.isEmpty
+                            ? "Please enter a Wi-Fi password"
+                            : null,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -810,6 +861,27 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
+                    "Background Image Control",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(color: Colors.green),
+                    ),
+                    onPressed: changeBackgroundImage,
+                    child: const Text(
+                      "Set Background Image",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
                     "Display Video On Mirror",
                     style: TextStyle(
                       fontSize: 18,
@@ -828,11 +900,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                       fillColor: Colors.white70,
                       filled: true,
                     ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? "Please enter a URL"
-                                : null,
+                    validator: (value) =>
+                        value == null || value.isEmpty
+                            ? "Please enter a URL"
+                            : null,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
