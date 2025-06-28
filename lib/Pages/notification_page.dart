@@ -120,6 +120,17 @@ class _NotificationPageState extends State<NotificationPage> {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      1348,
+      '🧘 Wellness Reminder',
+      'Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!',
+      _nextInstanceOfTime(0, 0),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
