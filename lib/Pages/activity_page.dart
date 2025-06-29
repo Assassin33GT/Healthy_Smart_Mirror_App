@@ -75,9 +75,11 @@ class _ActivityPageState extends State<ActivityPage> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
-      //margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
+        color:
+            color1 != Colors.black87
+                ? const Color.fromARGB(178, 255, 255, 255)
+                : const Color.fromARGB(105, 255, 255, 255),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -135,7 +137,15 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: Opacity(
                             opacity: value,
                             child: Card(
-                              color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
+                              color:
+                                  color1 != Colors.black87
+                                      ? const Color.fromARGB(150, 255, 255, 255)
+                                      : const Color.fromARGB(
+                                        107,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
                               elevation: 2,
                               margin: const EdgeInsets.only(bottom: 12),
                               shape: RoundedRectangleBorder(
@@ -223,7 +233,10 @@ class _ActivityPageState extends State<ActivityPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(173, 197, 196, 196),
+                      color:
+                          color1 != Colors.black87
+                              ? const Color.fromARGB(150, 255, 255, 255)
+                              : const Color.fromARGB(173, 197, 196, 196),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -311,6 +324,71 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Future<Widget> buildSkinCareStep(int n) async {
     Map<String, dynamic>? data = await getSkinAnalysis(n);
+    if (data == null) {
+      return TweenAnimationBuilder(
+        tween: Tween<double>(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 500),
+        builder: (context, double value, child) {
+          return Transform.translate(
+            offset: Offset(0, 20.0 * (1 - value)),
+            child: Opacity(
+              opacity: value,
+              child: Card(
+                color:
+                    color1 != Colors.black87
+                        ? const Color.fromARGB(150, 255, 255, 255)
+                        : const Color.fromARGB(107, 255, 255, 255),
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Text(
+                          "$n",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.purple.shade300,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "No Data",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "No Data",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 500),
@@ -320,7 +398,10 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Opacity(
             opacity: value,
             child: Card(
-              color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
+              color:
+                  color1 != Colors.black87
+                      ? const Color.fromARGB(150, 255, 255, 255)
+                      : const Color.fromARGB(107, 255, 255, 255),
               elevation: 2,
               margin: const EdgeInsets.only(bottom: 12),
               shape: RoundedRectangleBorder(
@@ -347,14 +428,22 @@ class _ActivityPageState extends State<ActivityPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            data!['Acne'] != null && data['Eczema Photos'] != null && data['Keratosis'] != null && data['Rosacea'] != null && data['Wrinkle'] != null ? "Acne: ${(data['Acne'] * 100).toInt()}%, Eczema: ${(data['Eczema Photos'] * 100).toInt()}%, Rosacea: ${(data['Rosacea'] * 100).toInt()}%, Wrinkle: ${(data['Wrinkle'] * 100).toInt()}%, Keratosis: ${(data['Keratosis'] * 100).toInt()}%" : "No Data",
+                            data['Acne'] != null &&
+                                    data['Eczema Photos'] != null &&
+                                    data['Keratosis'] != null &&
+                                    data['Rosacea'] != null &&
+                                    data['Wrinkle'] != null
+                                ? "Acne: ${(data['Acne'] * 100).toInt()}%, Eczema: ${(data['Eczema Photos'] * 100).toInt()}%, Rosacea: ${(data['Rosacea'] * 100).toInt()}%, Wrinkle: ${(data['Wrinkle'] * 100).toInt()}%, Keratosis: ${(data['Keratosis'] * 100).toInt()}%"
+                                : "No Data",
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            data['recommendation'] ?? "No Data",
+                            data['recommendation'] != null
+                                ? data['recommendation']
+                                : "No Data",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
@@ -381,7 +470,7 @@ class _ActivityPageState extends State<ActivityPage> {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));
-        } else if (!snapshot.hasData) {
+        } else if (!snapshot.hasData || snapshot.data == null) {
           return Center(child: Text("No Data"));
         }
         return snapshot.data!;
@@ -435,7 +524,15 @@ class _ActivityPageState extends State<ActivityPage> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 500),
                             decoration: BoxDecoration(
-                              color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
+                              color:
+                                  color1 != Colors.black87
+                                      ? const Color.fromARGB(178, 255, 255, 255)
+                                      : const Color.fromARGB(
+                                        105,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -512,12 +609,262 @@ class _ActivityPageState extends State<ActivityPage> {
                   child:
                       dietPlan != null
                           ? buildPlan()
-                          : const Text(
-                            "No Data",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                          : AnimatedContainer(
+                            duration: const Duration(milliseconds: 500),
+                            decoration: BoxDecoration(
+                              color:
+                                  color1 != Colors.black87
+                                      ? const Color.fromARGB(178, 255, 255, 255)
+                                      : const Color.fromARGB(
+                                        105,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          color1 != Colors.black87
+                                              ? color1
+                                              : const Color.fromARGB(
+                                                255,
+                                                60,
+                                                30,
+                                                182,
+                                              ),
+                                          Colors.purple.shade500,
+                                        ],
+                                      ),
+                                    ),
+                                    child: const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.restaurant_menu,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          "Today's Meal Plan",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                          TweenAnimationBuilder(
+                                            tween: Tween<double>(
+                                              begin: 0,
+                                              end: 1,
+                                            ),
+                                            duration: Duration(
+                                              milliseconds: 500,
+                                            ),
+                                            builder: (
+                                              context,
+                                              double value,
+                                              child,
+                                            ) {
+                                              return Transform.translate(
+                                                offset: Offset(
+                                                  0,
+                                                  20.0 * (1 - value),
+                                                ),
+                                                child: Opacity(
+                                                  opacity: value,
+                                                  child: Card(
+                                                    color:
+                                                        color1 != Colors.black87
+                                                            ? const Color.fromARGB(
+                                                              150,
+                                                              255,
+                                                              255,
+                                                              255,
+                                                            )
+                                                            : const Color.fromARGB(
+                                                              107,
+                                                              255,
+                                                              255,
+                                                              255,
+                                                            ),
+                                                    elevation: 2,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                          bottom: 12,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            12,
+                                                          ),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .restaurant,
+                                                                color:
+                                                                    Colors
+                                                                        .purple
+                                                                        .shade300,
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 8,
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  "No data",
+                                                                  style: const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              const Icon(
+                                                                Icons.timer,
+                                                                size: 16,
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 4,
+                                                              ),
+                                                              Text(
+                                                                "No Data",
+                                                                style: TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .grey
+                                                                          .shade600,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        const Divider(height: 32),
+                                        Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                color1 != Colors.black87
+                                                    ? const Color.fromARGB(
+                                                      150,
+                                                      255,
+                                                      255,
+                                                      255,
+                                                    )
+                                                    : const Color.fromARGB(
+                                                      173,
+                                                      197,
+                                                      196,
+                                                      196,
+                                                    ),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.monitor_heart,
+                                                    color: Colors.purple,
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    "Nutrition Summary",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _buildNutrientRow(
+                                                "Calories",
+                                                'N/A',
+                                                Icons.local_fire_department,
+                                              ),
+                                              _buildNutrientRow(
+                                                "Protein",
+                                                'N/A',
+                                                Icons.fitness_center,
+                                              ),
+                                              _buildNutrientRow(
+                                                "Fat",
+                                                'N/A',
+                                                Icons.water_drop,
+                                              ),
+                                              _buildNutrientRow(
+                                                "Carbs",
+                                                'N/A',
+                                                Icons.grain,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                 ),
@@ -530,9 +877,11 @@ class _ActivityPageState extends State<ActivityPage> {
                       Expanded(
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 500),
-                          //margin: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            color: color1 != Colors.black87? const Color.fromARGB(178, 255, 255, 255) : const Color.fromARGB(105, 255, 255, 255),
+                            color:
+                                color1 != Colors.black87
+                                    ? const Color.fromARGB(178, 255, 255, 255)
+                                    : const Color.fromARGB(105, 255, 255, 255),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -675,7 +1024,10 @@ class _ActivityPageState extends State<ActivityPage> {
                 vertical: 3,
               ),
               child: Card(
-                color: color1 != Colors.black87 ? const Color.fromARGB(150, 255, 255, 255) : const Color.fromARGB(107, 255, 255, 255),
+                color:
+                    color1 != Colors.black87
+                        ? const Color.fromARGB(150, 255, 255, 255)
+                        : const Color.fromARGB(107, 255, 255, 255),
                 elevation: 2,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(

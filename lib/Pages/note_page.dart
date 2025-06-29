@@ -195,62 +195,64 @@ class _NotePageState extends State<NotePage> {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Custom Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            "Notes",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                              letterSpacing: 1.2,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Custom Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 20,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              "Notes",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                                letterSpacing: 1.2,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                // Notes Sections
-                _buildSection(
-                  message:
-                      note1.isEmpty
-                          ? "Protect your skin daily with SPF 30+ to prevent wrinkles and sun damage."
-                          : note1,
-                  cardColor: Colors.orange.shade100.withOpacity(0.7),
-                  iconColor: Colors.orange.shade700,
-                ),
-                _buildSection(
-                  message:
-                      note2.isEmpty
-                          ? "Add a serving of greens to your lunch today — rich in vitamins for glowing skin!"
-                          : note2,
-                  cardColor: Colors.green.shade100.withOpacity(0.7),
-                  iconColor: Colors.green.shade700,
-                ),
-                _buildSection(
-                  message:
-                      note3.isEmpty
-                          ? "Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!"
-                          : note3,
-                  cardColor: Colors.purple.shade100.withOpacity(0.7),
-                  iconColor: Colors.purple.shade700,
-                ),
-                const SizedBox(height: 30),
-              ],
+                  const SizedBox(height: 10),
+                  // Notes Sections
+                  _buildSection(
+                    message:
+                        note1.isEmpty
+                            ? "Protect your skin daily with SPF 30+ to prevent wrinkles and sun damage."
+                            : note1,
+                    cardColor: Colors.orange.shade100.withOpacity(0.7),
+                    iconColor: Colors.orange.shade700,
+                  ),
+                  _buildSection(
+                    message:
+                        note2.isEmpty
+                            ? "Add a serving of greens to your lunch today — rich in vitamins for glowing skin!"
+                            : note2,
+                    cardColor: Colors.green.shade100.withOpacity(0.7),
+                    iconColor: Colors.green.shade700,
+                  ),
+                  _buildSection(
+                    message:
+                        note3.isEmpty
+                            ? "Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!"
+                            : note3,
+                    cardColor: Colors.purple.shade100.withOpacity(0.7),
+                    iconColor: Colors.purple.shade700,
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),

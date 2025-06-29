@@ -258,8 +258,12 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("STOP_VIDEO");
   }
 
-  void sendQCommand() {
-    sendCommand("SEND_Q_COMMAND");
+  void sendQPress() {
+    sendCommand("Q_PRESS");
+  }
+
+  void sendSPress() {
+    sendCommand("S_PRESS");
   }
 
   void startVideo() {
@@ -784,6 +788,34 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 10),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: sendQPress,
+                        child: const Text(
+                          "Scan QR code",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: sendSPress,
+                        child: const Text(
+                          "Scan user skin",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -1080,19 +1112,6 @@ class _ControlMirrorState extends State<ControlMirror> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          side: BorderSide(color: Colors.green),
-                        ),
-                        onPressed: sendQCommand,
-                        child: const Icon(Icons.wordpress, color: Colors.white70),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
