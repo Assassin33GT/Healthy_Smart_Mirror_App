@@ -347,14 +347,14 @@ class _ActivityPageState extends State<ActivityPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Acne: ${(data!['Acne'] * 100).toInt()}%, Eczema: ${(data['Eczema'] * 100).toInt()}%, Healthy: ${(data['Healthy'] * 100).toInt()}%, Pigmentation: ${(data['Pigmentation'] * 100).toInt()}%, Rosacea: ${(data['Rosacea'] * 100).toInt()}%, Wrinkles: ${(data['Wrinkles'] * 100).toInt()}%",
+                            data!['Acne'] != null && data['Eczema Photos'] != null && data['Keratosis'] != null && data['Rosacea'] != null && data['Wrinkle'] != null ? "Acne: ${(data['Acne'] * 100).toInt()}%, Eczema: ${(data['Eczema Photos'] * 100).toInt()}%, Rosacea: ${(data['Rosacea'] * 100).toInt()}%, Wrinkle: ${(data['Wrinkle'] * 100).toInt()}%, Keratosis: ${(data['Keratosis'] * 100).toInt()}%" : "No Data",
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            data['recommendation'],
+                            data['recommendation'] ?? "No Data",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,

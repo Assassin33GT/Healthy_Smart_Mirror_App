@@ -134,7 +134,7 @@ class _OintmentPageState extends State<OintmentPage>
 
               Map<String, dynamic> allData = snapshot.data!;
               Map<String, dynamic> data = allData['cosmetic'];
-              String recommendation = allData['recommendation'];
+              String recommendation = allData['recommendation'] ?? "No Data";
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,35 +169,35 @@ class _OintmentPageState extends State<OintmentPage>
                     _buildOintmentSection(
                       icon: Icons.business,
                       title: "Brand",
-                      value: data['brand'],
+                      value: data['brand'] ?? "No Data",
                       cardColor: Colors.purple.shade100.withOpacity(0.7),
                       iconColor: Colors.purple.shade700,
                     ),
                     _buildOintmentSection(
                       icon: Icons.label_important,
                       title: "Name",
-                      value: data['name'],
+                      value: data['name'] ?? "No Data",
                       cardColor: Colors.blue.shade100.withOpacity(0.7),
                       iconColor: Colors.blue.shade700,
                     ),
                     _buildOintmentSection(
                       icon: Icons.category,
                       title: "Category",
-                      value: data['categories'],
+                      value: data['categories'] ?? "No Data",
                       cardColor: Colors.green.shade100.withOpacity(0.7),
                       iconColor: Colors.green.shade700,
                     ),
                     _buildOintmentSection(
                       icon: Icons.warning_amber_rounded,
                       title: "Constraints",
-                      value: data['constraints'],
+                      value: data['constraints'] ?? "No Data",
                       cardColor: Colors.orange.shade100.withOpacity(0.7),
                       iconColor: Colors.orange.shade700,
                     ),
                     _buildOintmentSection(
                       icon: Icons.science,
                       title: "Ingredients",
-                      value: data['ingredients'],
+                      value: data['ingredients'] ?? "No Data",
                       cardColor: Colors.pink.shade100.withOpacity(0.7),
                       iconColor: Colors.pink.shade700,
                     ),

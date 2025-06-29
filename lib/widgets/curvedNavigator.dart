@@ -1,8 +1,8 @@
+import 'package:demo/Pages/note_page.dart';
 import 'package:demo/Pages/support_chat_page.dart';
 import 'package:demo/main.dart';
 import 'package:demo/pages/activity_page.dart';
 import 'package:demo/pages/home_page.dart';
-import 'package:demo/pages/notification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,7 +38,8 @@ class _CurvednavigatorState extends State<Curvednavigator> {
       Icon(Icons.home_outlined),
       Icon(Icons.workspace_premium),
       Icon(Icons.camera_alt_outlined),
-      Icon(Icons.notifications_active_outlined),
+      //Icon(Icons.notifications_active_outlined),
+      Icon(Icons.note_alt_outlined),
       Icon(Icons.support_agent_outlined),
     ];
 
@@ -72,7 +73,7 @@ class _CurvednavigatorState extends State<Curvednavigator> {
           } else if (index == 3) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationPage()),
+              MaterialPageRoute(builder: (context) => NotePage()),
             );
           } else if (index == 4) {
             Navigator.push(

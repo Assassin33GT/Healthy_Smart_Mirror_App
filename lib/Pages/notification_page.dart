@@ -21,7 +21,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    initFirebaseMessaging();
+    //initFirebaseMessaging();
     initLocalNotifications();
   }
 
@@ -53,23 +53,23 @@ class _NotificationPageState extends State<NotificationPage> {
     }
   }
 
-  void initFirebaseMessaging() {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // void initFirebaseMessaging() {
+  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    messaging.requestPermission();
+  //   messaging.requestPermission();
 
-    messaging.getToken().then((token) {
-      print("📡 FCM Token: $token");
-    });
+  //   messaging.getToken().then((token) {
+  //     print("📡 FCM Token: $token");
+  //   });
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("📬 Foreground notification: ${message.notification?.title}");
-    });
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     print("📬 Foreground notification: ${message.notification?.title}");
+  //   });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("📲 Opened from notification: ${message.notification?.title}");
-    });
-  }
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     print("📲 Opened from notification: ${message.notification?.title}");
+  //   });
+  // }
 
   Future<void> scheduleDailyNotifications() async {
     const androidDetails = AndroidNotificationDetails(
@@ -81,6 +81,18 @@ class _NotificationPageState extends State<NotificationPage> {
     );
 
     const notificationDetails = NotificationDetails(android: androidDetails);
+    
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      1700,
+      '🧘 Wellness Reminder',
+      'Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!',
+      _nextInstanceOfTime(17, 0),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
 
     // 10:00 AM
     await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -120,17 +132,6 @@ class _NotificationPageState extends State<NotificationPage> {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      1348,
-      '🧘 Wellness Reminder',
-      'Take 5 minutes today to breathe deeply or meditate. Stress management = better skin + better mood!',
-      _nextInstanceOfTime(0, 0),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
   }
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
@@ -146,6 +147,7 @@ class _NotificationPageState extends State<NotificationPage> {
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
+    print(scheduled);
     return scheduled;
   }
 
