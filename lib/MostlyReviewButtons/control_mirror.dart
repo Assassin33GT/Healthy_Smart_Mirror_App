@@ -258,6 +258,10 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("STOP_VIDEO");
   }
 
+  void sendQCommand() {
+    sendCommand("SEND_Q_COMMAND");
+  }
+
   void startVideo() {
     final url = videoUrlController.text.trim();
     if (url.isEmpty) {
@@ -993,7 +997,10 @@ class _ControlMirrorState extends State<ControlMirror> {
                           side: BorderSide(color: Colors.green),
                         ),
                         onPressed: stopVideo,
-                        child: const Icon(Icons.stop_circle_outlined, color: Colors.white70),
+                        child: const Icon(
+                          Icons.stop_circle_outlined,
+                          color: Colors.white70,
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -1008,7 +1015,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -1073,6 +1080,19 @@ class _ControlMirrorState extends State<ControlMirror> {
                     ],
                   ),
                   const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: sendQCommand,
+                        child: const Icon(Icons.wordpress, color: Colors.white70),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
