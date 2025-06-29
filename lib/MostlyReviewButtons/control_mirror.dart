@@ -254,6 +254,19 @@ class _ControlMirrorState extends State<ControlMirror> {
     sendCommand("CLOSE_VIDEO");
   }
 
+  void stopVideo() {
+    sendCommand("STOP_VIDEO");
+  }
+
+  void startVideo() {
+    final url = videoUrlController.text.trim();
+    if (url.isEmpty) {
+      _showSnackBar("Please enter a YouTube URL");
+      return;
+    }
+    sendCommand("PLAY_VIDEO", payload: {"url": url});
+  }
+
   void increaseVolume() {
     sendCommand("INCREASE_VOLUME");
   }
@@ -970,6 +983,32 @@ class _ControlMirrorState extends State<ControlMirror> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  // Add this Row widget after the existing video control Row with minimize, maximize, close icons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: stopVideo,
+                        child: const Icon(Icons.stop_circle_outlined, color: Colors.white70),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: startVideo,
+                        child: const Icon(
+                          Icons.play_arrow,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
