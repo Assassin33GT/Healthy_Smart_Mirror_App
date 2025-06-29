@@ -99,7 +99,7 @@ class _NotePageState extends State<NotePage> {
                 width: screenWidth * 0.155,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.amber,
+                  color: color1 != Colors.black87 ? Colors.amber : const Color.fromARGB(255, 188, 142, 3),
                 ),
                 child: Row(
                   children: [
