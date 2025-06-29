@@ -471,7 +471,7 @@ class _ActivityPageState extends State<ActivityPage> {
         } else if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text("No Data"));
+          return Center(child: CircularProgressIndicator());
         }
         return snapshot.data!;
       },
@@ -676,123 +676,118 @@ class _ActivityPageState extends State<ActivityPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                          TweenAnimationBuilder(
-                                            tween: Tween<double>(
-                                              begin: 0,
-                                              end: 1,
-                                            ),
-                                            duration: Duration(
-                                              milliseconds: 500,
-                                            ),
-                                            builder: (
-                                              context,
-                                              double value,
-                                              child,
-                                            ) {
-                                              return Transform.translate(
-                                                offset: Offset(
-                                                  0,
-                                                  20.0 * (1 - value),
-                                                ),
-                                                child: Opacity(
-                                                  opacity: value,
-                                                  child: Card(
-                                                    color:
-                                                        color1 != Colors.black87
-                                                            ? const Color.fromARGB(
-                                                              150,
-                                                              255,
-                                                              255,
-                                                              255,
-                                                            )
-                                                            : const Color.fromARGB(
-                                                              107,
-                                                              255,
-                                                              255,
-                                                              255,
-                                                            ),
-                                                    elevation: 2,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                          bottom: 12,
+                                        TweenAnimationBuilder(
+                                          tween: Tween<double>(
+                                            begin: 0,
+                                            end: 1,
+                                          ),
+                                          duration: Duration(milliseconds: 500),
+                                          builder: (
+                                            context,
+                                            double value,
+                                            child,
+                                          ) {
+                                            return Transform.translate(
+                                              offset: Offset(
+                                                0,
+                                                20.0 * (1 - value),
+                                              ),
+                                              child: Opacity(
+                                                opacity: value,
+                                                child: Card(
+                                                  color:
+                                                      color1 != Colors.black87
+                                                          ? const Color.fromARGB(
+                                                            150,
+                                                            255,
+                                                            255,
+                                                            255,
+                                                          )
+                                                          : const Color.fromARGB(
+                                                            107,
+                                                            255,
+                                                            255,
+                                                            255,
+                                                          ),
+                                                  elevation: 2,
+                                                  margin: const EdgeInsets.only(
+                                                    bottom: 12,
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
                                                         ),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12,
-                                                          ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            12,
-                                                          ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .restaurant,
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          12,
+                                                        ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.restaurant,
+                                                              color:
+                                                                  Colors
+                                                                      .purple
+                                                                      .shade300,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Expanded(
+                                                              child: Text(
+                                                                "No data",
+                                                                style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.timer,
+                                                              size: 16,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 4,
+                                                            ),
+                                                            Text(
+                                                              "No Data",
+                                                              style: TextStyle(
                                                                 color:
                                                                     Colors
-                                                                        .purple
-                                                                        .shade300,
+                                                                        .grey
+                                                                        .shade600,
                                                               ),
-                                                              const SizedBox(
-                                                                width: 8,
-                                                              ),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  "No data",
-                                                                  style: const TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              const Icon(
-                                                                Icons.timer,
-                                                                size: 16,
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 4,
-                                                              ),
-                                                              Text(
-                                                                "No Data",
-                                                                style: TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .grey
-                                                                          .shade600,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                        ],
-                                                      ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                         const Divider(height: 32),
                                         Container(
                                           padding: const EdgeInsets.all(16),
