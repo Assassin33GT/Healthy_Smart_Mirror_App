@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     await _firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update({
+        .set({
           'userName': username,
         });
   }
