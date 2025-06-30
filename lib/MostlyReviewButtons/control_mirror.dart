@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert'; // For base64 encoding
 import 'package:image/image.dart' as img; // For image compression
+import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
 class ControlMirror extends StatefulWidget {
   const ControlMirror({super.key});
@@ -19,7 +20,7 @@ class _ControlMirrorState extends State<ControlMirror> {
   );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController videoUrlController = TextEditingController(
-    text: "https://youtu.be/ko2OffMrn2s?si=G_van8LJBjwbKuYl",
+    text: "https://youtube.com/watch?v=wIynl3at0Rs&si=Ov51IqQQEbtJE2no",
   );
   final TextEditingController wifiSsidController = TextEditingController();
   final TextEditingController wifiPasswordController = TextEditingController();
@@ -144,12 +145,20 @@ class _ControlMirrorState extends State<ControlMirror> {
     toggleModule("MMM-SkinAnalysis", true);
   }
 
-  void hideSkinAnalysisChart() {
-    toggleModule("MMM-SkinAnalysisChart", false);
+  void hideTODOList() {
+    toggleModule("MMM-ToDoList", false);
   }
 
-  void showSkinAnalysisChart() {
-    toggleModule("MMM-SkinAnalysisChart", true);
+  void showTODOList() {
+    toggleModule("MMM-ToDoList", true);
+  }
+
+  void hidePrayerTime() {
+    toggleModule("MMM-PrayerTime", false);
+  }
+
+  void showPrayerTime() {
+    toggleModule("MMM-PrayerTime", true);
   }
 
   void hideQRScanner() {
@@ -322,7 +331,7 @@ class _ControlMirrorState extends State<ControlMirror> {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         backgroundColor: const Color.fromARGB(175, 120, 137, 120),
-        title: Text("Magic Mirror Control"),
+        title: Text("Magic Mirror Control!"),
       ),
       body: Container(
         width: double.infinity,
@@ -366,7 +375,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Hint: Find the IP in the bottom left of the mirror screen (phone and mirror must be on the same Wi-Fi).",
+                    "Hint: Find the IP in the bottom right of the mirror screen (phone and mirror must be on the same Wi-Fi).",
                     style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
                   const SizedBox(height: 30),
@@ -722,9 +731,9 @@ class _ControlMirrorState extends State<ControlMirror> {
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: Colors.green),
                         ),
-                        onPressed: showSkinAnalysisChart,
+                        onPressed: showTODOList,
                         child: const Icon(
-                          Icons.analytics,
+                          Icons.note_add,
                           color: Colors.white70,
                         ),
                       ),
@@ -733,7 +742,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: Colors.green),
                         ),
-                        onPressed: hideSkinAnalysisChart,
+                        onPressed: hideTODOList,
                         child: const Icon(
                           Icons.not_interested_sharp,
                           color: Colors.white70,
@@ -744,7 +753,44 @@ class _ControlMirrorState extends State<ControlMirror> {
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: Colors.green),
                         ),
-                        onPressed: () => refreshModule("MMM-SkinAnalysisChart"),
+                        onPressed: () => refreshModule("MMM-ToDoList"),
+                        child: const Icon(Icons.refresh, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: showPrayerTime,
+                        child: Icon(
+                          FlutterIslamicIcons.kaaba,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: hidePrayerTime,
+                        child: const Icon(
+                          Icons.not_interested_sharp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        onPressed: () => refreshModule("MMM-PrayerTime"),
                         child: const Icon(Icons.refresh, color: Colors.white70),
                       ),
                     ],
@@ -814,7 +860,7 @@ class _ControlMirrorState extends State<ControlMirror> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -58,6 +58,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   google_fonts: ^6.2.1
   device_info_plus: ^11.5.0
+  flutter_islamic_icons: ^1.0.2
   #tflite_flutter_helper: ^0.3.1
   #tflite_flutter: ^0.9.1
   #camera: ^0.9.8+1
@@ -94,6 +95,17 @@ flutter:
      - android/assets/images/person.jpeg
      - android/assets/images/person2.jpg
      - android/assets/models/skin_condition_classifier_v2_quantized.tflite
+     - android/assets/images/exercises/Push-Up.gif
+     - android/assets/images/exercises/Squat.gif
+     - android/assets/images/exercises/Jump-Jack.gif
+     - android/assets/images/exercises/Back-Extensions.gif
+     - android/assets/images/exercises/Plank.gif
+     - android/assets/images/exercises/High-Knees.gif
+     - android/assets/images/exercises/Mountain-Climber.gif
+     - android/assets/images/exercises/Jump-Rope.gif
+     - android/assets/images/exercises/Lunges.gif
+     - android/assets/images/exercises/Squat-Jump.gif
+     - android/assets/images/exercises/Toe-Touches.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

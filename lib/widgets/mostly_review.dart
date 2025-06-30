@@ -187,6 +187,13 @@ class _MostlyReviewState extends State<MostlyReview> {
                         SnackBar(
                           content: Text("Reset Counter to Start again!"),
                           duration: Duration(seconds: 1),
+                          backgroundColor: const Color.fromARGB(163, 92, 39, 176),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)
+                            )
+                          ),
                         ),
                       );
                     }

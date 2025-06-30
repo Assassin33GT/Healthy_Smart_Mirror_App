@@ -1,4 +1,5 @@
 import 'package:demo/Pages/ointment_page.dart';
+import 'package:demo/Pages/workout_page.dart';
 import 'package:demo/main.dart';
 import 'package:demo/widgets/curvednavigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -973,6 +974,21 @@ class _ActivityPageState extends State<ActivityPage> {
                                           ),
                                         );
                                       },
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => WorkoutPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: _buildHealthTip(
+                                        "Fitness Exercises",
+                                        "Click here for more details!",
+                                        Icons.fitness_center,
+                                      ),
                                     ),
                                     _buildHealthTip(
                                       "Sleep Well",
