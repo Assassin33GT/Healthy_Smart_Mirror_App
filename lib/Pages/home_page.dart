@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     saveUserName();
     _loadSavedColors();
     setState(() {
-    //increaseCounter();
+      //increaseCounter();
     });
   }
 
@@ -41,16 +41,14 @@ class _HomePageState extends State<HomePage> {
     await _firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
-          'userName': username,
-        });
+        .update({'userName': username});
   }
 
-  void changeBackgroundColor() async{
+  void changeBackgroundColor() async {
     setState(() {
-      if(color1 == Color.fromARGB(255, 126, 95, 227)){
+      if (color1 == Color.fromARGB(255, 126, 95, 227)) {
         color1 = Colors.black87;
-      }else{
+      } else {
         color1 = Color.fromARGB(255, 126, 95, 227);
       }
     });
@@ -181,12 +179,10 @@ class _HomePageState extends State<HomePage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(160, 30),
-                            backgroundColor: color1 != Colors.black87? const Color.fromARGB(
-                              255,
-                              207,
-                              69,
-                              231,
-                            ) : const Color.fromARGB(255, 60, 30, 182),
+                            backgroundColor:
+                                color1 != Colors.black87
+                                    ? const Color.fromARGB(255, 207, 69, 231)
+                                    : const Color.fromARGB(255, 60, 30, 182),
                           ),
                           onPressed: () {
                             FirebaseAuth.instance.userChanges();
@@ -199,19 +195,21 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Text(
                             "Change name",
-                            style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           fixedSize: Size(170, 30),
-                          backgroundColor: color1 != Colors.black87 ? const Color.fromARGB(
-                            255,
-                            207,
-                            69,
-                            231,
-                          ) : const Color.fromARGB(255, 60, 30, 182),
+                          backgroundColor:
+                              color1 != Colors.black87
+                                  ? const Color.fromARGB(255, 207, 69, 231)
+                                  : const Color.fromARGB(255, 60, 30, 182),
                         ),
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
@@ -226,7 +224,11 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Text(
                           "Change password",
-                          style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -237,33 +239,52 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: color1 != Colors.black87? const Color.fromARGB(198, 155, 39, 176) : const Color.fromARGB(255, 60, 30, 182),
+                          backgroundColor:
+                              color1 != Colors.black87
+                                  ? const Color.fromARGB(198, 155, 39, 176)
+                                  : const Color.fromARGB(255, 60, 30, 182),
                         ),
                         onPressed: () {
                           changeBackgroundColor();
                         },
-                        child: Icon(color1 == Colors.black87 ? Icons.light_mode_outlined : Icons.dark_mode_outlined, size: 20, color: Colors.white),
+                        child: Icon(
+                          color1 == Colors.black87
+                              ? Icons.light_mode_outlined
+                              : Icons.dark_mode_outlined,
+                          size: 20,
+                          color: Colors.white,
+                        ),
                       ),
                       ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: color1 != Colors.black87? const Color.fromARGB(198, 155, 39, 176) : const Color.fromARGB(255, 60, 30, 182),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QRCodePage(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              color1 != Colors.black87
+                                  ? const Color.fromARGB(198, 155, 39, 176)
+                                  : const Color.fromARGB(255, 60, 30, 182),
                         ),
-                      );
-                    },
-                    child: const Icon(Icons.qr_code, size: 20, color: Colors.white)
-                  ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QRCodePage(),
+                            ),
+                          );
+                        },
+                        child: const Icon(
+                          Icons.qr_code,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 25),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: color1 != Colors.black87 ? Colors.red : const Color.fromARGB(242, 156, 40, 32),
+                      backgroundColor:
+                          color1 != Colors.black87
+                              ? Colors.red
+                              : const Color.fromARGB(242, 156, 40, 32),
                     ),
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
@@ -275,7 +296,11 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Text(
                       "Sign Out",
-                      style: TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   //const SizedBox(height: 20),
@@ -332,10 +357,7 @@ class _HomePageState extends State<HomePage> {
         duration: const Duration(milliseconds: 2000),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color1,
-              color2,
-            ],
+            colors: [color1, color2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
